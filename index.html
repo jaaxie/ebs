@@ -277,8 +277,10 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .sync-indicator{position:fixed;top:62px;right:74px;padding:6px 12px;background:var(--bg2);border-radius:8px;font-size:11px;color:var(--text2);display:none;align-items:center;gap:6px;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .sync-indicator.active{display:flex}
 .sync-indicator.syncing{color:var(--yellow)}
+.sync-indicator.syncing .sync-dot{animation:spin 1s linear infinite;border:2px solid var(--yellow);border-top-color:transparent;background:transparent}
 .sync-indicator.synced{color:var(--green)}
 .sync-indicator.offline{color:var(--red)}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 .sync-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
 
 /* Online indicator */
@@ -689,9 +691,14 @@ function showSync(status,text){
 // ============================================
 let saveTimeout=null;
 let isSaving=false;
+
 function save(){
   if(!isAuthenticated)return;
   clearTimeout(saveTimeout);
+  
+  // Show syncing indicator immediately
+  showSync('syncing','Syncing...');
+  
   saveTimeout=setTimeout(()=>{
     if(isSaving)return;
     isSaving=true;
@@ -700,17 +707,23 @@ function save(){
       updatedAt:firebase.database.ServerValue.TIMESTAMP
     }).then(()=>{
       isSaving=false;
+      showSync('synced','Synced ✓');
+      setTimeout(()=>$('syncIndicator').classList.remove('active'),1500);
     }).catch(e=>{
       isSaving=false;
       showSync('offline','Save failed');
       console.error(e);
     });
-  },800);
+  },500);
 }
 
 function saveLeadTime(){
   if(!isAuthenticated)return;
-  projectRef.child('leadTime').set(leadTimeDb).catch(console.error);
+  showSync('syncing','Syncing...');
+  projectRef.child('leadTime').set(leadTimeDb).then(()=>{
+    showSync('synced','Synced ✓');
+    setTimeout(()=>$('syncIndicator').classList.remove('active'),1500);
+  }).catch(console.error);
 }
 
 function saveBoms(){
@@ -782,28 +795,31 @@ function initFirebaseListeners(){
   // Listen for main data changes
   projectRef.child('main').on('value',snapshot=>{
     const val=snapshot.val();
-    console.log('Firebase data received:', val ? 'has data' : 'empty');
     
-    if(val && val.data && val.data.length > 0){
-      // We have real data - use it
-      data=val.data||[];
-      team=val.team||[];
-      history=val.history||[];
-      projectDates=val.projectDates||{start:'',end:''};
-      actions=val.actions||[];
-      currentProjectName=val.projectName||'EBS Project';
+    // Firebase converts arrays to objects - convert back
+    const hasData = val && val.data && (Array.isArray(val.data) ? val.data.length > 0 : Object.keys(val.data).length > 0);
+    
+    if(hasData){
+      // Convert Firebase object to array if needed
+      data = Array.isArray(val.data) ? val.data : Object.values(val.data);
+      team = val.team ? (Array.isArray(val.team) ? val.team : Object.values(val.team)) : [];
+      history = val.history ? (Array.isArray(val.history) ? val.history : Object.values(val.history)) : [];
+      actions = val.actions ? (Array.isArray(val.actions) ? val.actions : Object.values(val.actions)) : [];
+      projectDates = val.projectDates || {start:'',end:''};
+      currentProjectName = val.projectName || 'EBS Project';
       updateProjectName();
       render();
+      
+      if(firstLoad){
+        showSync('synced','Connected');
+        setTimeout(()=>$('syncIndicator').classList.remove('active'),2000);
+      }
     } else if(firstLoad){
-      // No data - initialize with sample data immediately
-      console.log('No data found, loading sample...');
+      // No data at all - initialize with sample data
+      console.log('Firebase empty, initializing sample data...');
       initializeSampleData();
     }
     
-    if(firstLoad){
-      showSync('synced','Connected');
-      setTimeout(()=>$('syncIndicator').classList.remove('active'),2000);
-    }
     firstLoad=false;
   },err=>{
     console.error('Firebase read error:',err);
@@ -813,22 +829,26 @@ function initFirebaseListeners(){
   
   // Listen for lead time data
   projectRef.child('leadTime').on('value',snapshot=>{
-    leadTimeDb=snapshot.val()||{};
+    const val=snapshot.val();
+    leadTimeDb=val||{};
   });
   
   // Listen for BOMs
   projectRef.child('boms').on('value',snapshot=>{
     const val=snapshot.val();
-    if(val)savedBoms=val;
-    else loadSampleBoms();
+    if(val){
+      savedBoms=Array.isArray(val)?val:Object.values(val);
+    }
   });
   
   // Listen for global codes/mfrs
   projectRef.child('globalCodes').on('value',snapshot=>{
-    globalCodes=snapshot.val()||[];
+    const val=snapshot.val();
+    globalCodes=val?(Array.isArray(val)?val:Object.values(val)):[];
   });
   projectRef.child('globalMfrs').on('value',snapshot=>{
-    globalMfrs=snapshot.val()||[];
+    const val=snapshot.val();
+    globalMfrs=val?(Array.isArray(val)?val:Object.values(val)):[];
   });
   
   // Connection state - only show when going offline/online
