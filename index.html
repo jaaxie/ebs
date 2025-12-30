@@ -288,20 +288,26 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 
 /* AI popover specific - Claude UI style */
 .ai-popover{width:700px;max-width:calc(100vw - 32px);background:#2f2f2f;border:1px solid #3d3d3d;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.5)}
-.ai-popover .modal-body{padding:0;display:flex;flex-direction:column;max-height:70vh}
+.ai-popover .modal-body{padding:0;display:flex;flex-direction:column;max-height:85vh}
 .ai-popover .modal-head{display:flex;align-items:center;gap:12px;border-bottom:1px solid #3d3d3d;padding:16px 24px}
 .ai-popover .modal-title{flex:1;font-size:15px;font-weight:500;color:#e8e8e8}
 .ai-popover .modal-close{background:#3d3d3d;color:#999;width:32px;height:32px;font-size:18px}
 .ai-popover .modal-close:hover{background:#4d4d4d;color:#ccc}
 .ai-title-icon{color:#d4776b;font-size:14px;margin-right:4px}
 .ai-model-badge{font-size:11px;color:#777;font-family:-apple-system,system-ui,sans-serif;background:#3d3d3d;padding:5px 12px;border-radius:6px;font-weight:500}
-.ai-content{flex:1;overflow-y:auto;padding:24px;min-height:200px;background:#212121}
+.ai-content{flex:1;overflow-y:auto;padding:24px;min-height:300px;background:#212121}
 .ai-welcome{color:#777;font-size:15px;line-height:1.7}
 .ai-welcome p{margin:0}
 .ai-welcome strong{color:#aaa;font-weight:600}
 .ai-prose{font-size:15px;line-height:1.8;color:#e0e0e0}
-.ai-prose p{margin-bottom:20px}
+.ai-prose p{margin-bottom:16px}
 .ai-prose p:last-child{margin-bottom:0}
+.ai-prose strong{color:#fff;font-weight:600}
+.ai-prose ul,.ai-prose ol{margin:8px 0 16px 0;padding-left:8px;list-style:none}
+.ai-prose li{margin:8px 0;padding-left:20px;position:relative;line-height:1.6}
+.ai-prose li::before{content:'•';position:absolute;left:0;color:#64d2ff}
+.ai-section-header{font-size:11px;font-weight:700;color:#888;letter-spacing:1px;margin:24px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #3a3a3a}
+.ai-section-header:first-child{margin-top:0}
 .ai-part-link{color:#60a5fa;cursor:pointer;text-decoration:underline;text-decoration-color:rgba(96,165,250,0.4);text-underline-offset:3px;transition:all .15s}
 .ai-part-link:hover{color:#93c5fd;text-decoration-color:rgba(147,197,253,0.6)}
 .ai-asm-link{color:#2dd4bf;cursor:pointer;text-decoration:underline;text-decoration-color:rgba(45,212,191,0.4);text-underline-offset:3px;transition:all .15s}
@@ -2133,19 +2139,19 @@ function buildProjectContext(){
       assemblies:asms.length,
       ...byStatus
     },
-    stuck:stuck.slice(0,20),
+    stuck,
     overdue,
     upcoming,
-    allActions:allActions.slice(0,15),
-    completedActions:completedActions.slice(0,15),
-    partsWithNotes:partsWithNotes.slice(0,15),
-    suppliers:suppliers.filter(s=>s.count>=2).slice(0,10),
-    recentComments:extendedComments.slice(0,20),
-    asmProgress:asmProgress.slice(0,10),
+    allActions,
+    completedActions,
+    partsWithNotes,
+    suppliers:suppliers.filter(s=>s.count>=1),
+    recentComments:extendedComments,
+    asmProgress,
     criticalPath,
     forecast:getVelocityForecast(),
-    leadTimeHistory:leadTimeHistory.slice(0,20),
-    partsWithEta:partsWithEta.slice(0,20),
+    leadTimeHistory,
+    partsWithEta,
     progressHistory,
     allParts:allPartsSummary,
     partsByMfr
@@ -2225,23 +2231,56 @@ function formatClaudeResponse(text,mode){
     return asmName;
   });
   
-  // Split into paragraphs - try double newlines first, then single
-  let paragraphs=html.split(/\n\n+/).filter(p=>p.trim());
-  if(paragraphs.length===1){
-    // No double newlines - split on sentence boundaries after 2+ sentences
-    const text=paragraphs[0];
-    const sentences=text.split(/(?<=[.!?])\s+(?=[A-Z])/);
-    if(sentences.length>3){
-      paragraphs=[];
-      for(let i=0;i<sentences.length;i+=3){
-        paragraphs.push(sentences.slice(i,i+3).join(' '));
-      }
+  // Replace **bold** with <strong>
+  html=html.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  
+  // Process line by line
+  const lines=html.split('\n');
+  let result=[];
+  let inList=false;
+  let listItems=[];
+  
+  const flushList=()=>{
+    if(listItems.length){
+      result.push('<ul>'+listItems.map(li=>'<li>'+li+'</li>').join('')+'</ul>');
+      listItems=[];
     }
-  }
+    inList=false;
+  };
   
-  html='<div class="ai-prose">'+paragraphs.map(p=>'<p>'+p.replace(/\n/g,' ').trim()+'</p>').join('')+'</div>';
+  lines.forEach(line=>{
+    const trimmed=line.trim();
+    if(!trimmed)return;
+    
+    // Check for section header (ALL CAPS followed by colon)
+    if(/^[A-Z][A-Z\s]+:$/.test(trimmed)){
+      flushList();
+      result.push('<h4 class="ai-section-header">'+trimmed.replace(':','')+'</h4>');
+      return;
+    }
+    
+    // Check for bullet point
+    if(/^[•\-\*]\s/.test(trimmed)){
+      inList=true;
+      listItems.push(trimmed.replace(/^[•\-\*]\s*/,''));
+      return;
+    }
+    
+    // Check for numbered item
+    if(/^\d+[\.\)]\s/.test(trimmed)){
+      inList=true;
+      listItems.push(trimmed.replace(/^\d+[\.\)]\s*/,''));
+      return;
+    }
+    
+    // Regular text - flush any pending list and add as paragraph
+    flushList();
+    result.push('<p>'+trimmed+'</p>');
+  });
   
-  return html;
+  flushList();
+  
+  return '<div class="ai-prose">'+result.join('')+'</div>';
 }
 
 // Navigation functions for AI links
