@@ -2017,12 +2017,75 @@ function buildProjectContext(){
     suppliers.push({mfr,count:mfrStats[mfr].total,inTransit:mfrStats[mfr].ordered,avgLead});
   });
   
-  // Recent comments (last 7 days)
-  const recentComments=[];
+  // Historical lead time database - full data
+  const leadTimeHistory=[];
+  Object.keys(leadTimeDb).forEach(code=>{
+    const lt=leadTimeDb[code];
+    if(lt&&lt.samples&&lt.samples.length){
+      leadTimeHistory.push({
+        code,
+        avgDays:lt.avg,
+        samples:lt.samples.length,
+        recentSamples:lt.samples.slice(-5).map(s=>({days:s.days,date:s.date}))
+      });
+    }
+  });
+  
+  // Parts with ETA data for forecasting
+  const partsWithEta=parts.filter(p=>p.expectedArrival||p.orderedDate).map(p=>{
+    const asm=asms.find(a=>a.id===p.parentId);
+    const lt=p.code?leadTimeDb[p.code.toUpperCase()]:null;
+    return {
+      name:p.name,
+      code:p.code,
+      status:p.status,
+      assembly:asm?.name||'',
+      orderedDate:p.orderedDate||null,
+      expectedArrival:p.expectedArrival||null,
+      historicalAvg:lt?.avg||null
+    };
+  });
+  
+  // Progress history for trend analysis
+  const progressHistory=history.slice(-14).map(h=>({date:h.date,pct:h.pct}));
+  
+  // Completed actions (last 30 days) for accomplishment tracking
+  const thirtyDaysAgo=now-30*day;
+  const completedActions=actions.filter(a=>a.status==='completed'&&a.completedAt&&a.completedAt>thirtyDaysAgo).map(a=>({
+    task:a.task,
+    assignee:a.assignee||'Unassigned',
+    completedDate:new Date(a.completedAt).toISOString().split('T')[0]
+  }));
+  
+  // All parts condensed (for queries like "show me all X parts")
+  const allPartsSummary=parts.map(p=>{
+    const asm=asms.find(a=>a.id===p.parentId);
+    const daysInStatus=p.changedAt?Math.floor((now-p.changedAt)/day):null;
+    return {
+      name:p.name,
+      code:p.code||'',
+      mfr:p.mfr||'',
+      status:p.status,
+      assembly:asm?.name||'',
+      daysInStatus
+    };
+  });
+  
+  // Parts grouped by manufacturer (for supplier queries)
+  const partsByMfr={};
+  parts.filter(p=>p.mfr).forEach(p=>{
+    if(!partsByMfr[p.mfr])partsByMfr[p.mfr]=[];
+    partsByMfr[p.mfr].push(p.name);
+  });
+  
+  // Extended comments (30 days instead of 7)
+  
+  // Extended comments (30 days instead of 7)
+  const extendedComments=[];
   parts.forEach(p=>{
     if(p.comments){
-      p.comments.filter(c=>(now-(c.ts||c.timestamp))<7*day).forEach(c=>{
-        recentComments.push({partName:p.name,partId:p.id,text:c.text,date:new Date(c.ts||c.timestamp).toLocaleDateString()});
+      p.comments.filter(c=>(now-(c.ts||c.timestamp))<30*day).forEach(c=>{
+        extendedComments.push({partName:p.name,partId:p.id,text:c.text,date:new Date(c.ts||c.timestamp).toLocaleDateString()});
       });
     }
   });
@@ -2074,12 +2137,18 @@ function buildProjectContext(){
     overdue,
     upcoming,
     allActions:allActions.slice(0,15),
+    completedActions:completedActions.slice(0,15),
     partsWithNotes:partsWithNotes.slice(0,15),
     suppliers:suppliers.filter(s=>s.count>=2).slice(0,10),
-    recentComments:recentComments.slice(0,15),
+    recentComments:extendedComments.slice(0,20),
     asmProgress:asmProgress.slice(0,10),
     criticalPath,
-    forecast:getVelocityForecast()
+    forecast:getVelocityForecast(),
+    leadTimeHistory:leadTimeHistory.slice(0,20),
+    partsWithEta:partsWithEta.slice(0,20),
+    progressHistory,
+    allParts:allPartsSummary,
+    partsByMfr
   };
 }
 
