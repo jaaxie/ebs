@@ -118,7 +118,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .data-table{background:var(--bg2);border:none;border-radius:14px;display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .table-header{display:grid;gap:1px;padding:0 12px;background:var(--bg3);font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.3px;height:36px;align-items:center;flex-shrink:0}
 .table-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
-.parts-grid{grid-template-columns:22px 22px minmax(80px,1fr) 100px 100px 60px 30px 62px 70px 100px minmax(100px,180px) 32px 32px 32px}
+.parts-grid{grid-template-columns:22px 22px minmax(80px,1fr) 100px 100px 60px 30px 62px 70px 100px minmax(100px,180px) 32px 32px 32px 32px}
 .add-row{display:flex;align-items:center;padding:8px 12px;background:var(--bg)}
 .add-row-btn{width:24px;height:24px;background:var(--bg3);border:none;border-radius:8px;color:var(--text3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:10px;transition:all .15s}
 .add-row-btn:hover{background:var(--accent);color:#fff}
@@ -316,47 +316,73 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .sync-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
 
 /* Online indicator */
-.online-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--text2)}
+.online-badge{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg3);border-radius:8px;font-size:12px;color:var(--text2);position:relative;cursor:pointer}
 .online-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 
 /* Chat Panel */
-.chat-toggle{position:fixed;top:62px;right:20px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:300;transition:transform .2s}
+.chat-toggle{position:fixed;bottom:20px;right:20px;width:50px;height:50px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);z-index:300;transition:transform .2s;display:flex;align-items:center;justify-content:center}
 .chat-toggle:hover{transform:scale(1.1)}
-.chat-toggle.has-new{animation:bounce .5s ease infinite}
-@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-.chat-panel{position:fixed;top:116px;right:20px;width:320px;height:450px;background:var(--bg2);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:300;display:none;flex-direction:column;overflow:hidden}
+.chat-toggle svg{width:24px;height:24px}
+.chat-badge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;background:#ff3b30;color:#fff;border-radius:10px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;box-shadow:0 2px 6px rgba(0,0,0,.3);animation:badgePulse 2s ease-in-out infinite}
+@keyframes badgePop{0%{transform:scale(0)}50%{transform:scale(1.2)}100%{transform:scale(1)}}
+@keyframes badgePulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+.chat-panel{position:fixed;bottom:80px;right:20px;width:320px;height:420px;background:var(--bg2);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:300;display:none;flex-direction:column;overflow:hidden}
 .chat-panel.open{display:flex}
-.chat-header{padding:14px 16px;background:var(--bg3);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
-.chat-title{font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px}
-.chat-close{width:28px;height:28px;border-radius:50%;background:var(--bg4);border:none;color:var(--text2);font-size:16px;cursor:pointer}
+.chat-header{padding:12px 14px;background:var(--bg3);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.chat-title{font-weight:600;font-size:13px}
+.chat-close{width:26px;height:26px;border-radius:50%;background:var(--bg4);border:none;color:var(--text2);font-size:16px;cursor:pointer}
 .chat-close:hover{background:var(--border);color:var(--text)}
-.chat-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
-.chat-msg{max-width:85%;padding:8px 12px;border-radius:12px;font-size:13px;line-height:1.4;word-wrap:break-word}
+.chat-messages{flex:1;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px;-webkit-overflow-scrolling:touch}
+.chat-msg{max-width:85%;padding:8px 10px;border-radius:10px;font-size:12px;line-height:1.4;word-wrap:break-word}
 .chat-msg.mine{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
 .chat-msg.other{background:var(--bg3);color:var(--text);align-self:flex-start;border-bottom-left-radius:4px}
 .chat-msg-name{font-size:10px;font-weight:600;margin-bottom:2px;opacity:0.8}
-.chat-msg-time{font-size:9px;opacity:0.6;margin-top:4px}
-.chat-input-area{padding:12px;background:var(--bg3);border-top:1px solid var(--border);display:flex;gap:8px}
-.chat-input{flex:1;height:36px;padding:0 12px;font-size:13px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:18px;outline:none}
+.chat-msg-time{font-size:9px;opacity:0.5;margin-top:3px}
+.chat-input-area{padding:10px;background:var(--bg3);border-top:1px solid var(--border);display:flex;gap:6px}
+.chat-input{flex:1;height:34px;padding:0 12px;font-size:12px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:17px;outline:none}
 .chat-input:focus{border-color:var(--accent)}
-.chat-send{width:36px;height:36px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:16px;cursor:pointer}
+.chat-send{width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:14px;cursor:pointer}
 .chat-send:hover{filter:brightness(1.1)}
-.chat-emojis{display:flex;gap:4px;padding:8px 12px;background:var(--bg2);border-top:1px solid var(--border);flex-wrap:wrap}
-.chat-emoji{width:32px;height:32px;border:none;background:transparent;font-size:18px;cursor:pointer;border-radius:6px}
-.chat-emoji:hover{background:var(--bg4)}
 .chat-nickname{padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:12px;text-align:center}
-.chat-nickname-title{font-size:14px;color:var(--text2)}
-.chat-nickname input{width:100%;max-width:200px;height:40px;padding:0 14px;font-size:14px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:10px;text-align:center}
+.chat-nickname-title{font-size:13px;color:var(--text2)}
+.chat-nickname input{width:100%;max-width:180px;height:38px;padding:0 14px;font-size:13px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:10px;text-align:center}
 .chat-nickname input:focus{outline:none;border-color:var(--accent)}
-.chat-nickname button{padding:10px 24px;font-size:13px;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:10px;cursor:pointer}
-.chat-empty{text-align:center;color:var(--text3);padding:40px 20px;font-size:13px}
+.chat-nickname button{padding:10px 24px;font-size:12px;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:10px;cursor:pointer}
+.chat-empty{text-align:center;color:var(--text3);padding:40px 20px;font-size:12px}
+
+/* Online hover card */
+.online-hover{position:absolute;top:100%;right:0;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px;min-width:180px;box-shadow:0 8px 24px rgba(0,0,0,.3);z-index:400;display:none}
+.online-badge:hover .online-hover{display:block}
+.online-user{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px}
+.online-user-dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.online-user-name{flex:1;color:var(--text)}
+.online-user-time{font-size:10px;color:var(--text3)}
+
+/* Part comments */
+.comment-btn{background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;padding:2px 4px;border-radius:4px;display:flex;align-items:center;gap:3px}
+.comment-btn:hover{color:var(--accent);background:var(--bg4)}
+.comment-btn.has-comments{color:var(--accent)}
+.comment-count{font-size:10px}
+.comments-popover{position:fixed;background:var(--bg2);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:1002;width:280px;max-height:350px;display:flex;flex-direction:column;opacity:0;transform:scale(0.95);transition:all 0.15s ease;pointer-events:none}
+.comments-popover.open{opacity:1;transform:scale(1);pointer-events:auto}
+.comments-header{padding:10px 12px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.comments-header button{background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer}
+.comments-list{flex:1;overflow-y:auto;padding:8px;max-height:200px}
+.comment-item{padding:8px;background:var(--bg3);border-radius:8px;margin-bottom:6px;font-size:11px}
+.comment-item:last-child{margin-bottom:0}
+.comment-author{font-weight:600;color:var(--accent);margin-bottom:2px}
+.comment-text{color:var(--text);line-height:1.4}
+.comment-time{font-size:9px;color:var(--text3);margin-top:4px}
+.comments-input{padding:8px;border-top:1px solid var(--border);display:flex;gap:6px}
+.comments-input input{flex:1;height:30px;padding:0 10px;font-size:11px;background:var(--bg);border:1px solid var(--border);border-radius:6px;color:var(--text)}
+.comments-input button{padding:0 12px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer}
+.comments-empty{text-align:center;color:var(--text3);padding:20px;font-size:11px}
 
 /* Mobile chat */
 @media(max-width:768px){
-  .chat-panel{width:calc(100vw - 32px);height:calc(100vh - 120px);top:60px;right:16px;left:16px;margin:0 auto}
-  .chat-toggle{width:40px;height:40px;font-size:18px;top:58px;right:12px}
-  .online-badge{display:none}
+  .chat-panel{width:calc(100vw - 32px);right:16px;bottom:80px;height:60vh}
+  .chat-toggle{width:46px;height:46px}
 }
 .toast{padding:12px 18px;background:var(--bg3);border:none;border-radius:10px;font-size:13px;margin-top:8px;box-shadow:0 4px 16px rgba(0,0,0,.15)}
 .toast.success{border-left:4px solid var(--green)}.toast.err{border-left:4px solid var(--red)}
@@ -436,9 +462,9 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
   .tab{height:32px;font-size:12px;padding:0 8px}
   .data-table{border-radius:10px;overflow:hidden}
   .table-header{height:32px;padding:0 8px;font-size:9px}
-  .table-header.parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px!important}
-  .part-row.parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px!important}
-  .parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px!important}
+  .table-header.parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px 28px!important}
+  .part-row.parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px 28px!important}
+  .parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px 28px!important}
   .asm-row{grid-template-columns:20px 1fr 80px 28px 28px!important;height:38px;padding:0 8px}
   .part-row{height:36px;padding:0 8px}
   .table-header>div:nth-child(n+7),.part-row>div:nth-child(n+7),.asm-row>div:nth-child(n+6){display:none}
@@ -505,7 +531,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
   .pipe-label{font-size:7px;letter-spacing:0}
   .tabs{margin-bottom:6px}
   .tab{height:30px;font-size:11px;padding:0 6px}
-  .table-header.parts-grid,.part-row.parts-grid,.parts-grid{grid-template-columns:18px 1fr 55px 26px 26px!important}
+  .table-header.parts-grid,.part-row.parts-grid,.parts-grid{grid-template-columns:18px 1fr 55px 26px 26px 26px!important}
   .asm-row{grid-template-columns:18px 1fr 60px 26px!important;height:36px}
   .part-row{height:34px}
   .asm-name{font-size:12px}
@@ -569,7 +595,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 <div class="logo" id="projectName">EBS v2</div>
 <div class="ai-alert good" id="aiAlert" title="Click for AI insights"><div class="ai-icon">✓</div><div class="ai-text"><span class="ai-label">AI</span><span id="aiAlertText">All systems nominal</span></div></div>
 <div class="header-spacer"></div>
-<div class="online-badge"><div class="online-dot"></div><span id="onlineCount">1 online</span></div>
+<div class="online-badge"><div class="online-dot"></div><span id="onlineCount">1 online</span><div class="online-hover" id="onlineHover"><div id="onlineUserList"></div></div></div>
 <div class="header-spacer"></div>
 <div class="header-search"><input type="text" id="headerSearch" placeholder="Search parts..."><button class="header-search-clear" id="headerSearchClear">×</button></div>
 <div class="header-spacer"></div>
@@ -636,34 +662,27 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 <div class="toast-box" id="toastBox"></div>
 
 <!-- Chat -->
-<button class="chat-toggle" id="chatToggle" title="Team Chat">💬</button>
+<button class="chat-toggle" id="chatToggle" title="Team Chat"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg><span class="chat-badge" id="chatBadge" style="display:none">0</span></button>
 <div class="chat-panel" id="chatPanel">
 <div class="chat-header">
-<div class="chat-title">💬 Team Chat</div>
+<div class="chat-title">Team Chat</div>
 <button class="chat-close" id="chatClose">×</button>
 </div>
 <div class="chat-nickname" id="chatNickname">
-<div class="chat-nickname-title">Enter your nickname to chat</div>
+<div class="chat-nickname-title">Enter your name to chat</div>
 <input type="text" id="chatNickInput" placeholder="Your name..." maxlength="20">
-<button id="chatNickBtn">Join Chat 🚀</button>
+<button id="chatNickBtn">Join</button>
 </div>
 <div class="chat-messages" id="chatMessages" style="display:none"></div>
-<div class="chat-emojis" id="chatEmojis" style="display:none">
-<button class="chat-emoji">👍</button>
-<button class="chat-emoji">👎</button>
-<button class="chat-emoji">✅</button>
-<button class="chat-emoji">❌</button>
-<button class="chat-emoji">🔥</button>
-<button class="chat-emoji">⚠️</button>
-<button class="chat-emoji">📦</button>
-<button class="chat-emoji">🎉</button>
-<button class="chat-emoji">👀</button>
-<button class="chat-emoji">💪</button>
-</div>
 <div class="chat-input-area" id="chatInputArea" style="display:none">
 <input type="text" class="chat-input" id="chatInput" placeholder="Type a message..." maxlength="500">
 <button class="chat-send" id="chatSend">➤</button>
 </div>
+</div>
+<div class="comments-popover" id="commentsPopover">
+<div class="comments-header"><span id="commentsTitle">Comments</span><button id="commentsClose">×</button></div>
+<div class="comments-list" id="commentsList"></div>
+<div class="comments-input"><input type="text" id="commentInput" placeholder="Add comment..." maxlength="200"><button id="commentAdd">Add</button></div>
 </div>
 <script>
 (function(){
@@ -1542,9 +1561,13 @@ function renderPart(r){
   
   const notesHtml=p.notes?'<span class="notes-cell" title="'+esc(p.notes)+'">'+esc(p.notes)+'</span>':'<span style="color:var(--text3)">—</span>';
   
+  // Comments button
+  const commentCount=p.comments?.length||0;
+  const commentBtn='<button class="comment-btn'+(commentCount?' has-comments':'')+'" onclick="window.openComments('+p.id+',event)" title="Comments">💬'+(commentCount?'<span class="comment-count">'+commentCount+'</span>':'')+'</button>';
+  
   const childClass=r.child?' child'+(depth>0?' subchild':''):'';
   
-  return '<div class="part-row parts-grid'+childClass+'" data-part-id="'+p.id+'" style="'+(depth>0?'background:var(--bg);':'')+'"><div class="part-indent" style="'+indentStyle+'">'+indentSymbol+'</div><div>'+addSubBtn+'</div><div class="cell" onclick="window.editCell(event,'+p.id+',\'name\')">'+esc(p.name)+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'code\')">'+(p.code||'—')+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'mfr\')">'+(p.mfr||'—')+'</div><div class="cell muted" onclick="window.editCellAssignee(event,'+p.id+')">'+(p.assignee||'—')+'</div><div class="cell muted" onclick="window.editCell(event,'+p.id+',\'qty\')">'+(p.qty||1)+'</div><div><span class="status-badge '+p.status+'">'+SLABELS[p.status]+'</span></div><div class="stage-dots">'+stageDots+'</div><div>'+etaHtml+'</div><div>'+notesHtml+'</div><div>'+advBtn+'</div><div><button class="sm-btn" onclick="window.editPart('+p.id+',event)">✎</button></div><div><button class="sm-btn red" onclick="window.confirmDelete('+p.id+',\'part\',event)">×</button></div></div>';
+  return '<div class="part-row parts-grid'+childClass+'" data-part-id="'+p.id+'" style="'+(depth>0?'background:var(--bg);':'')+'"><div class="part-indent" style="'+indentStyle+'">'+indentSymbol+'</div><div>'+addSubBtn+'</div><div class="cell" onclick="window.editCell(event,'+p.id+',\'name\')">'+esc(p.name)+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'code\')">'+(p.code||'—')+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'mfr\')">'+(p.mfr||'—')+'</div><div class="cell muted" onclick="window.editCellAssignee(event,'+p.id+')">'+(p.assignee||'—')+'</div><div class="cell muted" onclick="window.editCell(event,'+p.id+',\'qty\')">'+(p.qty||1)+'</div><div><span class="status-badge '+p.status+'">'+SLABELS[p.status]+'</span></div><div class="stage-dots">'+stageDots+'</div><div>'+etaHtml+'</div><div>'+notesHtml+'</div><div>'+advBtn+'</div><div>'+commentBtn+'</div><div><button class="sm-btn" onclick="window.editPart('+p.id+',event)">✎</button></div><div><button class="sm-btn red" onclick="window.confirmDelete('+p.id+',\'part\',event)">×</button></div></div>';
 }
 
 function renderGantt(){
@@ -2044,12 +2067,15 @@ $('pmNotify').onclick=()=>{if(editId){const p=data.find(d=>d.id===editId);if(p)s
 $('actClose').onclick=$('actCancel').onclick=()=>{hidePopoverModal($('actionModal'));editActId=null};
 $('actSave').onclick=()=>{
   const task=$('actTask').value.trim();if(!task){toast('Enter task',1);return}
+  const newStatus=$('actStatus').value;
   if(editActId){
     const a=actions.find(x=>x.id===editActId);
-    if(a){a.task=task;a.linkedPartId=$('actLinkedPart').value?parseInt($('actLinkedPart').value):null;a.due=$('actDue').value;a.assignee=$('actAssignee').value;a.status=$('actStatus').value}
+    if(a){
+      a.task=task;a.linkedPartId=$('actLinkedPart').value?parseInt($('actLinkedPart').value):null;a.due=$('actDue').value;a.assignee=$('actAssignee').value;a.status=newStatus;
+    }
     toast('Updated');
   }else{
-    actions.push({id:Date.now(),task,linkedPartId:$('actLinkedPart').value?parseInt($('actLinkedPart').value):null,due:$('actDue').value,assignee:$('actAssignee').value,status:$('actStatus').value,createdAt:new Date().toISOString().split('T')[0]});
+    actions.push({id:Date.now(),task,linkedPartId:$('actLinkedPart').value?parseInt($('actLinkedPart').value):null,due:$('actDue').value,assignee:$('actAssignee').value,status:newStatus,createdAt:new Date().toISOString().split('T')[0]});
     toast('Added');
   }
   save();render();hidePopoverModal($('actionModal'));editActId=null;
@@ -2160,7 +2186,7 @@ document.querySelectorAll('.tab').forEach(tab=>tab.onclick=()=>{
   if(tab.dataset.tab==='progress')setTimeout(renderBurndown,10);
 });
 
-document.onkeydown=e=>{if(e.key==='Escape'){['teamModal','datesModal','reportModal','leadtimeModal','etaModal','bomModal','themeModal','poModal','otdModal'].forEach(closeModal);hidePopoverModal($('partModal'));hidePopoverModal($('asmModal'));hidePopoverModal($('actionModal'));hidePopoverModal($('aiModal'));closeDeletePopover();editId=editAsmId=editActId=editEtaPartId=pendingAdvPartId=null}};
+document.onkeydown=e=>{if(e.key==='Escape'){['teamModal','datesModal','reportModal','leadtimeModal','etaModal','bomModal','themeModal','poModal','otdModal'].forEach(closeModal);hidePopoverModal($('partModal'));hidePopoverModal($('asmModal'));hidePopoverModal($('actionModal'));hidePopoverModal($('aiModal'));closeDeletePopover();$('commentsPopover').classList.remove('open');currentCommentPartId=null;editId=editAsmId=editActId=editEtaPartId=pendingAdvPartId=null}};
 
 // ============================================
 // CHAT SYSTEM
@@ -2169,6 +2195,19 @@ let chatNickname='';
 let lastMessageId=null;
 let chatOpen=false;
 
+let unreadCount=0;
+let chatInitialized=false;
+
+function updateChatBadge(){
+  const badge=$('chatBadge');
+  if(unreadCount>0){
+    badge.textContent=unreadCount>99?'99+':unreadCount;
+    badge.style.display='flex';
+  }else{
+    badge.style.display='none';
+  }
+}
+
 function initChat(){
   const stored=localStorage.getItem('ebs-chat-nick');
   if(stored){
@@ -2176,14 +2215,21 @@ function initChat(){
     showChatInterface();
   }
   
+  // Load initial messages first, then listen for new ones
+  projectRef.child('chat').orderByChild('timestamp').limitToLast(50).once('value',snapshot=>{
+    // Mark as initialized after initial load
+    setTimeout(()=>{chatInitialized=true},500);
+  });
+  
   // Listen for chat messages
   projectRef.child('chat').orderByChild('timestamp').limitToLast(50).on('child_added',snapshot=>{
     const msg=snapshot.val();
     if(msg&&chatNickname){
       addMessageToUI(msg,snapshot.key);
-      // Bounce chat button if panel is closed and message is from someone else
-      if(!chatOpen&&msg.nickname!==chatNickname&&snapshot.key!==lastMessageId){
-        $('chatToggle').classList.add('has-new');
+      // Show badge if panel is closed, message is from someone else, and we're past initial load
+      if(chatInitialized&&!chatOpen&&msg.nickname!==chatNickname){
+        unreadCount++;
+        updateChatBadge();
       }
     }
   });
@@ -2208,22 +2254,35 @@ function setupPresence(){
   projectRef.child('presence').on('value',snapshot=>{
     const users=snapshot.val();
     const now=Date.now();
-    let count=0;
+    let onlineUsers=[];
     if(users){
       Object.values(users).forEach(u=>{
-        if(u.lastSeen&&now-u.lastSeen<60000)count++;
+        if(u.lastSeen&&now-u.lastSeen<60000){
+          onlineUsers.push({name:u.nickname,lastSeen:u.lastSeen});
+        }
       });
     }
-    count=Math.max(1,count);
-    $('onlineCount').textContent=count===1?'1 online':count+' online';
+    if(onlineUsers.length===0)onlineUsers.push({name:'You',lastSeen:now});
+    
+    $('onlineCount').textContent=onlineUsers.length===1?'1 online':onlineUsers.length+' online';
+    
+    // Update hover card
+    $('onlineUserList').innerHTML=onlineUsers.map(u=>{
+      const ago=Math.floor((now-u.lastSeen)/1000);
+      const timeStr=ago<60?'now':ago<3600?Math.floor(ago/60)+'m ago':Math.floor(ago/3600)+'h ago';
+      return '<div class="online-user"><div class="online-user-dot"></div><span class="online-user-name">'+esc(u.name)+'</span><span class="online-user-time">'+timeStr+'</span></div>';
+    }).join('');
   });
 }
 
 function showChatInterface(){
   $('chatNickname').style.display='none';
   $('chatMessages').style.display='flex';
-  $('chatEmojis').style.display='flex';
   $('chatInputArea').style.display='flex';
+  
+  // Clear unread badge
+  unreadCount=0;
+  updateChatBadge();
   
   // Load existing messages
   projectRef.child('chat').orderByChild('timestamp').limitToLast(50).once('value',snapshot=>{
@@ -2233,7 +2292,7 @@ function showChatInterface(){
       Object.entries(msgs).forEach(([key,msg])=>addMessageToUI(msg,key));
       scrollChatToBottom();
     }else{
-      $('chatMessages').innerHTML='<div class="chat-empty">No messages yet.<br>Say hi! 👋</div>';
+      $('chatMessages').innerHTML='<div class="chat-empty">No messages yet.<br>Start the conversation!</div>';
     }
   });
 }
@@ -2251,7 +2310,10 @@ function addMessageToUI(msg,key){
   
   const div=document.createElement('div');
   div.className='chat-msg '+(isMine?'mine':'other');
-  div.innerHTML=(isMine?'':'<div class="chat-msg-name">'+esc(msg.nickname)+'</div>')+esc(msg.text)+'<div class="chat-msg-time">'+time+'</div>';
+  div.innerHTML=
+    (isMine?'':'<div class="chat-msg-name">'+esc(msg.nickname)+'</div>')+
+    esc(msg.text)+
+    '<div class="chat-msg-time">'+time+'</div>';
   container.appendChild(div);
   scrollChatToBottom();
 }
@@ -2279,8 +2341,11 @@ function sendMessage(){
 $('chatToggle').onclick=()=>{
   chatOpen=!chatOpen;
   $('chatPanel').classList.toggle('open',chatOpen);
-  $('chatToggle').classList.remove('has-new');
-  if(chatOpen&&chatNickname)scrollChatToBottom();
+  if(chatOpen){
+    unreadCount=0;
+    updateChatBadge();
+    if(chatNickname)scrollChatToBottom();
+  }
 };
 
 $('chatClose').onclick=()=>{
@@ -2302,13 +2367,80 @@ $('chatNickInput').onkeydown=e=>{if(e.key==='Enter')$('chatNickBtn').click()};
 $('chatSend').onclick=sendMessage;
 $('chatInput').onkeydown=e=>{if(e.key==='Enter')sendMessage()};
 
-// Emoji buttons
-document.querySelectorAll('.chat-emoji').forEach(btn=>{
-  btn.onclick=()=>{
-    $('chatInput').value+=' '+btn.textContent+' ';
-    $('chatInput').focus();
-  };
+// Comments on parts
+let currentCommentPartId=null;
+
+window.openComments=function(partId,e){
+  currentCommentPartId=partId;
+  const part=data.find(d=>d.id===partId);
+  $('commentsTitle').textContent='Comments: '+(part?part.name.substring(0,20):'Part');
+  
+  // Position near button
+  const popover=$('commentsPopover');
+  const btn=e?e.target.closest('button'):null;
+  if(btn){
+    const rect=btn.getBoundingClientRect();
+    let top=rect.bottom+8;
+    let left=rect.left;
+    if(left+280>window.innerWidth)left=window.innerWidth-290;
+    if(top+350>window.innerHeight)top=rect.top-350-8;
+    popover.style.top=Math.max(10,top)+'px';
+    popover.style.left=Math.max(10,left)+'px';
+  }
+  
+  loadComments(partId);
+  popover.classList.add('open');
+};
+
+function loadComments(partId){
+  const part=data.find(d=>d.id===partId);
+  const comments=part?.comments||[];
+  if(comments.length===0){
+    $('commentsList').innerHTML='<div class="comments-empty">No comments yet</div>';
+  }else{
+    $('commentsList').innerHTML=comments.map(c=>{
+      const time=new Date(c.timestamp).toLocaleString([],{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+      return '<div class="comment-item"><div class="comment-author">'+esc(c.author)+'</div><div class="comment-text">'+esc(c.text)+'</div><div class="comment-time">'+time+'</div></div>';
+    }).join('');
+  }
+}
+
+$('commentsClose').onclick=()=>{
+  $('commentsPopover').classList.remove('open');
+  currentCommentPartId=null;
+};
+
+// Close comments when clicking outside
+document.addEventListener('click',e=>{
+  const popover=$('commentsPopover');
+  if(popover.classList.contains('open')&&!popover.contains(e.target)&&!e.target.closest('.comment-btn')){
+    popover.classList.remove('open');
+    currentCommentPartId=null;
+  }
 });
+
+$('commentAdd').onclick=()=>{
+  const input=$('commentInput');
+  const text=input.value.trim();
+  if(!text||!currentCommentPartId)return;
+  
+  const part=data.find(d=>d.id===currentCommentPartId);
+  if(!part)return;
+  
+  if(!part.comments)part.comments=[];
+  part.comments.push({
+    author:chatNickname||'Anonymous',
+    text:text,
+    timestamp:Date.now()
+  });
+  
+  save();
+  loadComments(currentCommentPartId);
+  input.value='';
+  render(); // Update comment count
+};
+
+$('commentInput').onkeydown=e=>{if(e.key==='Enter')$('commentAdd').click()};
 
 // Theme System
 const THEMES=[
