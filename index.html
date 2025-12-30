@@ -546,9 +546,8 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 </div>
 <div class="header-btns">
 <button class="btn" id="themeBtn">🎨</button>
-<button class="btn btn-save" id="saveBtn">💾 <span>Save</span></button>
 <button class="btn btn-report" id="reportBtn">📋 <span>Report</span></button>
-<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Load Sample Data</div><div class="dropdown-div"></div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
+<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Reset to Sample Data</div><div class="dropdown-div"></div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
 </div>
 </header>
 <main class="main">
@@ -790,22 +789,17 @@ function initFirebaseListeners(){
       projectDates=val.projectDates||{start:'',end:''};
       actions=val.actions||[];
       currentProjectName=val.projectName||'New Project';
-    }else{
-      // No data in Firebase yet - start fresh
-      data=[];team=[];history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';
+      updateProjectName();
+      render();
+    }else if(firstLoad){
+      // No data in Firebase yet - auto-load sample data
+      loadSample();
     }
-    updateProjectName();
-    render();
     
     // Only show sync on first load
     if(firstLoad){
       showSync('synced','Connected');
       setTimeout(()=>$('syncIndicator').classList.remove('active'),2000);
-    }
-    
-    // Show welcome message on first load if no data
-    if(firstLoad&&!data.length){
-      toast('Welcome! Click "Load Sample" or add assemblies to get started');
     }
     firstLoad=false;
   },err=>{
@@ -1660,12 +1654,6 @@ $('etaModal').onclick=e=>{if(e.target.id==='etaModal'){closeModal('etaModal');ed
 $('etaSave').onclick=()=>{if(!editEtaPartId)return;const part=data.find(d=>d.id===editEtaPartId);if(!part)return;const val=$('etaDateInput').value;part.expectedArrival=val||undefined;part.manualEta=undefined;save();render();closeModal('etaModal');editEtaPartId=null;toast('Saved')};
 $('etaClear').onclick=()=>{if(!editEtaPartId)return;const part=data.find(d=>d.id===editEtaPartId);if(!part)return;part.expectedArrival=undefined;part.manualEta=undefined;save();render();closeModal('etaModal');editEtaPartId=null;toast('Cleared')};
 
-$('saveBtn').onclick=()=>{
-  projectRef.child('main').set({
-    data,team,history,projectDates,actions,projectName:currentProjectName,
-    updatedAt:firebase.database.ServerValue.TIMESTAMP
-  }).then(()=>toast('Saved to cloud ☁️')).catch(()=>toast('Save failed',true));
-};
 $('bomClose').onclick=$('bomCancel').onclick=()=>closeModal('bomModal');
 $('bomModal').onclick=e=>{if(e.target.id==='bomModal')closeModal('bomModal')};
 $('bomSave').onclick=window.saveBom;
