@@ -42,17 +42,10 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .header-search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:18px;height:18px;background:var(--bg4);border:none;border-radius:50%;color:var(--text3);font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center}
 .header-search-clear.visible{display:flex}
 .header-search-clear:hover{background:var(--text3);color:var(--bg)}
-.ai-alert{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bg3);border:none;border-radius:10px;cursor:pointer;max-width:280px;overflow:hidden;transition:all .2s;flex-shrink:0}
-.ai-alert:hover{background:var(--bg4)}
-.ai-alert.critical{background:rgba(255,69,58,.15)}
-.ai-alert.warning{background:rgba(255,214,10,.12)}
-.ai-alert.good{background:rgba(48,209,88,.12)}
-.ai-icon{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
-.ai-alert.critical .ai-icon{background:var(--red);color:white}
-.ai-alert.warning .ai-icon{background:var(--yellow);color:#111}
-.ai-alert.good .ai-icon{background:var(--green);color:white}
-.ai-text{font-size:11px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ai-label{font-size:9px;color:var(--purple);font-weight:600;margin-right:4px}
+.ai-insights-btn{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bg3);border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:500;color:var(--text);transition:all .2s;flex-shrink:0}
+.ai-insights-btn:hover{background:var(--bg4)}
+.ai-insights-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#3b82f6);box-shadow:0 0 8px rgba(59,130,246,0.5);animation:ai-pulse 2s ease-in-out infinite}
+@keyframes ai-pulse{0%,100%{box-shadow:0 0 8px rgba(59,130,246,0.5)}50%{box-shadow:0 0 12px rgba(59,130,246,0.8)}}
 .header-spacer{flex:1}
 .header-metrics{display:flex;align-items:center;gap:8px}
 .hm{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg3);border-radius:10px}
@@ -225,12 +218,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .gantt-cell{width:70px;min-width:70px;border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;padding:6px}
 .gantt-bar{height:24px;border-radius:6px;font-size:10px;font-weight:600;color:#fff;display:flex;align-items:center;justify-content:center;min-width:60px;cursor:pointer}
 .gantt-bar.to-order{background:var(--s1)}.gantt-bar.ordered{background:var(--s2)}.gantt-bar.arrived{background:var(--s3);color:#1c1c1e}.gantt-bar.configured{background:var(--s4)}.gantt-bar.tested{background:var(--s5);color:#1c1c1e}.gantt-bar.installed{background:var(--s6)}.gantt-bar.asm-bar{background:var(--accent)}
-.ai-modal{max-width:560px}
-.ai-tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--bg);padding:4px;border-radius:8px}
-.ai-tab{flex:1;padding:8px 12px;background:transparent;border:none;border-radius:6px;font-size:11px;font-weight:500;color:var(--text2);cursor:pointer;transition:all .15s}
-.ai-tab:hover{color:var(--text)}
-.ai-tab.active{background:var(--bg3);color:var(--text)}
-.ai-content{min-height:200px}
+.ai-modal{max-width:720px;width:95vw}
 .ai-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:var(--text2)}
 .ai-loading-spinner{width:32px;height:32px;border:3px solid var(--bg4);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:12px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -300,8 +288,31 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .modal-popover .notify-btn{width:100%;padding:8px;font-size:11px;margin-top:4px}
 
 /* AI popover specific */
-.ai-popover{width:360px;max-width:calc(100vw - 32px)}
-.ai-popover .modal-body{padding:10px 14px;max-height:400px;overflow-y:auto}
+.ai-popover{width:680px;max-width:calc(100vw - 32px)}
+.ai-popover .modal-body{padding:0;display:flex;flex-direction:column;max-height:75vh}
+.ai-popover .modal-head{display:flex;align-items:center;gap:12px}
+.ai-popover .modal-title{flex:1}
+.ai-model-badge{font-size:9px;color:var(--text3);font-family:monospace;background:var(--bg);padding:3px 8px;border-radius:4px}
+.ai-content{flex:1;overflow-y:auto;padding:16px 20px;min-height:200px}
+.ai-welcome{color:var(--text2);font-size:13px;line-height:1.7}
+.ai-welcome p{margin:0}
+.ai-prose{font-size:13px;line-height:1.8;color:var(--text)}
+.ai-prose p{margin-bottom:12px}
+.ai-prose p:last-child{margin-bottom:0}
+.ai-part-link{color:var(--accent);cursor:pointer;border-bottom:1px dotted var(--accent)}
+.ai-part-link:hover{color:var(--text);border-bottom-color:var(--text)}
+.ai-asm-link{color:var(--cyan);cursor:pointer;border-bottom:1px dotted var(--cyan)}
+.ai-asm-link:hover{color:var(--text);border-bottom-color:var(--text)}
+.ai-input-row{display:flex;gap:8px;padding:16px 20px;border-top:1px solid var(--border);background:var(--bg3);border-radius:0 0 12px 12px}
+.ai-input-row input{flex:1;padding:10px 14px;font-size:13px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text)}
+.ai-input-row input:focus{outline:none;border-color:var(--accent)}
+.ai-input-row .btn{padding:10px 16px;white-space:nowrap}
+.btn-straight{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white}
+.btn-straight:hover{filter:brightness(1.1)}
+.ai-conversation{display:flex;flex-direction:column;gap:12px}
+.ai-message{padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.7}
+.ai-message.user{background:var(--accent);color:white;align-self:flex-end;max-width:85%;border-bottom-right-radius:4px}
+.ai-message.assistant{background:var(--bg);align-self:flex-start;max-width:100%;border-bottom-left-radius:4px}
 .modal{background:var(--bg2);width:100%;max-width:400px;max-height:85vh;overflow-y:auto;border-radius:16px;border:none;box-shadow:0 16px 48px rgba(0,0,0,.25);-webkit-overflow-scrolling:touch}
 .modal-head{padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
 .modal-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;letter-spacing:-0.2px}
@@ -510,7 +521,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
   .hm-progress{min-width:140px}
   .hm-bar{width:80px}
   .header-search{width:180px}
-  .ai-alert{max-width:200px;padding:6px 10px}
+  .ai-insights-btn{padding:6px 10px;font-size:11px}
 }
 
 /* Mobile styles */
@@ -520,7 +531,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
   .logo{min-width:60px;max-width:100px;font-size:14px}
   .header-search{display:none}
   .header-metrics{display:none}
-  .ai-alert{display:none}
+  .ai-insights-btn{display:none}
   .header-spacer{display:none}
   .header-btns .btn span{display:none}
   .header-btns .btn{padding:0 10px;min-width:36px;justify-content:center}
@@ -666,7 +677,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 
 <header class="header">
 <div class="logo" id="projectName">EBS v2</div>
-<div class="ai-alert good" id="aiAlert" title="Click for AI insights"><div class="ai-icon">✓</div><div class="ai-text"><span class="ai-label">AI</span><span id="aiAlertText">All systems nominal</span></div></div>
+<button class="ai-insights-btn" id="aiAlert" title="AI Insights"><span class="ai-insights-dot"></span>AI Insights</button>
 <div class="header-spacer"></div>
 <div class="online-badge"><div class="online-dot"></div><span id="onlineCount">1 online</span><div class="online-hover" id="onlineHover"><div id="onlineUserList"></div></div></div>
 <div class="header-spacer"></div>
@@ -681,7 +692,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 <button class="btn" id="themeBtn">🎨</button>
 <button class="btn btn-report" id="reportBtn">📋 <span>Report</span></button>
 <div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-item" id="itemConfigBtn">Item Code Config</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Reset to Sample Data</div><div class="dropdown-div"></div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
-<div class="version-badge">v1.0.1</div>
+<div class="version-badge">v1.0.2</div>
 </div>
 </header>
 <main class="main">
@@ -719,7 +730,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 </div>
 </div>
 </main>
-<div class="modal-popover ai-popover ai-modal" id="aiModal"><div class="modal-head"><span class="modal-title"><span style="color:var(--purple)">🤖</span> AI Insights</span><button class="modal-close" id="aiClose">×</button></div><div class="modal-body"><div class="ai-tabs"><button class="ai-tab active" data-mode="quick">Quick Check</button><button class="ai-tab" data-mode="standup">Daily Standup</button><button class="ai-tab" data-mode="risks">Risk Analysis</button></div><div class="ai-content" id="aiContent"><div class="ai-insights-list" id="aiInsightsList"></div></div><div class="ai-timestamp" id="aiTimestamp"></div></div><div class="modal-foot"><button class="btn" id="aiRefresh">↻ Refresh</button><button class="btn" id="aiDone">Close</button></div></div>
+<div class="modal-popover ai-popover ai-modal" id="aiModal"><div class="modal-head"><span class="modal-title"><span style="color:var(--purple)">🤖</span> AI Insights</span><span class="ai-model-badge" id="aiModelBadge"></span><button class="modal-close" id="aiClose">×</button></div><div class="modal-body"><div class="ai-content" id="aiContent"><div class="ai-welcome"><p>Ask me anything about your project, or click <strong>Give it to me straight</strong> for an honest assessment.</p></div></div><div class="ai-input-row"><input type="text" id="aiQuestion" placeholder="Ask about your project..."><button class="btn btn-primary" id="aiAskBtn">Ask</button><button class="btn btn-straight" id="aiStraightBtn">Give it to me straight</button></div></div></div>
 <div class="modal-bg" id="reportModal"><div class="modal report-modal"><div class="modal-head"><span class="modal-title">📋 Daily Report</span><button class="modal-close" id="reportClose">×</button></div><div class="modal-body"><div class="report-meta"><span id="reportDate"></span><span id="reportRecipients"></span></div><div class="report-content" id="reportContent"></div></div><div class="modal-foot"><button class="btn" id="reportCopy">📋 Copy</button><button class="btn btn-primary" id="reportEmail">✉️ Email Team</button></div></div></div>
 <div class="modal-bg" id="etaModal"><div class="modal eta-modal"><div class="modal-head"><span class="modal-title">📅 Expected Arrival</span><button class="modal-close" id="etaClose">×</button></div><div class="modal-body"><div id="etaPartName" style="font-weight:600;margin-bottom:8px"></div><div id="etaCode" style="font-size:10px;color:var(--text3);margin-bottom:12px"></div><div class="eta-history" id="etaHistory"></div><div class="field"><label class="field-label">Expected Arrival Date</label><input type="date" class="field-input" id="etaDateInput"></div></div><div class="modal-foot"><button class="btn" id="etaClear">Clear</button><button class="btn btn-primary" id="etaSave">Save</button></div></div></div>
 <div class="modal-bg" id="bomModal"><div class="modal bom-modal"><div class="modal-head"><span class="modal-title" id="bomTitle">💾 Save Specification</span><button class="modal-close" id="bomClose">×</button></div><div class="modal-body"><div class="field" id="bomNameField"><label class="field-label">Specification Name</label><input type="text" class="field-input" id="bomName" placeholder="e.g. Standard Control Panel"></div><div class="bom-list" id="bomList"></div></div><div class="modal-foot"><button class="btn" id="bomCancel">Cancel</button><button class="btn btn-primary" id="bomSave">Save</button></div></div></div>
@@ -1140,6 +1151,57 @@ function createSampleData(){
   const end=new Date();end.setDate(end.getDate()+45);
   projectDates={start:start.toISOString().split('T')[0],end:end.toISOString().split('T')[0]};
   
+  // Notes and comments to add context
+  const partNotes={
+    'Robot Stand':'Custom fabrication - drawings sent to vendor Dec 15. Waiting for quote approval.',
+    'Safety PLC':'Need to confirm safety category requirements with customer before ordering.',
+    'Light Curtain 600mm':'Check if 600mm is sufficient - customer mentioned possible layout change.',
+    'Robot Arm 6-Axis':'Long lead item - Fanuc quoted 3-4 weeks. December shipments may be delayed.',
+    'Hydraulic Power Unit':'15HP unit is special order. Standard is 10HP. Confirm with engineering.',
+    '2D Camera':'Keyence rep suggested newer model CV-X series. Waiting for comparison specs.',
+    'Vision Camera':'Cognex recommended In-Sight 2800 instead. Need to validate.',
+    'Air Compressor 7.5HP':'Verify if existing plant air can be used instead.',
+    'Main Breaker 400A':'Electrician needs to confirm panel space before ordering.'
+  };
+  
+  const partComments={
+    'Robot Arm 6-Axis':[
+      {text:'Fanuc confirmed delivery for Jan 15',ts:now-3*day,author:'John'},
+      {text:'Need to book installation training - 2 days required',ts:now-day,author:'Marisa'}
+    ],
+    'Light Curtain 600mm':[
+      {text:'Sick says 10 days lead time, not 7 as quoted',ts:now-5*day,author:'Sarah'},
+      {text:'Ordered backup from Banner in case Sick is late',ts:now-2*day,author:'Marisa'}
+    ],
+    'Safety PLC':[
+      {text:'Customer confirmed Cat 3 PLd is sufficient',ts:now-2*day,author:'Mike'}
+    ],
+    'Robot Stand':[
+      {text:'Vendor asking for 50% deposit before starting fabrication',ts:now-4*day,author:'John'},
+      {text:'Approved by finance - PO going out today',ts:now-day,author:'Marisa'}
+    ],
+    'Servo Motor 3kW':[
+      {text:'Wrong model delivered - returning for replacement',ts:now-2*day,author:'Sarah'}
+    ],
+    'PLC CPU S7-1500':[
+      {text:'Firmware needs to be V2.9 or higher for safety integration',ts:now-6*day,author:'Mike'}
+    ],
+    'HMI Panel 15"':[
+      {text:'Customer wants additional screens added - change request pending',ts:now-3*day,author:'John'}
+    ],
+    'Hydraulic Power Unit':[
+      {text:'Bosch Rexroth quoted 14 days - faster than Parker',ts:now-5*day,author:'Mike'},
+      {text:'Oil cooler sizing needs verification with thermal calc',ts:now-2*day,author:'John'}
+    ],
+    '2D Camera':[
+      {text:'Keyence demo went well. Proceeding with CV-X420 model',ts:now-4*day,author:'Sarah'},
+      {text:'Need to order calibration target separately',ts:now-day,author:'Sarah'}
+    ],
+    'Gripper Assembly':[
+      {text:'Schunk can do 5 day delivery if we pay express freight',ts:now-3*day,author:'Marisa'}
+    ]
+  };
+  
   const partTemplates=[
     {asm:'Main Control Panel',parts:[{name:'PLC CPU S7-1500',code:'6ES7-1500',mfr:'Siemens'},{name:'HMI Panel 15"',code:'HMI-TP1500',mfr:'Siemens'},{name:'PSU 24V 40A',code:'PSU-24-40',mfr:'Mean Well'},{name:'DI Module 32pt',code:'IO-DI-32',mfr:'Siemens'},{name:'DO Module 32pt',code:'IO-DO-32',mfr:'Siemens'},{name:'AI Module 8ch',code:'IO-AI-8',mfr:'Siemens'},{name:'AO Module 4ch',code:'IO-AO-4',mfr:'Siemens'},{name:'Profinet Switch',code:'PN-SW-8',mfr:'Scalance'},{name:'UPS System',code:'UPS-3KVA',mfr:'APC'},{name:'Panel Cooler',code:'PC-500W',mfr:'Rittal'}]},
     {asm:'Conveyor Line 1',parts:[{name:'Servo Motor 3kW',code:'SM-3KW-01',mfr:'Yaskawa'},{name:'Servo Drive',code:'SD-3KW-01',mfr:'Yaskawa'},{name:'Gearbox 15:1',code:'GB-15-1',mfr:'SEW'},{name:'Timing Belt',code:'TB-500',mfr:'Gates'},{name:'Conveyor Frame',code:'CF-3M',mfr:'Bosch'},{name:'Guide Rails',code:'GR-3M',mfr:'Bosch'},{name:'Proximity Sensors x4',code:'PS-IND-4',mfr:'IFM'},{name:'Photo Eyes x2',code:'PE-RET-2',mfr:'Banner'},{name:'Motor Cable 15m',code:'MC-15M',mfr:'Lapp'},{name:'Encoder Cable',code:'EC-10M',mfr:'Lapp'}]},
@@ -1187,7 +1249,11 @@ function createSampleData(){
         }
       }
       
-      data.push({id:partId,name:p.name,code:p.code,mfr:p.mfr,qty:Math.ceil(Math.random()*3),assignee:partAssignee,parentId:asmId,status:statuses[statusIdx],changedAt:now-Math.floor(Math.random()*14)*day,orderedAt,arrivedAt,expectedArrival});
+      // Add notes and comments
+      const notes=partNotes[p.name]||'';
+      const comments=partComments[p.name]||[];
+      
+      data.push({id:partId,name:p.name,code:p.code,mfr:p.mfr,qty:Math.ceil(Math.random()*3),assignee:partAssignee,parentId:asmId,status:statuses[statusIdx],changedAt:now-Math.floor(Math.random()*14)*day,orderedAt,arrivedAt,expectedArrival,notes,comments:comments.length?comments:undefined});
     });
   });
 
@@ -1204,14 +1270,19 @@ function createSampleData(){
 
   const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
   const nextWeek=new Date();nextWeek.setDate(nextWeek.getDate()+7);
+  const twoDaysAgo=new Date();twoDaysAgo.setDate(twoDaysAgo.getDate()-2);
   const inTwoDays=new Date();inTwoDays.setDate(inTwoDays.getDate()+2);
+  const inFourDays=new Date();inFourDays.setDate(inFourDays.getDate()+4);
   
   actions=[
     {id:now+1,task:'Order remaining pneumatic components',linkedPartId:null,due:yesterday.toISOString().split('T')[0],assignee:'Marisa',status:'not-started',createdAt:new Date(now-7*day).toISOString().split('T')[0]},
-    {id:now+2,task:'Complete safety system certification',linkedPartId:null,due:nextWeek.toISOString().split('T')[0],assignee:'Marisa',status:'in-progress',createdAt:new Date(now-5*day).toISOString().split('T')[0]},
-    {id:now+3,task:'Review robot cell integration plan',linkedPartId:null,due:inTwoDays.toISOString().split('T')[0],assignee:'Marisa',status:'not-started',createdAt:new Date(now-3*day).toISOString().split('T')[0]},
-    {id:now+4,task:'Schedule hydraulic system commissioning',linkedPartId:null,due:nextWeek.toISOString().split('T')[0],assignee:'John',status:'not-started',createdAt:new Date(now-5*day).toISOString().split('T')[0]},
-    {id:now+5,task:'Verify vision camera calibration',linkedPartId:null,due:inTwoDays.toISOString().split('T')[0],assignee:'Sarah',status:'in-progress',createdAt:new Date(now-7*day).toISOString().split('T')[0]}
+    {id:now+2,task:'Complete safety system certification docs',linkedPartId:null,due:nextWeek.toISOString().split('T')[0],assignee:'Mike',status:'in-progress',createdAt:new Date(now-5*day).toISOString().split('T')[0]},
+    {id:now+3,task:'Follow up with Fanuc on robot delivery',linkedPartId:null,due:inTwoDays.toISOString().split('T')[0],assignee:'John',status:'not-started',createdAt:new Date(now-3*day).toISOString().split('T')[0]},
+    {id:now+4,task:'Get deposit approval for Robot Stand fabrication',linkedPartId:null,due:twoDaysAgo.toISOString().split('T')[0],assignee:'Marisa',status:'completed',createdAt:new Date(now-5*day).toISOString().split('T')[0]},
+    {id:now+5,task:'Schedule hydraulic system commissioning',linkedPartId:null,due:nextWeek.toISOString().split('T')[0],assignee:'John',status:'not-started',createdAt:new Date(now-5*day).toISOString().split('T')[0]},
+    {id:now+6,task:'Review customer change request for HMI screens',linkedPartId:null,due:inFourDays.toISOString().split('T')[0],assignee:'Sarah',status:'in-progress',createdAt:new Date(now-2*day).toISOString().split('T')[0]},
+    {id:now+7,task:'Confirm Sick light curtain lead time',linkedPartId:null,due:yesterday.toISOString().split('T')[0],assignee:'Sarah',status:'completed',createdAt:new Date(now-4*day).toISOString().split('T')[0]},
+    {id:now+8,task:'Order calibration target for Keyence camera',linkedPartId:null,due:inTwoDays.toISOString().split('T')[0],assignee:'Sarah',status:'not-started',createdAt:new Date(now-1*day).toISOString().split('T')[0]}
   ];
 
   leadTimeDb={
@@ -1860,6 +1931,7 @@ let currentAIMode='quick';
 let aiCache={quick:null,standup:null,risks:null};
 let aiCacheTime={quick:0,standup:0,risks:0};
 const AI_CACHE_TTL=60000; // 1 minute cache
+let aiConversation=[];
 
 function buildProjectContext(){
   const parts=getParts();
@@ -1871,30 +1943,52 @@ function buildProjectContext(){
   const byStatus={};
   STAGES.forEach(s=>byStatus[s]=parts.filter(p=>p.status===s).length);
   
-  // Stuck parts (>5 days in same status)
-  const stuck=parts.filter(p=>p.changedAt&&(now-p.changedAt)>5*day).map(p=>({
-    name:p.name,
-    code:p.code||'',
-    mfr:p.mfr||'',
-    status:p.status,
-    days:Math.floor((now-p.changedAt)/day)
+  // Stuck parts (>5 days in same status) with notes
+  const stuck=parts.filter(p=>p.changedAt&&(now-p.changedAt)>5*day).map(p=>{
+    const asm=asms.find(a=>a.id===p.parentId);
+    return {
+      id:p.id,
+      name:p.name,
+      code:p.code||'',
+      mfr:p.mfr||'',
+      status:p.status,
+      days:Math.floor((now-p.changedAt)/day),
+      assembly:asm?.name||'',
+      notes:p.notes||'',
+      lastComment:p.comments?.length?p.comments[p.comments.length-1].text:''
+    };
+  }).sort((a,b)=>b.days-a.days);
+  
+  // All actions with details
+  const allActions=actions.map(a=>({
+    task:a.task,
+    status:a.status,
+    due:a.due,
+    assignee:a.assignee||'Unassigned',
+    isOverdue:a.status!=='completed'&&a.due&&a.due<today,
+    daysOverdue:a.due&&a.due<today?Math.floor((new Date(today)-new Date(a.due))/day):0,
+    linkedPartId:a.linkedPartId
   }));
   
   // Overdue actions
-  const overdue=actions.filter(a=>a.status!=='completed'&&a.due&&a.due<today).map(a=>({
-    task:a.task,
-    due:a.due,
-    assignee:a.assignee||'Unassigned',
-    daysOverdue:Math.floor((new Date(today)-new Date(a.due))/day)
-  }));
+  const overdue=allActions.filter(a=>a.isOverdue);
   
   // Upcoming actions (next 7 days)
   const nextWeek=new Date(now+7*day).toISOString().split('T')[0];
-  const upcoming=actions.filter(a=>a.status!=='completed'&&a.due&&a.due>=today&&a.due<=nextWeek).map(a=>({
-    task:a.task,
-    due:a.due,
-    assignee:a.assignee||'Unassigned'
-  }));
+  const upcoming=allActions.filter(a=>a.status!=='completed'&&a.due&&a.due>=today&&a.due<=nextWeek);
+  
+  // Parts with notes or comments
+  const partsWithNotes=parts.filter(p=>p.notes||p.comments?.length).map(p=>{
+    const asm=asms.find(a=>a.id===p.parentId);
+    return {
+      id:p.id,
+      name:p.name,
+      status:p.status,
+      assembly:asm?.name||'',
+      notes:p.notes||'',
+      comments:p.comments?.map(c=>c.text)||[]
+    };
+  });
   
   // Supplier stats from lead time DB
   const suppliers=[];
@@ -1915,39 +2009,64 @@ function buildProjectContext(){
   const recentComments=[];
   parts.forEach(p=>{
     if(p.comments){
-      p.comments.filter(c=>(now-c.ts)<7*day).forEach(c=>{
-        recentComments.push({partName:p.name,partCode:p.code||'',text:c.text,date:new Date(c.ts).toLocaleDateString()});
+      p.comments.filter(c=>(now-(c.ts||c.timestamp))<7*day).forEach(c=>{
+        recentComments.push({partName:p.name,partId:p.id,text:c.text,date:new Date(c.ts||c.timestamp).toLocaleDateString()});
       });
     }
   });
   
-  // Assembly progress
-  const asmProgress=asms.map(a=>({
-    name:a.name,
-    progress:calcAsmProgress(a.id),
-    parts:parts.filter(p=>p.parentId===a.id).length
-  })).sort((a,b)=>a.progress-b.progress);
+  // Assembly progress with details
+  const asmProgress=asms.map(a=>{
+    const asmParts=parts.filter(p=>p.parentId===a.id);
+    const installed=asmParts.filter(p=>p.status==='installed').length;
+    return {
+      id:a.id,
+      name:a.name,
+      progress:calcAsmProgress(a.id),
+      total:asmParts.length,
+      installed,
+      stuck:asmParts.filter(p=>p.changedAt&&(now-p.changedAt)>5*day).length
+    };
+  }).sort((a,b)=>a.progress-b.progress);
+  
+  // Critical path - lowest progress assemblies blocking completion
+  const criticalPath=asmProgress.filter(a=>a.progress<50).slice(0,3);
+  
+  // Calculate math
+  const totalParts=parts.length;
+  const installedParts=byStatus.installed||0;
+  const remainingParts=totalParts-installedParts;
+  const velocity=getVelocity();
+  const daysLeft=getDaysRemaining();
+  const daysNeeded=velocity&&velocity>0?Math.ceil(remainingParts/velocity):null;
+  const buffer=daysLeft&&daysNeeded?(daysLeft-daysNeeded):null;
   
   return {
     project:{
       name:currentProjectName,
       progress:calcOverallProgress(),
-      velocity:getVelocity(),
-      daysLeft:getDaysRemaining(),
+      velocity,
+      daysLeft,
+      daysNeeded,
+      buffer,
       startDate:projectDates.start,
       endDate:projectDates.end
     },
     counts:{
-      total:parts.length,
+      total:totalParts,
+      remaining:remainingParts,
       assemblies:asms.length,
       ...byStatus
     },
-    stuck:stuck.slice(0,15),
+    stuck:stuck.slice(0,20),
     overdue,
     upcoming,
+    allActions:allActions.slice(0,15),
+    partsWithNotes:partsWithNotes.slice(0,15),
     suppliers:suppliers.filter(s=>s.count>=2).slice(0,10),
-    recentComments:recentComments.slice(0,10),
+    recentComments:recentComments.slice(0,15),
     asmProgress:asmProgress.slice(0,10),
+    criticalPath,
     forecast:getVelocityForecast()
   };
 }
@@ -1969,76 +2088,89 @@ function getVelocity(){
   return Math.round(partsPerDay*10)/10;
 }
 
-async function generateAIReport(mode){
+async function generateAIReport(mode,question){
   const context=buildProjectContext();
   
   // Quick mode uses local generation (instant, no API call)
   if(mode==='quick'){
+    $('aiModelBadge').textContent='';
     return generateLocalReport(mode,context);
   }
   
-  // Standup and Risks use Claude via Cloud Function
+  // AI modes use Claude via Cloud Function
   try{
     console.log('Calling Cloud Function for mode:',mode);
     const generateInsights=firebase.functions().httpsCallable('generateInsights');
-    const result=await generateInsights({mode,projectContext:context});
+    const payload={mode,projectContext:context};
+    if(question)payload.question=question;
+    
+    const result=await generateInsights(payload);
     console.log('Cloud Function response:',result.data);
     
     if(result.data?.success){
-      return '<div class="ai-source">✨ Generated by Claude</div>'+formatClaudeResponse(result.data.content,mode);
+      $('aiModelBadge').textContent='claude-3-haiku';
+      return formatClaudeResponse(result.data.content,mode);
     }else{
       throw new Error('No response');
     }
   }catch(e){
     console.error('Cloud function failed:',e);
-    // Fallback to local generation
-    return '<div class="ai-source">📊 Local analysis (API unavailable)</div>'+generateLocalReport(mode,context);
+    $('aiModelBadge').textContent='offline';
+    return '<div class="ai-prose"><p>Unable to connect to AI service. Please try again.</p></div>';
   }
 }
 
 function formatClaudeResponse(text,mode){
-  // Parse Claude's response into HTML
-  const lines=text.trim().split('\n');
-  let html='<div class="ai-report">';
-  let inSection=false;
+  // Make part references clickable: [[Part Name]] -> link
+  let html=text;
   
-  const sectionIcons={
-    'BLOCKERS':'🔴','ATTENTION':'🟡','FOCUS':'🎯',
-    'SCHEDULE':'📊','SUPPLIERS':'🚚','ASSEMBLIES':'⚠️','ACTIONS':'🛡️',
-    'RISKS':'⚠️','MITIGATIONS':'✅'
-  };
+  // Escape HTML first
+  html=esc(html);
   
-  const sectionLevels={
-    'BLOCKERS':'critical','ATTENTION':'warning','FOCUS':'success',
-    'SCHEDULE':'info','SUPPLIERS':'warning','ASSEMBLIES':'warning','ACTIONS':'success'
-  };
-  
-  lines.forEach(line=>{
-    const trimmed=line.trim();
-    if(!trimmed)return;
-    
-    // Check if it's a section header
-    const headerMatch=trimmed.match(/^([A-Z]{3,})/);
-    if(headerMatch&&sectionIcons[headerMatch[1]]){
-      if(inSection)html+='</div></div>';
-      const section=headerMatch[1];
-      html+='<div class="ai-report-section"><div class="ai-report-header"><span class="ai-report-header-icon">'+sectionIcons[section]+'</span> '+section.charAt(0)+section.slice(1).toLowerCase()+'</div><div class="ai-report-items">';
-      inSection=true;
-    }else if(trimmed.startsWith('-')||trimmed.startsWith('•')||trimmed.match(/^\d+\./)){
-      // Bullet point
-      const text=trimmed.replace(/^[-•]\s*/,'').replace(/^\d+\.\s*/,'');
-      const level=inSection?'info':'info';
-      html+='<div class="ai-report-item '+level+'"><span class="ai-report-bullet">•</span><div class="ai-report-text">'+esc(text)+'</div></div>';
-    }else if(inSection){
-      // Regular text in section
-      html+='<div class="ai-report-item info"><span class="ai-report-bullet">•</span><div class="ai-report-text">'+esc(trimmed)+'</div></div>';
+  // Replace [[Part Name]] with clickable links
+  html=html.replace(/\[\[([^\]]+)\]\]/g,(match,partName)=>{
+    const part=getParts().find(p=>p.name.toLowerCase()===partName.toLowerCase());
+    if(part){
+      return '<span class="ai-part-link" onclick="window.goToPart('+part.id+')">'+partName+'</span>';
     }
+    return partName;
   });
   
-  if(inSection)html+='</div></div>';
-  html+='</div>';
+  // Replace {{Assembly Name}} with clickable links  
+  html=html.replace(/\{\{([^\}]+)\}\}/g,(match,asmName)=>{
+    const asm=getAsms().find(a=>a.name.toLowerCase()===asmName.toLowerCase());
+    if(asm){
+      return '<span class="ai-asm-link" onclick="window.goToAsm('+asm.id+')">'+asmName+'</span>';
+    }
+    return asmName;
+  });
+  
+  // Convert newlines to paragraphs
+  const paragraphs=html.split(/\n\n+/).filter(p=>p.trim());
+  html='<div class="ai-prose">'+paragraphs.map(p=>'<p>'+p.replace(/\n/g,' ')+'</p>').join('')+'</div>';
   
   return html;
+}
+
+async function askAI(question){
+  const context=buildProjectContext();
+  
+  try{
+    $('aiModelBadge').textContent='thinking...';
+    const generateInsights=firebase.functions().httpsCallable('generateInsights');
+    const result=await generateInsights({mode:'ask',projectContext:context,question});
+    
+    if(result.data?.success){
+      $('aiModelBadge').textContent='claude-3-haiku';
+      return formatClaudeResponse(result.data.content,'ask');
+    }else{
+      throw new Error('No response');
+    }
+  }catch(e){
+    console.error('Ask failed:',e);
+    $('aiModelBadge').textContent='offline';
+    return '<div class="ai-prose"><p>Unable to get response. Please try again.</p></div>';
+  }
 }
 
 function generateLocalReport(mode,ctx){
@@ -2179,39 +2311,66 @@ function renderQuickInsights(){
   return insights.map((ins,i)=>'<div class="ai-insight '+ins.level+'" data-idx="'+i+'"><div class="ai-insight-icon">'+ins.icon+'</div><div class="ai-insight-content"><div class="ai-insight-title">'+ins.title+'</div><div class="ai-insight-desc">'+ins.desc+'</div>'+(ins.action?'<div class="ai-insight-action">'+ins.action+'</div>':'')+'</div></div>').join('');
 }
 
-function renderAIModal(mode){
-  mode=mode||currentAIMode;
-  currentAIMode=mode;
-  
-  // Update tab state
-  document.querySelectorAll('.ai-tab').forEach(t=>t.classList.toggle('active',t.dataset.mode===mode));
-  
-  // Check cache
-  const now=Date.now();
-  if(aiCache[mode]&&(now-aiCacheTime[mode])<AI_CACHE_TTL){
-    $('aiContent').innerHTML=aiCache[mode];
-    $('aiTimestamp').textContent='Updated '+new Date(aiCacheTime[mode]).toLocaleTimeString();
-    bindQuickInsightHandlers();
-    return;
+function openAIModal(){
+  showPopoverModal($('aiModal'),$('aiAlert'));
+  if(aiConversation.length===0){
+    $('aiContent').innerHTML='<div class="ai-welcome"><p>Ask me anything about your project, or click <strong>Give it to me straight</strong> for an honest assessment.</p></div>';
+    $('aiModelBadge').textContent='';
+  }else{
+    renderConversation();
   }
+  $('aiQuestion').focus();
+}
+
+function renderConversation(){
+  let html='<div class="ai-conversation">';
+  aiConversation.forEach(msg=>{
+    html+='<div class="ai-message '+msg.role+'">'+msg.content+'</div>';
+  });
+  html+='</div>';
+  $('aiContent').innerHTML=html;
+  // Scroll to bottom
+  const content=$('aiContent');
+  content.scrollTop=content.scrollHeight;
+}
+
+async function handleAskSubmit(){
+  const input=$('aiQuestion');
+  const question=input.value.trim();
+  if(!question)return;
   
-  // Show loading
-  $('aiContent').innerHTML='<div class="ai-loading"><div class="ai-loading-spinner"></div><div class="ai-loading-text">Analyzing project data...</div><div class="ai-loading-sub">This takes a moment</div></div>';
-  $('aiTimestamp').textContent='';
+  // Add user message
+  aiConversation.push({role:'user',content:esc(question)});
+  renderConversation();
+  input.value='';
   
-  // Generate report (simulated async for future LLM call)
-  setTimeout(async()=>{
-    try{
-      const html=await generateAIReport(mode);
-      aiCache[mode]=html;
-      aiCacheTime[mode]=Date.now();
-      $('aiContent').innerHTML=html;
-      $('aiTimestamp').textContent='Updated '+new Date().toLocaleTimeString();
-      bindQuickInsightHandlers();
-    }catch(e){
-      $('aiContent').innerHTML='<div class="ai-error"><div class="ai-error-icon">⚠️</div><div class="ai-error-msg">Failed to generate insights</div><button class="btn" onclick="renderAIModal()">Retry</button></div>';
-    }
-  },mode==='quick'?100:600);
+  // Add loading indicator
+  aiConversation.push({role:'assistant',content:'<span class="ai-loading-text">Thinking...</span>'});
+  renderConversation();
+  
+  // Get AI response
+  const response=await askAI(question);
+  
+  // Replace loading with actual response
+  aiConversation[aiConversation.length-1].content=response.replace(/<div class="ai-prose">|<\/div>/g,'').replace(/<p>/g,'').replace(/<\/p>/g,' ');
+  renderConversation();
+}
+
+async function handleStraight(){
+  // Add system indicator
+  aiConversation.push({role:'user',content:'Give it to me straight'});
+  renderConversation();
+  
+  // Add loading indicator
+  aiConversation.push({role:'assistant',content:'<span class="ai-loading-text">Reviewing your project...</span>'});
+  renderConversation();
+  
+  // Get AI response
+  const response=await generateAIReport('straight');
+  
+  // Replace loading with actual response
+  aiConversation[aiConversation.length-1].content=response.replace(/<div class="ai-prose">|<\/div>/g,'').replace(/<p>/g,'').replace(/<\/p>/g,' ');
+  renderConversation();
 }
 
 function bindQuickInsightHandlers(){
@@ -2576,10 +2735,11 @@ window.goToAsm=asmId=>{document.querySelectorAll('.tab').forEach(t=>t.classList.
 const closeModal=id=>$(id).classList.remove('open');
 
 // Event listeners
-$('aiAlert').onclick=(e)=>{renderAIModal('quick');showPopoverModal($('aiModal'),e.target.closest('button')||e.target)};
-$('aiClose').onclick=$('aiDone').onclick=()=>hidePopoverModal($('aiModal'));
-$('aiRefresh').onclick=()=>{aiCache={quick:null,standup:null,risks:null};renderAIModal(currentAIMode)};
-document.querySelectorAll('.ai-tab').forEach(tab=>{tab.onclick=()=>renderAIModal(tab.dataset.mode)});
+$('aiAlert').onclick=(e)=>{openAIModal()};
+$('aiClose').onclick=()=>hidePopoverModal($('aiModal'));
+$('aiAskBtn').onclick=handleAskSubmit;
+$('aiStraightBtn').onclick=handleStraight;
+$('aiQuestion').onkeydown=e=>{if(e.key==='Enter')handleAskSubmit()};
 
 $('reportBtn').onclick=()=>{const report=generateReport();$('reportContent').textContent=report;$('reportDate').textContent=new Date().toLocaleDateString();$('reportRecipients').textContent=team.length?'To: '+team.map(t=>t.name).join(', '):'No team';$('reportModal').classList.add('open')};
 $('reportClose').onclick=()=>closeModal('reportModal');
