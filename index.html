@@ -782,21 +782,24 @@ function initFirebaseListeners(){
   // Listen for main data changes
   projectRef.child('main').on('value',snapshot=>{
     const val=snapshot.val();
-    if(val){
+    console.log('Firebase data received:', val ? 'has data' : 'empty');
+    
+    if(val && val.data && val.data.length > 0){
+      // We have real data - use it
       data=val.data||[];
       team=val.team||[];
       history=val.history||[];
       projectDates=val.projectDates||{start:'',end:''};
       actions=val.actions||[];
-      currentProjectName=val.projectName||'New Project';
+      currentProjectName=val.projectName||'EBS Project';
       updateProjectName();
       render();
-    }else if(firstLoad){
-      // No data in Firebase yet - auto-load sample data
-      loadSample();
+    } else if(firstLoad){
+      // No data - initialize with sample data immediately
+      console.log('No data found, loading sample...');
+      initializeSampleData();
     }
     
-    // Only show sync on first load
     if(firstLoad){
       showSync('synced','Connected');
       setTimeout(()=>$('syncIndicator').classList.remove('active'),2000);
@@ -1458,6 +1461,93 @@ function generateReport(){
   return report;
 }
 
+// Initialize with sample data when Firebase is empty
+function initializeSampleData(){
+  const now=Date.now(),day=86400000;
+  
+  // Simple starter data
+  currentProjectName='Industrial Automation Project';
+  team=[
+    {name:'John',email:'john@company.com'},
+    {name:'Sarah',email:'sarah@company.com'},
+    {name:'Mike',email:'mike@company.com'},
+    {name:'Lisa',email:'lisa@company.com'}
+  ];
+  
+  const start=new Date();start.setDate(start.getDate()-7);
+  const end=new Date();end.setDate(end.getDate()+30);
+  projectDates={start:start.toISOString().split('T')[0],end:end.toISOString().split('T')[0]};
+  
+  data=[];
+  let id=1;
+  expanded={};
+  
+  // Create assemblies and parts
+  const assemblies=[
+    {name:'Main Control Panel',parts:['PLC CPU S7-1500','HMI Panel 15"','Power Supply 24V','IO Module DI-32','IO Module DO-32','Network Switch']},
+    {name:'Conveyor Line 1',parts:['Servo Motor 3kW','Servo Drive','Gearbox 15:1','Proximity Sensors x4','Safety Light Curtain','Motor Cable 15m']},
+    {name:'Robot Cell',parts:['Robot Arm 6-Axis','Robot Controller','Gripper Assembly','Vision Camera','Safety Scanner','Teach Pendant']},
+    {name:'Safety System',parts:['Safety PLC','E-Stop Stations x4','Door Interlock x2','Safety Relay Module','Reset Button x2']},
+    {name:'Pneumatic System',parts:['Air Compressor','FRL Unit','Solenoid Valves x8','Cylinders 50mm x4','Flow Controls x10']}
+  ];
+  
+  const statuses=['to-order','ordered','arrived','tested','installed'];
+  const mfrs=['Siemens','ABB','Festo','Fanuc','Bosch','SMC','Sick','IFM'];
+  
+  assemblies.forEach((asm,ai)=>{
+    const asmId=id++;
+    data.push({id:asmId,name:asm.name,isAsm:true,assignee:team[ai%team.length].name,priority:ai+1});
+    expanded[asmId]=true;
+    
+    asm.parts.forEach((partName,pi)=>{
+      const statusIdx=Math.floor(Math.random()*5);
+      const partId=id++;
+      let orderedAt,arrivedAt;
+      
+      if(statusIdx>=1){
+        orderedAt=now-Math.floor(Math.random()*15+5)*day;
+        if(statusIdx>=2){
+          arrivedAt=orderedAt+Math.floor(Math.random()*10+3)*day;
+          if(arrivedAt>now)arrivedAt=now-day;
+        }
+      }
+      
+      data.push({
+        id:partId,
+        name:partName,
+        code:'PART-'+(1000+partId),
+        mfr:mfrs[Math.floor(Math.random()*mfrs.length)],
+        qty:Math.ceil(Math.random()*3),
+        assignee:team[(ai+pi)%team.length].name,
+        parentId:asmId,
+        status:statuses[statusIdx],
+        changedAt:now-Math.floor(Math.random()*10)*day,
+        orderedAt,
+        arrivedAt
+      });
+    });
+  });
+  
+  history=[];
+  actions=[
+    {id:now+1,task:'Order remaining components',linkedPartId:null,due:new Date(now+3*day).toISOString().split('T')[0],assignee:'Mike',status:'in-progress',createdAt:new Date(now-2*day).toISOString().split('T')[0]},
+    {id:now+2,task:'Complete safety certification',linkedPartId:null,due:new Date(now+7*day).toISOString().split('T')[0],assignee:'Sarah',status:'not-started',createdAt:new Date(now-day).toISOString().split('T')[0]}
+  ];
+  
+  // Write to Firebase immediately
+  projectRef.child('main').set({
+    data,team,history,projectDates,actions,projectName:currentProjectName,
+    updatedAt:firebase.database.ServerValue.TIMESTAMP
+  }).then(()=>{
+    console.log('Sample data saved to Firebase');
+    updateProjectName();
+    render();
+  }).catch(e=>{
+    console.error('Failed to save sample data:',e);
+    toast('Failed to initialize data',true);
+  });
+}
+
 function loadSample(){
   const now=Date.now(),day=86400000;
   currentProjectName='Industrial Automation Line - Phase 2';
@@ -1794,7 +1884,7 @@ $('deleteModal').onclick=e=>{if(e.target.id==='deleteModal'){closeModal('deleteM
 $('menuBtn').onclick=e=>{e.stopPropagation();$('menuDrop').classList.toggle('open')};
 document.onclick=()=>$('menuDrop').classList.remove('open');
 
-$('sampleBtn').onclick=()=>{if(confirm('Load sample data? This will replace current data.'))loadSample()};
+$('sampleBtn').onclick=()=>{if(confirm('Reset to sample data? This will replace all current data.'))initializeSampleData()};
 
 $('expandToggle').onclick=()=>{
   const asms=getAsms();
