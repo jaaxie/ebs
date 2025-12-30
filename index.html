@@ -42,10 +42,9 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .header-search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:18px;height:18px;background:var(--bg4);border:none;border-radius:50%;color:var(--text3);font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center}
 .header-search-clear.visible{display:flex}
 .header-search-clear:hover{background:var(--text3);color:var(--bg)}
-.ai-insights-btn{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--bg3);border:none;border-radius:10px;cursor:pointer;font-size:12px;font-weight:500;color:var(--text);transition:all .2s;flex-shrink:0}
-.ai-insights-btn:hover{background:var(--bg4)}
-.ai-insights-dot{width:8px;height:8px;border-radius:50%;background:linear-gradient(135deg,#60a5fa,#3b82f6);box-shadow:0 0 8px rgba(59,130,246,0.5);animation:ai-pulse 2s ease-in-out infinite}
-@keyframes ai-pulse{0%,100%{box-shadow:0 0 8px rgba(59,130,246,0.5)}50%{box-shadow:0 0 12px rgba(59,130,246,0.8)}}
+.ai-console-btn{display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;background:transparent;border:none;border-radius:10px;cursor:pointer;font-size:14px;font-weight:400;color:var(--text);transition:all .15s;flex-shrink:0}
+.ai-console-btn:hover{background:rgba(255,255,255,0.06)}
+.ai-console-icon{width:26px;height:26px;border-radius:50%;background:#d4776b;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;font-weight:300;line-height:1}
 .header-spacer{flex:1}
 .header-metrics{display:flex;align-items:center;gap:8px}
 .hm{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg3);border-radius:10px}
@@ -222,7 +221,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .ai-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:var(--text2)}
 .ai-loading-spinner{width:32px;height:32px;border:3px solid var(--bg4);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ai-loading-text{font-size:12px;text-align:center}
+.ai-loading-text{font-size:14px;color:#888;font-style:italic}
 .ai-loading-sub{font-size:10px;color:var(--text3);margin-top:4px}
 .ai-report{font-size:12px;line-height:1.7}
 .ai-report-section{margin-bottom:16px}
@@ -287,32 +286,42 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .modal-popover .btn{padding:7px 14px;font-size:12px}
 .modal-popover .notify-btn{width:100%;padding:8px;font-size:11px;margin-top:4px}
 
-/* AI popover specific */
-.ai-popover{width:680px;max-width:calc(100vw - 32px)}
-.ai-popover .modal-body{padding:0;display:flex;flex-direction:column;max-height:75vh}
-.ai-popover .modal-head{display:flex;align-items:center;gap:12px}
-.ai-popover .modal-title{flex:1}
-.ai-model-badge{font-size:9px;color:var(--text3);font-family:monospace;background:var(--bg);padding:3px 8px;border-radius:4px}
-.ai-content{flex:1;overflow-y:auto;padding:16px 20px;min-height:200px}
-.ai-welcome{color:var(--text2);font-size:13px;line-height:1.7}
+/* AI popover specific - Claude UI style */
+.ai-popover{width:700px;max-width:calc(100vw - 32px);background:#2f2f2f;border:1px solid #3d3d3d;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.5)}
+.ai-popover .modal-body{padding:0;display:flex;flex-direction:column;max-height:70vh}
+.ai-popover .modal-head{display:flex;align-items:center;gap:12px;border-bottom:1px solid #3d3d3d;padding:16px 24px}
+.ai-popover .modal-title{flex:1;font-size:15px;font-weight:500;color:#e8e8e8}
+.ai-popover .modal-close{background:#3d3d3d;color:#999;width:32px;height:32px;font-size:18px}
+.ai-popover .modal-close:hover{background:#4d4d4d;color:#ccc}
+.ai-title-icon{color:#d4776b;font-size:14px;margin-right:4px}
+.ai-model-badge{font-size:11px;color:#777;font-family:-apple-system,system-ui,sans-serif;background:#3d3d3d;padding:5px 12px;border-radius:6px;font-weight:500}
+.ai-content{flex:1;overflow-y:auto;padding:24px;min-height:200px;background:#212121}
+.ai-welcome{color:#777;font-size:15px;line-height:1.7}
 .ai-welcome p{margin:0}
-.ai-prose{font-size:13px;line-height:1.8;color:var(--text)}
-.ai-prose p{margin-bottom:12px}
+.ai-welcome strong{color:#aaa;font-weight:600}
+.ai-prose{font-size:15px;line-height:1.8;color:#e0e0e0}
+.ai-prose p{margin-bottom:20px}
 .ai-prose p:last-child{margin-bottom:0}
-.ai-part-link{color:var(--accent);cursor:pointer;border-bottom:1px dotted var(--accent)}
-.ai-part-link:hover{color:var(--text);border-bottom-color:var(--text)}
-.ai-asm-link{color:var(--cyan);cursor:pointer;border-bottom:1px dotted var(--cyan)}
-.ai-asm-link:hover{color:var(--text);border-bottom-color:var(--text)}
-.ai-input-row{display:flex;gap:8px;padding:16px 20px;border-top:1px solid var(--border);background:var(--bg3);border-radius:0 0 12px 12px}
-.ai-input-row input{flex:1;padding:10px 14px;font-size:13px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text)}
-.ai-input-row input:focus{outline:none;border-color:var(--accent)}
-.ai-input-row .btn{padding:10px 16px;white-space:nowrap}
-.btn-straight{background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:white}
-.btn-straight:hover{filter:brightness(1.1)}
-.ai-conversation{display:flex;flex-direction:column;gap:12px}
-.ai-message{padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.7}
-.ai-message.user{background:var(--accent);color:white;align-self:flex-end;max-width:85%;border-bottom-right-radius:4px}
-.ai-message.assistant{background:var(--bg);align-self:flex-start;max-width:100%;border-bottom-left-radius:4px}
+.ai-part-link{color:#60a5fa;cursor:pointer;text-decoration:underline;text-decoration-color:rgba(96,165,250,0.4);text-underline-offset:3px;transition:all .15s}
+.ai-part-link:hover{color:#93c5fd;text-decoration-color:rgba(147,197,253,0.6)}
+.ai-asm-link{color:#2dd4bf;cursor:pointer;text-decoration:underline;text-decoration-color:rgba(45,212,191,0.4);text-underline-offset:3px;transition:all .15s}
+.ai-asm-link:hover{color:#5eead4;text-decoration-color:rgba(94,234,212,0.6)}
+.ai-input-row{display:flex;align-items:center;gap:12px;padding:16px 24px;border-top:1px solid #3d3d3d;background:#2f2f2f;border-radius:0 0 16px 16px}
+.ai-input-row input{flex:1;height:48px;padding:0 18px;font-size:15px;background:#212121;border:1px solid #3d3d3d;border-radius:12px;color:#e8e8e8;transition:border-color .15s}
+.ai-input-row input:focus{outline:none;border-color:#555}
+.ai-input-row input::placeholder{color:#666}
+.ai-input-row .btn{height:48px;padding:0 24px;font-size:14px;font-weight:500;border-radius:10px}
+.ai-input-row .btn:first-of-type{background:#3d3d3d;color:#ccc}
+.ai-input-row .btn:first-of-type:hover{background:#4a4a4a}
+.btn-tell{background:linear-gradient(135deg,#7c5cff 0%,#6366f1 100%);color:white;border:none}
+.btn-tell:hover{filter:brightness(1.1)}
+.ai-conversation{display:flex;flex-direction:column;gap:28px}
+.ai-message{font-size:15px;line-height:1.8}
+.ai-message.user{color:#888;font-size:14px}
+.ai-user-label{color:#60a5fa;font-weight:500}
+.ai-message.assistant{color:#e0e0e0}
+.ai-message.assistant p{margin:0 0 16px 0}
+.ai-message.assistant p:last-child{margin-bottom:0}
 .modal{background:var(--bg2);width:100%;max-width:400px;max-height:85vh;overflow-y:auto;border-radius:16px;border:none;box-shadow:0 16px 48px rgba(0,0,0,.25);-webkit-overflow-scrolling:touch}
 .modal-head{padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
 .modal-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;letter-spacing:-0.2px}
@@ -521,7 +530,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
   .hm-progress{min-width:140px}
   .hm-bar{width:80px}
   .header-search{width:180px}
-  .ai-insights-btn{padding:6px 10px;font-size:11px}
+  .ai-console-btn{padding:8px 14px;font-size:12px}
 }
 
 /* Mobile styles */
@@ -531,7 +540,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
   .logo{min-width:60px;max-width:100px;font-size:14px}
   .header-search{display:none}
   .header-metrics{display:none}
-  .ai-insights-btn{display:none}
+  .ai-console-btn{display:none}
   .header-spacer{display:none}
   .header-btns .btn span{display:none}
   .header-btns .btn{padding:0 10px;min-width:36px;justify-content:center}
@@ -677,7 +686,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 
 <header class="header">
 <div class="logo" id="projectName">EBS v2</div>
-<button class="ai-insights-btn" id="aiAlert" title="AI Insights"><span class="ai-insights-dot"></span>AI Insights</button>
+<button class="ai-console-btn" id="aiAlert" title="AI Console"><div class="ai-console-icon">+</div>AI Console</button>
 <div class="header-spacer"></div>
 <div class="online-badge"><div class="online-dot"></div><span id="onlineCount">1 online</span><div class="online-hover" id="onlineHover"><div id="onlineUserList"></div></div></div>
 <div class="header-spacer"></div>
@@ -730,7 +739,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 </div>
 </div>
 </main>
-<div class="modal-popover ai-popover ai-modal" id="aiModal"><div class="modal-head"><span class="modal-title"><span style="color:var(--purple)">🤖</span> AI Insights</span><span class="ai-model-badge" id="aiModelBadge"></span><button class="modal-close" id="aiClose">×</button></div><div class="modal-body"><div class="ai-content" id="aiContent"><div class="ai-welcome"><p>Ask me anything about your project, or click <strong>Give it to me straight</strong> for an honest assessment.</p></div></div><div class="ai-input-row"><input type="text" id="aiQuestion" placeholder="Ask about your project..."><button class="btn btn-primary" id="aiAskBtn">Ask</button><button class="btn btn-straight" id="aiStraightBtn">Give it to me straight</button></div></div></div>
+<div class="modal-popover ai-popover ai-modal" id="aiModal"><div class="modal-head"><span class="modal-title"><span class="ai-title-icon">✦</span> AI Console</span><span class="ai-model-badge" id="aiModelBadge"></span><button class="modal-close" id="aiClose">×</button></div><div class="modal-body"><div class="ai-content" id="aiContent"><div class="ai-welcome"><p>Ask any question about your project, or click <strong>Tell me</strong> for a status briefing.</p></div></div><div class="ai-input-row"><input type="text" id="aiQuestion" placeholder="Ask a question..."><button class="btn" id="aiAskBtn">Ask</button><button class="btn btn-tell" id="aiStraightBtn">Tell me</button></div></div></div>
 <div class="modal-bg" id="reportModal"><div class="modal report-modal"><div class="modal-head"><span class="modal-title">📋 Daily Report</span><button class="modal-close" id="reportClose">×</button></div><div class="modal-body"><div class="report-meta"><span id="reportDate"></span><span id="reportRecipients"></span></div><div class="report-content" id="reportContent"></div></div><div class="modal-foot"><button class="btn" id="reportCopy">📋 Copy</button><button class="btn btn-primary" id="reportEmail">✉️ Email Team</button></div></div></div>
 <div class="modal-bg" id="etaModal"><div class="modal eta-modal"><div class="modal-head"><span class="modal-title">📅 Expected Arrival</span><button class="modal-close" id="etaClose">×</button></div><div class="modal-body"><div id="etaPartName" style="font-weight:600;margin-bottom:8px"></div><div id="etaCode" style="font-size:10px;color:var(--text3);margin-bottom:12px"></div><div class="eta-history" id="etaHistory"></div><div class="field"><label class="field-label">Expected Arrival Date</label><input type="date" class="field-input" id="etaDateInput"></div></div><div class="modal-foot"><button class="btn" id="etaClear">Clear</button><button class="btn btn-primary" id="etaSave">Save</button></div></div></div>
 <div class="modal-bg" id="bomModal"><div class="modal bom-modal"><div class="modal-head"><span class="modal-title" id="bomTitle">💾 Save Specification</span><button class="modal-close" id="bomClose">×</button></div><div class="modal-body"><div class="field" id="bomNameField"><label class="field-label">Specification Name</label><input type="text" class="field-input" id="bomName" placeholder="e.g. Standard Control Panel"></div><div class="bom-list" id="bomList"></div></div><div class="modal-foot"><button class="btn" id="bomCancel">Cancel</button><button class="btn btn-primary" id="bomSave">Save</button></div></div></div>
@@ -1847,7 +1856,10 @@ function generateAIInsights(){
   return insights;
 }
 
-function updateAIAlert(){const insights=generateAIInsights();const top=insights[0];$('aiAlert').className='ai-alert '+top.level;$('aiAlertText').textContent=top.title;window._aiInsights=insights}
+function updateAIAlert(){
+  // Just generate insights for caching
+  window._aiInsights=generateAIInsights();
+}
 
 // ============================================
 // Event Logging for AI Learning
@@ -2108,7 +2120,7 @@ async function generateAIReport(mode,question){
     console.log('Cloud Function response:',result.data);
     
     if(result.data?.success){
-      $('aiModelBadge').textContent='claude-3-haiku';
+      $('aiModelBadge').textContent='haiku-4.5';
       return formatClaudeResponse(result.data.content,mode);
     }else{
       throw new Error('No response');
@@ -2121,7 +2133,6 @@ async function generateAIReport(mode,question){
 }
 
 function formatClaudeResponse(text,mode){
-  // Make part references clickable: [[Part Name]] -> link
   let html=text;
   
   // Escape HTML first
@@ -2131,7 +2142,7 @@ function formatClaudeResponse(text,mode){
   html=html.replace(/\[\[([^\]]+)\]\]/g,(match,partName)=>{
     const part=getParts().find(p=>p.name.toLowerCase()===partName.toLowerCase());
     if(part){
-      return '<span class="ai-part-link" onclick="window.goToPart('+part.id+')">'+partName+'</span>';
+      return '<a class="ai-part-link" href="#" onclick="window.aiGoToPart('+part.id+');return false;">'+partName+'</a>';
     }
     return partName;
   });
@@ -2140,17 +2151,61 @@ function formatClaudeResponse(text,mode){
   html=html.replace(/\{\{([^\}]+)\}\}/g,(match,asmName)=>{
     const asm=getAsms().find(a=>a.name.toLowerCase()===asmName.toLowerCase());
     if(asm){
-      return '<span class="ai-asm-link" onclick="window.goToAsm('+asm.id+')">'+asmName+'</span>';
+      return '<a class="ai-asm-link" href="#" onclick="window.aiGoToAsm('+asm.id+');return false;">'+asmName+'</a>';
     }
     return asmName;
   });
   
-  // Convert newlines to paragraphs
-  const paragraphs=html.split(/\n\n+/).filter(p=>p.trim());
-  html='<div class="ai-prose">'+paragraphs.map(p=>'<p>'+p.replace(/\n/g,' ')+'</p>').join('')+'</div>';
+  // Split into paragraphs - try double newlines first, then single
+  let paragraphs=html.split(/\n\n+/).filter(p=>p.trim());
+  if(paragraphs.length===1){
+    // No double newlines - split on sentence boundaries after 2+ sentences
+    const text=paragraphs[0];
+    const sentences=text.split(/(?<=[.!?])\s+(?=[A-Z])/);
+    if(sentences.length>3){
+      paragraphs=[];
+      for(let i=0;i<sentences.length;i+=3){
+        paragraphs.push(sentences.slice(i,i+3).join(' '));
+      }
+    }
+  }
+  
+  html='<div class="ai-prose">'+paragraphs.map(p=>'<p>'+p.replace(/\n/g,' ').trim()+'</p>').join('')+'</div>';
   
   return html;
 }
+
+// Navigation functions for AI links
+window.aiGoToPart=function(partId){
+  hidePopoverModal($('aiModal'));
+  const part=data.find(d=>d.id===partId);
+  if(part&&part.parentId){
+    expanded[part.parentId]=true;
+  }
+  render();
+  setTimeout(()=>{
+    const row=document.querySelector('[data-id="'+partId+'"]');
+    if(row){
+      row.scrollIntoView({behavior:'smooth',block:'center'});
+      row.style.background='rgba(99,102,241,0.2)';
+      setTimeout(()=>row.style.background='',2000);
+    }
+  },100);
+};
+
+window.aiGoToAsm=function(asmId){
+  hidePopoverModal($('aiModal'));
+  expanded[asmId]=true;
+  render();
+  setTimeout(()=>{
+    const row=document.querySelector('[data-id="'+asmId+'"]');
+    if(row){
+      row.scrollIntoView({behavior:'smooth',block:'center'});
+      row.style.background='rgba(99,102,241,0.2)';
+      setTimeout(()=>row.style.background='',2000);
+    }
+  },100);
+};
 
 async function askAI(question){
   const context=buildProjectContext();
@@ -2161,7 +2216,7 @@ async function askAI(question){
     const result=await generateInsights({mode:'ask',projectContext:context,question});
     
     if(result.data?.success){
-      $('aiModelBadge').textContent='claude-3-haiku';
+      $('aiModelBadge').textContent='haiku-4.5';
       return formatClaudeResponse(result.data.content,'ask');
     }else{
       throw new Error('No response');
@@ -2314,7 +2369,7 @@ function renderQuickInsights(){
 function openAIModal(){
   showPopoverModal($('aiModal'),$('aiAlert'));
   if(aiConversation.length===0){
-    $('aiContent').innerHTML='<div class="ai-welcome"><p>Ask me anything about your project, or click <strong>Give it to me straight</strong> for an honest assessment.</p></div>';
+    $('aiContent').innerHTML='<div class="ai-welcome"><p>Ask any question about your project, or click <strong>Tell me</strong> for a status briefing.</p></div>';
     $('aiModelBadge').textContent='';
   }else{
     renderConversation();
@@ -2325,7 +2380,11 @@ function openAIModal(){
 function renderConversation(){
   let html='<div class="ai-conversation">';
   aiConversation.forEach(msg=>{
-    html+='<div class="ai-message '+msg.role+'">'+msg.content+'</div>';
+    if(msg.role==='user'){
+      html+='<div class="ai-message user"><span class="ai-user-label">You:</span> '+msg.content+'</div>';
+    }else{
+      html+='<div class="ai-message assistant">'+msg.content+'</div>';
+    }
   });
   html+='</div>';
   $('aiContent').innerHTML=html;
@@ -2351,25 +2410,25 @@ async function handleAskSubmit(){
   // Get AI response
   const response=await askAI(question);
   
-  // Replace loading with actual response
-  aiConversation[aiConversation.length-1].content=response.replace(/<div class="ai-prose">|<\/div>/g,'').replace(/<p>/g,'').replace(/<\/p>/g,' ');
+  // Replace loading with actual response - preserve paragraph breaks
+  aiConversation[aiConversation.length-1].content=response.replace(/<div class="ai-prose">/g,'').replace(/<\/div>/g,'').replace(/<\/p>\s*<p>/g,'</p><p>');
   renderConversation();
 }
 
 async function handleStraight(){
   // Add system indicator
-  aiConversation.push({role:'user',content:'Give it to me straight'});
+  aiConversation.push({role:'user',content:'Tell me'});
   renderConversation();
   
   // Add loading indicator
-  aiConversation.push({role:'assistant',content:'<span class="ai-loading-text">Reviewing your project...</span>'});
+  aiConversation.push({role:'assistant',content:'<span class="ai-loading-text">Analyzing...</span>'});
   renderConversation();
   
   // Get AI response
   const response=await generateAIReport('straight');
   
-  // Replace loading with actual response
-  aiConversation[aiConversation.length-1].content=response.replace(/<div class="ai-prose">|<\/div>/g,'').replace(/<p>/g,'').replace(/<\/p>/g,' ');
+  // Replace loading with actual response - preserve paragraph breaks
+  aiConversation[aiConversation.length-1].content=response.replace(/<div class="ai-prose">/g,'').replace(/<\/div>/g,'').replace(/<\/p>\s*<p>/g,'</p><p>');
   renderConversation();
 }
 
