@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>EBS v2</title>
+<title>EBS v3 - Cloud</title>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
 :root{--bg:#2f2f2f;--bg2:#3d3d3d;--bg3:#4a4a4a;--bg4:#5a5a5a;--border:#4a4a4a;--text:#ececec;--text2:#a0a0a0;--text3:#707070;--accent:#da7756;--green:#5cb85c;--yellow:#f0c36d;--orange:#e89a5a;--red:#d9534f;--cyan:#5bc0de;--purple:#a87fd1;--s1:#d9534f;--s2:#e89a5a;--s3:#f0c36d;--s4:#5bc0de;--s5:#5cb85c}
 [data-theme="claude-light"]{--bg:#f5f4f2;--bg2:#ffffff;--bg3:#eae8e4;--bg4:#ddd9d4;--border:#d4d0ca;--text:#2d2d2d;--text2:#6b6b6b;--text3:#9a9a9a;--accent:#da7756;--green:#3d8c40;--yellow:#c49a30;--orange:#c67840;--red:#c44540;--cyan:#3a8ea8;--purple:#7c5aad;--s1:#c44540;--s2:#c67840;--s3:#c49a30;--s4:#3a8ea8;--s5:#3d8c40}
@@ -28,7 +31,7 @@
 *::-webkit-scrollbar-track{background:transparent}
 *::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
 *::-webkit-scrollbar-thumb:hover{background:var(--text3)}
-html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","SF Pro Text",system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;-webkit-font-smoothing:antialiased;line-height:1.5}
+html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","SF Pro Text",system-ui,sans-serif;background:var(--bg);color:var(--text);font-size:13px;-webkit-font-smoothing:antialiased;line-height:1.5}
 .header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 18px;display:flex;align-items:center;position:fixed;top:0;left:0;right:0;z-index:100;height:54px;gap:12px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
 .logo{font-weight:600;font-size:15px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:140px;max-width:280px;letter-spacing:-0.2px;flex-shrink:0}
 .header-search{position:relative;width:220px;flex-shrink:0}
@@ -108,13 +111,13 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .toggle-btn:hover{background:var(--bg3);color:var(--text)}
 .toggle-btn.expanded{background:var(--bg3);color:var(--accent)}
 .toggle-btn .arrow{font-size:9px;transition:transform .2s}
-.panel{display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden}.panel.active{display:flex}
+.panel{display:none;flex-direction:column;flex:1;min-height:0;overflow:hidden;-webkit-overflow-scrolling:touch}.panel.active{display:flex}
 .filter-badges{margin-bottom:6px;flex-shrink:0}
 .filter-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(10,132,255,.15);color:var(--accent);padding:4px 10px;border-radius:8px;font-size:12px;font-weight:500;margin-right:6px}
 .filter-badge button{background:rgba(255,255,255,.2);border:none;color:var(--accent);width:16px;height:16px;border-radius:50%;cursor:pointer;font-size:11px}
 .data-table{background:var(--bg2);border:none;border-radius:14px;display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .table-header{display:grid;gap:1px;padding:0 12px;background:var(--bg3);font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.3px;height:36px;align-items:center;flex-shrink:0}
-.table-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden}
+.table-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .parts-grid{grid-template-columns:22px 22px minmax(80px,1fr) 100px 100px 60px 30px 62px 70px 100px minmax(100px,180px) 32px 32px 32px}
 .add-row{display:flex;align-items:center;padding:8px 12px;background:var(--bg)}
 .add-row-btn{width:24px;height:24px;background:var(--bg3);border:none;border-radius:8px;color:var(--text3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:10px;transition:all .15s}
@@ -173,7 +176,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .action-due{font-size:12px;color:var(--text2)}.action-due.overdue{color:var(--red);font-weight:600}.action-due.soon{color:var(--yellow)}
 .action-status{font-size:10px;font-weight:600;padding:4px 8px;border-radius:6px;text-align:center}
 .action-status.not-started{background:rgba(255,69,58,.15);color:var(--s1)}.action-status.in-progress{background:rgba(255,214,10,.15);color:var(--s3)}.action-status.completed{background:rgba(48,209,88,.15);color:var(--s5)}
-.progress-layout{display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto}
+.progress-layout{display:flex;flex-direction:column;gap:12px;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 .progress-top{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:900px){.progress-top{grid-template-columns:1fr}}
 .card{background:var(--bg2);border:none;border-radius:14px;padding:16px;display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.12)}
@@ -236,7 +239,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .report-meta{font-size:10px;color:var(--text3);margin-bottom:12px;display:flex;justify-content:space-between}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);justify-content:center;align-items:center;z-index:1000;padding:16px}
 .modal-bg.open{display:flex}
-.modal{background:var(--bg2);width:100%;max-width:400px;max-height:85vh;overflow-y:auto;border-radius:16px;border:none;box-shadow:0 16px 48px rgba(0,0,0,.25)}
+.modal{background:var(--bg2);width:100%;max-width:400px;max-height:85vh;overflow-y:auto;border-radius:16px;border:none;box-shadow:0 16px 48px rgba(0,0,0,.25);-webkit-overflow-scrolling:touch}
 .modal-head{padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
 .modal-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;letter-spacing:-0.2px}
 .modal-close{width:28px;height:28px;background:var(--bg3);border:none;border-radius:8px;color:var(--text2);font-size:14px;cursor:pointer;transition:all .15s}
@@ -256,6 +259,27 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .notify-btn{width:100%;height:38px;margin-top:14px;background:var(--bg3);border:none;border-radius:10px;color:var(--yellow);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
 .notify-btn:hover{background:var(--bg4)}.notify-btn:disabled{opacity:.4;cursor:not-allowed}
 .toast-box{position:fixed;bottom:16px;left:16px;right:16px;z-index:1100;pointer-events:none}
+
+/* Login Screen */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;padding:20px}
+.login-box{background:var(--bg2);border-radius:16px;padding:32px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.login-logo{font-size:24px;font-weight:600;text-align:center;margin-bottom:8px;color:var(--text)}
+.login-subtitle{font-size:13px;color:var(--text3);text-align:center;margin-bottom:24px}
+.login-field{margin-bottom:16px}
+.login-field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px}
+.login-field input{width:100%;height:44px;padding:0 14px;font-size:16px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:10px;outline:none}
+.login-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(218,119,86,.2)}
+.login-btn{width:100%;height:44px;font-size:14px;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:10px;cursor:pointer;transition:all .2s}
+.login-btn:hover{filter:brightness(1.1)}
+.login-btn:disabled{opacity:0.5;cursor:not-allowed}
+.login-error{color:var(--red);font-size:12px;text-align:center;margin-top:12px;min-height:18px}
+.login-status{font-size:11px;color:var(--text3);text-align:center;margin-top:16px}
+.sync-indicator{position:fixed;top:60px;right:16px;padding:6px 12px;background:var(--bg2);border-radius:8px;font-size:11px;color:var(--text2);display:none;align-items:center;gap:6px;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.sync-indicator.active{display:flex}
+.sync-indicator.syncing{color:var(--yellow)}
+.sync-indicator.synced{color:var(--green)}
+.sync-indicator.offline{color:var(--red)}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:currentColor}
 .toast{padding:12px 18px;background:var(--bg3);border:none;border-radius:10px;font-size:13px;margin-top:8px;box-shadow:0 4px 16px rgba(0,0,0,.15)}
 .toast.success{border-left:4px solid var(--green)}.toast.err{border-left:4px solid var(--red)}
 .dropdown{position:relative}
@@ -302,10 +326,167 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 .lt-stats{display:flex;gap:12px;font-size:10px;align-items:center}
 .lt-stat-val{font-size:14px;font-weight:700;color:var(--purple)}
 .lt-samples{font-size:9px;color:var(--text3)}
-@media(max-width:700px){.parts-grid{grid-template-columns:20px 20px 1fr 55px 40px 70px 40px 22px 22px}.table-header .col-code,.table-header .col-mfr,.table-header .col-assignee{display:none}.part-row .cell-code,.part-row .cell-mfr,.part-row .cell-assignee{display:none}}
+
+/* Tablet styles */
+@media(max-width:1024px){
+  .header-metrics{gap:6px}
+  .hm{padding:6px 10px}
+  .hm-progress{min-width:140px}
+  .hm-bar{width:80px}
+  .header-search{width:180px}
+  .ai-alert{max-width:200px;padding:6px 10px}
+}
+
+/* Mobile styles */
+@media(max-width:768px){
+  html,body{overflow-x:hidden!important}
+  .header{height:50px;padding:0 12px;gap:8px;overflow:hidden}
+  .logo{min-width:60px;max-width:100px;font-size:14px}
+  .header-search{display:none}
+  .header-metrics{display:none}
+  .ai-alert{display:none}
+  .header-spacer{display:none}
+  .header-btns .btn span{display:none}
+  .header-btns .btn{padding:0 10px;min-width:36px;justify-content:center}
+  .header-btns{gap:4px}
+  .main{padding:8px 10px;padding-top:58px;overflow-x:hidden}
+  .pipeline{gap:4px;margin-bottom:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0}
+  .pipe{min-width:60px;padding:8px 6px;border-radius:10px;flex-shrink:0}
+  .pipe-count{font-size:16px}
+  .pipe-label{font-size:8px}
+  .tabs{margin-bottom:8px;padding:2px;gap:1px;flex-shrink:0}
+  .tab{height:32px;font-size:12px;padding:0 8px}
+  .data-table{border-radius:10px;overflow:hidden}
+  .table-header{height:32px;padding:0 8px;font-size:9px}
+  .table-header.parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px!important}
+  .part-row.parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px!important}
+  .parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px!important}
+  .asm-row{grid-template-columns:20px 1fr 80px 28px 28px!important;height:38px;padding:0 8px}
+  .part-row{height:36px;padding:0 8px}
+  .table-header>div:nth-child(n+7),.part-row>div:nth-child(n+7),.asm-row>div:nth-child(n+6){display:none}
+  .col-subpart,.col-code,.col-mfr,.col-qty,.col-assignee,.col-eta,.col-notes{display:none!important}
+  .asm-priority{display:none}
+  .asm-name{font-size:13px}
+  .asm-meta{font-size:10px}
+  .asm-toggle{font-size:10px}
+  .cell{font-size:12px}
+  .status-badge{font-size:9px;padding:3px 6px}
+  .sm-btn{width:28px;height:28px}
+  .adv-btn{width:28px;height:28px}
+  .subpart-add{display:none}
+  .add-row{padding:8px!important;padding-left:12px!important}
+  .add-row-btn{width:24px;height:24px;font-size:14px}
+  .add-row-text{font-size:11px}
+  .card{padding:12px;border-radius:10px}
+  .card-title{font-size:13px}
+  .progress-top{grid-template-columns:1fr!important;gap:10px}
+  .progress-layout{overflow-x:hidden}
+  .gantt-wrap{display:none}
+  .ins-group-title{font-size:10px}
+  .ins-label{font-size:11px}
+  .ins-val{font-size:13px}
+  .toolbar{gap:8px;flex-wrap:wrap}
+  .toolbar .search{width:100%;max-width:none}
+  .toolbar .filter-select{width:100%}
+  .toolbar .btn{flex:1;min-width:80px}
+  .action-row{grid-template-columns:1fr 70px 70px 28px!important}
+  .action-row>div:nth-child(2),.action-row>div:nth-child(3),.action-row>div:nth-child(5){display:none}
+  .action-task{font-size:12px}
+  .action-status{font-size:9px;padding:3px 6px}
+  .filter-badges{flex-wrap:wrap}
+  .filter-badge{font-size:10px}
+  .modal{max-width:calc(100vw - 32px);max-height:calc(100vh - 32px);border-radius:14px}
+  .modal-head{padding:14px 16px}
+  .modal-title{font-size:15px}
+  .modal-body{padding:4px 16px 16px}
+  .modal-foot{padding:12px 16px}
+  .field-label{font-size:11px}
+  .field-input,.field-select,.field-textarea{font-size:16px;height:44px;border-radius:8px}
+  .field-textarea{height:80px}
+  .field-row{flex-direction:column;gap:8px}
+  .modal-foot .btn{height:44px;font-size:14px}
+  .toast{font-size:12px;padding:10px 14px}
+  .dropdown-menu{right:0;left:auto;min-width:180px}
+  .theme-grid{grid-template-columns:1fr 1fr}
+  .theme-card{padding:10px}
+  .theme-name{font-size:11px}
+  .burndown-container{height:140px}
+  .report-content{font-size:10px}
+  .notes-cell{display:none}
+}
+
+/* Small mobile styles */
+@media(max-width:480px){
+  .header{height:48px;padding:0 10px}
+  .logo{font-size:13px;min-width:50px;max-width:80px}
+  .header-btns .btn{padding:0 8px;height:32px;min-width:32px}
+  .main{padding:6px 8px;padding-top:54px}
+  .pipeline{gap:3px;margin-bottom:6px;padding-bottom:4px}
+  .pipe{min-width:56px;padding:6px 4px;border-radius:8px}
+  .pipe-count{font-size:14px}
+  .pipe-label{font-size:7px;letter-spacing:0}
+  .tabs{margin-bottom:6px}
+  .tab{height:30px;font-size:11px;padding:0 6px}
+  .table-header.parts-grid,.part-row.parts-grid,.parts-grid{grid-template-columns:18px 1fr 55px 26px 26px!important}
+  .asm-row{grid-template-columns:18px 1fr 60px 26px!important;height:36px}
+  .part-row{height:34px}
+  .asm-name{font-size:12px}
+  .cell{font-size:11px}
+  .status-badge{font-size:8px;padding:2px 5px}
+  .sm-btn{width:26px;height:26px;font-size:10px}
+  .adv-btn{width:26px;height:26px;font-size:10px}
+  .action-row{grid-template-columns:1fr 60px 26px!important}
+  .action-task{font-size:11px}
+  .modal{border-radius:12px;margin:8px}
+  .modal-head{padding:12px 14px}
+  .modal-body{padding:4px 14px 14px}
+  .modal-foot{padding:10px 14px;flex-direction:column;gap:8px}
+  .modal-foot .btn{width:100%}
+  .field-input,.field-select,.field-textarea{height:44px;font-size:16px}
+  .modal-foot .btn{height:44px;font-size:14px}
+  .progress-top{gap:8px}
+  .card{padding:10px}
+  .ins-row{padding:6px 0}
+  .theme-grid{grid-template-columns:1fr 1fr}
+  .burndown-container{height:120px}
+  .forecast-card{padding:10px}
+  .forecast-date{font-size:16px}
+}
+
+/* Touch improvements */
+@media(hover:none){
+  .btn:hover,.sm-btn:hover,.adv-btn:hover,.pipe:hover,.tab:hover,.action-row:hover,.part-row:hover,.asm-row:hover{transform:none;filter:none}
+  .btn:active,.sm-btn:active,.adv-btn:active{transform:scale(0.95);opacity:0.8}
+  .pipe:active,.tab:active{background:var(--bg4)}
+}
+
+/* Safe area for notched devices */
+@supports(padding:max(0px)){
+  .header{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+  .main{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));padding-bottom:max(10px,env(safe-area-inset-bottom))}
+  .modal{margin-bottom:env(safe-area-inset-bottom)}
+}
 </style>
 </head>
 <body>
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+<div class="login-box">
+<div class="login-logo">📦 EBS Cloud</div>
+<div class="login-subtitle">Parts Pipeline Tracker</div>
+<div class="login-field">
+<label>Access Code</label>
+<input type="password" id="loginCode" placeholder="Enter team access code" autocomplete="off">
+</div>
+<button class="login-btn" id="loginBtn">Sign In</button>
+<div class="login-error" id="loginError"></div>
+<div class="login-status" id="loginStatus">Connecting to cloud...</div>
+</div>
+</div>
+
+<!-- Sync Indicator -->
+<div class="sync-indicator" id="syncIndicator"><div class="sync-dot"></div><span id="syncText">Synced</span></div>
+
 <header class="header">
 <div class="logo" id="projectName">EBS v2</div>
 <div class="ai-alert good" id="aiAlert" title="Click for AI insights"><div class="ai-icon">✓</div><div class="ai-text"><span class="ai-label">AI</span><span id="aiAlertText">All systems nominal</span></div></div>
@@ -321,7 +502,7 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 <button class="btn" id="themeBtn">🎨</button>
 <button class="btn btn-save" id="saveBtn">💾 <span>Save</span></button>
 <button class="btn btn-report" id="reportBtn">📋 <span>Report</span></button>
-<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="loadBomBtn">Load Specification</div><div class="dropdown-div"></div><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Load Sample</div><div class="dropdown-div"></div><div class="dropdown-item danger" id="clearBtn">Clear All</div></div></div>
+<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="loadBomBtn">Load Specification</div><div class="dropdown-div"></div><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Load Sample</div><div class="dropdown-div"></div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
 </div>
 </header>
 <main class="main">
@@ -375,36 +556,237 @@ html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFo
 <div class="toast-box" id="toastBox"></div>
 <script>
 (function(){
+
+// ============================================
+// FIREBASE CONFIGURATION
+// ============================================
+const firebaseConfig = {
+  apiKey: "AIzaSyCuzREUYQica1pjdVgQJlXD2eh8D7Dqlo4",
+  authDomain: "ebsv1-78d54.firebaseapp.com",
+  databaseURL: "https://ebsv1-78d54-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "ebsv1-78d54",
+  storageBucket: "ebsv1-78d54.firebasestorage.app",
+  messagingSenderId: "70538130924",
+  appId: "1:70538130924:web:9e34e90b56e4f3f72ebcc9"
+};
+
+// Access code for the team
+const ACCESS_CODE = "jaakko123";
+
+// ============================================
+// Initialize Firebase
+// ============================================
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const projectRef = db.ref('project');
+
+// ============================================
+// App State
+// ============================================
 const STAGES=['to-order','ordered','arrived','tested','installed'];
 const SLABELS={'to-order':'To Order','ordered':'Ordered','arrived':'Arrived','tested':'Tested','installed':'Installed'};
 const ASTAGES=['not-started','in-progress','completed'];
 const ALABELS={'not-started':'Not Started','in-progress':'In Progress','completed':'Completed'};
-const KEY='ebs-v2-data',LTKEY='ebs-v2-leadtime',BOMKEY='ebs-v2-boms',CODEKEY='ebs-v2-codes',MFRKEY='ebs-v2-mfrs';
 
 let data=[],team=[],expanded={},history=[],projectDates={start:'',end:''},actions=[],leadTimeDb={},savedBoms=[],currentProjectName='New Project',allExpanded=false;
 let globalCodes=[],globalMfrs=[];
 let editId=null,editAsmId=null,editActId=null,editEtaPartId=null,filterStage='',filterAssignee='',searchQ='',actionSearchQ='',actionAssigneeFilter='',highlightActionId=null,highlightPartId=null,bomMode='save';
+let isAuthenticated=false,isConnected=false,isSyncing=false;
 
 const $=id=>document.getElementById(id);
 const esc=s=>s?String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';
 const toast=(msg,e)=>{const t=document.createElement('div');t.className='toast '+(e?'err':'success');t.textContent=msg;$('toastBox').appendChild(t);setTimeout(()=>t.remove(),2500)};
 
-function load(){try{const s=localStorage.getItem(KEY);if(s){const d=JSON.parse(s);data=d.data||[];team=d.team||[];expanded=d.expanded||{};history=d.history||[];projectDates=d.projectDates||{start:'',end:''};actions=d.actions||[];currentProjectName=d.projectName||'New Project'}}catch(e){}}
-function loadLeadTime(){try{const s=localStorage.getItem(LTKEY);if(s)leadTimeDb=JSON.parse(s)}catch(e){leadTimeDb={}}}
-function loadBoms(){try{const s=localStorage.getItem(BOMKEY);if(s)savedBoms=JSON.parse(s);else loadSampleBoms()}catch(e){savedBoms=[];loadSampleBoms()}}
-function loadGlobalCodes(){try{const s=localStorage.getItem(CODEKEY);if(s)globalCodes=JSON.parse(s)}catch(e){globalCodes=[]}}
-function loadGlobalMfrs(){try{const s=localStorage.getItem(MFRKEY);if(s)globalMfrs=JSON.parse(s)}catch(e){globalMfrs=[]}}
-function saveGlobalCodes(){localStorage.setItem(CODEKEY,JSON.stringify(globalCodes))}
-function saveGlobalMfrs(){localStorage.setItem(MFRKEY,JSON.stringify(globalMfrs))}
+// ============================================
+// Sync Indicator
+// ============================================
+function showSync(status,text){
+  const ind=$('syncIndicator');
+  const txt=$('syncText');
+  ind.className='sync-indicator active '+status;
+  txt.textContent=text||status;
+  if(status==='synced')setTimeout(()=>ind.classList.remove('active'),2000);
+}
+
+// ============================================
+// Firebase Data Operations
+// ============================================
+let saveTimeout=null;
+function save(){
+  if(!isAuthenticated)return;
+  showSync('syncing','Saving...');
+  clearTimeout(saveTimeout);
+  saveTimeout=setTimeout(()=>{
+    projectRef.child('main').set({
+      data,team,history,projectDates,actions,projectName:currentProjectName,
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    }).then(()=>showSync('synced','Saved')).catch(e=>{showSync('offline','Save failed');console.error(e)});
+  },500);
+}
+
+function saveLeadTime(){
+  if(!isAuthenticated)return;
+  projectRef.child('leadTime').set(leadTimeDb).catch(console.error);
+}
+
+function saveBoms(){
+  if(!isAuthenticated)return;
+  projectRef.child('boms').set(savedBoms).catch(console.error);
+}
+
+function saveGlobalCodes(){
+  if(!isAuthenticated)return;
+  projectRef.child('globalCodes').set(globalCodes).catch(console.error);
+}
+
+function saveGlobalMfrs(){
+  if(!isAuthenticated)return;
+  projectRef.child('globalMfrs').set(globalMfrs).catch(console.error);
+}
+
+function saveExpanded(){
+  // Keep expanded state local (per-user preference)
+  try{localStorage.setItem('ebs-expanded',JSON.stringify(expanded))}catch(e){}
+}
+
+function loadExpanded(){
+  try{const s=localStorage.getItem('ebs-expanded');if(s)expanded=JSON.parse(s)}catch(e){expanded={}}
+}
+
 function addGlobalCode(code){if(code&&!globalCodes.includes(code)){globalCodes.push(code);saveGlobalCodes()}}
 function addGlobalMfr(mfr){if(mfr&&!globalMfrs.includes(mfr)){globalMfrs.push(mfr);saveGlobalMfrs()}}
 function getAllCodes(){const projectCodes=[...new Set(data.filter(d=>d.code).map(d=>d.code))];return[...new Set([...globalCodes,...projectCodes])].sort()}
 function getAllMfrs(){const projectMfrs=[...new Set(data.filter(d=>d.mfr).map(d=>d.mfr))];return[...new Set([...globalMfrs,...projectMfrs])].sort()}
+
 function loadSampleBoms(){savedBoms=[{id:1,name:'Standard Control Panel',items:[{name:'Control Panel',isAsm:true},{name:'PLC CPU',code:'6ES7-1500',mfr:'Siemens',qty:1,parent:'Control Panel'}]}];saveBoms()}
-function save(){localStorage.setItem(KEY,JSON.stringify({data,team,expanded,history,projectDates,actions,projectName:currentProjectName}))}
-function saveLeadTime(){localStorage.setItem(LTKEY,JSON.stringify(leadTimeDb))}
-function saveBoms(){localStorage.setItem(BOMKEY,JSON.stringify(savedBoms))}
-function updateProjectName(){$('projectName').textContent=currentProjectName||'EBS v2'}
+
+function updateProjectName(){$('projectName').textContent=(currentProjectName||'EBS Cloud')+' ☁️'}
+
+// ============================================
+// Authentication
+// ============================================
+function checkAuth(){
+  const stored=sessionStorage.getItem('ebs-auth');
+  return stored===ACCESS_CODE;
+}
+
+function login(code){
+  if(code===ACCESS_CODE){
+    sessionStorage.setItem('ebs-auth',code);
+    isAuthenticated=true;
+    $('loginScreen').style.display='none';
+    initFirebaseListeners();
+    return true;
+  }
+  return false;
+}
+
+function logout(){
+  sessionStorage.removeItem('ebs-auth');
+  isAuthenticated=false;
+  location.reload();
+}
+
+// ============================================
+// Firebase Real-time Listeners
+// ============================================
+function initFirebaseListeners(){
+  showSync('syncing','Loading...');
+  let firstLoad=true;
+  
+  // Listen for main data changes
+  projectRef.child('main').on('value',snapshot=>{
+    const val=snapshot.val();
+    if(val){
+      data=val.data||[];
+      team=val.team||[];
+      history=val.history||[];
+      projectDates=val.projectDates||{start:'',end:''};
+      actions=val.actions||[];
+      currentProjectName=val.projectName||'New Project';
+    }else{
+      // No data in Firebase yet - start fresh
+      data=[];team=[];history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';
+    }
+    updateProjectName();
+    render();
+    showSync('synced','Connected');
+    
+    // Show welcome message on first load if no data
+    if(firstLoad&&!data.length){
+      firstLoad=false;
+      toast('Welcome! Click "Load Sample" or add assemblies to get started');
+    }
+    firstLoad=false;
+  },err=>{
+    console.error('Firebase read error:',err);
+    showSync('offline','Connection error');
+    toast('Connection error - check Firebase config',true);
+  });
+  
+  // Listen for lead time data
+  projectRef.child('leadTime').on('value',snapshot=>{
+    leadTimeDb=snapshot.val()||{};
+  });
+  
+  // Listen for BOMs
+  projectRef.child('boms').on('value',snapshot=>{
+    const val=snapshot.val();
+    if(val)savedBoms=val;
+    else loadSampleBoms();
+  });
+  
+  // Listen for global codes/mfrs
+  projectRef.child('globalCodes').on('value',snapshot=>{
+    globalCodes=snapshot.val()||[];
+  });
+  projectRef.child('globalMfrs').on('value',snapshot=>{
+    globalMfrs=snapshot.val()||[];
+  });
+  
+  // Connection state
+  db.ref('.info/connected').on('value',snapshot=>{
+    isConnected=snapshot.val()===true;
+    if(isConnected){
+      showSync('synced','Connected');
+    }else{
+      showSync('offline','Offline');
+    }
+  });
+}
+
+// ============================================
+// Login UI Handlers
+// ============================================
+$('loginBtn').onclick=()=>{
+  const code=$('loginCode').value.trim();
+  if(!code){
+    $('loginError').textContent='Please enter access code';
+    return;
+  }
+  $('loginBtn').disabled=true;
+  $('loginBtn').textContent='Signing in...';
+  
+  // Small delay for UX
+  setTimeout(()=>{
+    if(login(code)){
+      $('loginError').textContent='';
+    }else{
+      $('loginError').textContent='Invalid access code';
+      $('loginBtn').disabled=false;
+      $('loginBtn').textContent='Sign In';
+    }
+  },500);
+};
+
+$('loginCode').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
+
+// Check connection status on load
+db.ref('.info/connected').once('value').then(()=>{
+  $('loginStatus').textContent='Ready';
+}).catch(()=>{
+  $('loginStatus').textContent='Unable to connect - check Firebase config';
+});
 
 function recordLeadTime(code,days){if(!code||days<=0||days>365)return;code=code.toUpperCase();if(!leadTimeDb[code])leadTimeDb[code]={samples:[],avg:null};const entry=leadTimeDb[code];entry.samples.push({days,date:new Date().toISOString().split('T')[0]});if(entry.samples.length>20)entry.samples=entry.samples.slice(-20);entry.avg=Math.round(entry.samples.reduce((a,s)=>a+s.days,0)/entry.samples.length);saveLeadTime()}
 
@@ -839,7 +1221,7 @@ function updateExpandToggle(){const btn=$('expandToggle');const asms=getAsms();c
 function renderTeamList(){$('teamList').innerHTML=!team.length?'<p style="color:var(--text3);text-align:center;padding:12px;font-size:10px">No team members</p>':team.map((t,i)=>'<div class="team-item"><div class="team-item-info"><div style="font-weight:600">'+esc(t.name)+'</div><div style="font-size:10px;color:var(--text3)">'+esc(t.email)+'</div></div><button class="team-item-del" onclick="window.delTeam('+i+')">×</button></div>').join('')}
 function renderBomList(){if(!savedBoms.length){$('bomList').innerHTML='<p style="color:var(--text3);text-align:center;padding:20px">No saved specifications</p>';return}$('bomList').innerHTML=savedBoms.map(b=>'<div class="bom-item" onclick="window.loadBom('+b.id+')"><div class="bom-item-info"><div class="bom-item-name">'+esc(b.name)+'</div><div class="bom-item-meta">'+b.items.filter(i=>i.isAsm).length+' asm, '+b.items.filter(i=>!i.isAsm).length+' parts</div></div><button class="bom-item-del" onclick="event.stopPropagation();window.delBom('+b.id+')">×</button></div>').join('')}
 
-window.toggleAsmRow=function(e,id){if(e.target.closest('.asm-actions')||e.target.closest('.cell')||e.target.closest('.asm-priority'))return;expanded[id]=!expanded[id];save();render()};
+window.toggleAsmRow=function(e,id){if(e.target.closest('.asm-actions')||e.target.closest('.cell')||e.target.closest('.asm-priority'))return;expanded[id]=!expanded[id];saveExpanded();render()};
 window.moveAsmUp=function(id){
   const asms=getAsms();
   const idx=asms.findIndex(a=>a.id===id);
@@ -1327,6 +1709,7 @@ $('expandToggle').onclick=()=>{
 };
 
 $('clearBtn').onclick=()=>{if(confirm('Delete ALL data?')){data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';save();render();toast('Cleared')}};
+$('signOutBtn').onclick=()=>{if(confirm('Sign out?'))logout()};
 
 // Header search
 $('headerSearch').oninput=e=>{
@@ -1398,9 +1781,14 @@ $('themeModal').onclick=e=>{if(e.target.id==='themeModal')closeModal('themeModal
 
 // Initialize
 applyTheme(currentTheme);
-load();loadLeadTime();loadBoms();loadGlobalCodes();loadGlobalMfrs();
-if(!data.length)loadSample();
-render();
+loadExpanded();
+
+// Check if already authenticated
+if(checkAuth()){
+  isAuthenticated=true;
+  $('loginScreen').style.display='none';
+  initFirebaseListeners();
+}
 
 })();
 </script>
