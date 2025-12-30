@@ -239,6 +239,38 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .report-meta{font-size:10px;color:var(--text3);margin-bottom:12px;display:flex;justify-content:space-between}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);justify-content:center;align-items:center;z-index:1000;padding:16px}
 .modal-bg.open{display:flex}
+
+/* Small contextual popover */
+.popover{position:fixed;background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:1001;padding:14px 16px;min-width:180px;max-width:260px;opacity:0;transform:scale(0.95) translateY(-4px);transition:opacity 0.15s ease,transform 0.15s ease;pointer-events:none}
+.popover.open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}
+.popover-msg{font-size:13px;margin-bottom:12px;line-height:1.4;color:var(--text)}
+.popover-btns{display:flex;gap:8px;justify-content:flex-end}
+.popover-btns .btn{padding:6px 12px;font-size:11px;min-width:60px}
+
+/* Backdrop blur for popovers */
+.popover-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.15);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999;opacity:0;transition:opacity 0.2s ease;pointer-events:none}
+.popover-backdrop.active{opacity:1;pointer-events:auto}
+
+/* Popover-style modal (positioned near trigger) */
+.modal-popover{position:fixed;background:var(--bg2);border:1px solid var(--bg4);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.4);z-index:1001;width:320px;max-width:calc(100vw - 32px);max-height:calc(100vh - 100px);overflow:auto;opacity:0;transform:scale(0.95);transition:opacity 0.18s ease,transform 0.18s ease;pointer-events:none}
+.modal-popover.open{opacity:1;transform:scale(1);pointer-events:auto}
+.modal-popover .modal-head{padding:12px 16px;border-bottom:1px solid var(--bg4);display:flex;justify-content:space-between;align-items:center}
+.modal-popover .modal-title{font-size:14px;font-weight:600}
+.modal-popover .modal-close{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:0 4px}
+.modal-popover .modal-body{padding:14px 16px}
+.modal-popover .modal-foot{padding:12px 16px;border-top:1px solid var(--bg4);display:flex;gap:8px;justify-content:flex-end}
+.modal-popover .field{margin-bottom:12px}
+.modal-popover .field-label{font-size:11px;margin-bottom:4px;color:var(--text2)}
+.modal-popover .field-input,.modal-popover .field-select,.modal-popover .field-textarea{width:100%;padding:8px 10px;font-size:12px}
+.modal-popover .field-textarea{min-height:50px;resize:vertical}
+.modal-popover .field-row{display:flex;gap:10px}
+.modal-popover .field-row .field{flex:1;margin-bottom:12px}
+.modal-popover .btn{padding:7px 14px;font-size:12px}
+.modal-popover .notify-btn{width:100%;padding:8px;font-size:11px;margin-top:4px}
+
+/* AI popover specific */
+.ai-popover{width:360px;max-width:calc(100vw - 32px)}
+.ai-popover .modal-body{padding:10px 14px;max-height:400px;overflow-y:auto}
 .modal{background:var(--bg2);width:100%;max-width:400px;max-height:85vh;overflow-y:auto;border-radius:16px;border:none;box-shadow:0 16px 48px rgba(0,0,0,.25);-webkit-overflow-scrolling:touch}
 .modal-head{padding:16px 18px;display:flex;justify-content:space-between;align-items:center}
 .modal-title{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;letter-spacing:-0.2px}
@@ -586,20 +618,21 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 </div>
 </div>
 </main>
-<div class="modal-bg" id="aiModal"><div class="modal ai-modal"><div class="modal-head"><span class="modal-title"><span style="color:var(--purple)">🤖</span> AI Insights</span><button class="modal-close" id="aiClose">×</button></div><div class="modal-body"><div class="ai-insights-list" id="aiInsightsList"></div></div><div class="modal-foot"><button class="btn" id="aiDone">Close</button></div></div></div>
+<div class="modal-popover ai-popover" id="aiModal"><div class="modal-head"><span class="modal-title"><span style="color:var(--purple)">🤖</span> AI Insights</span><button class="modal-close" id="aiClose">×</button></div><div class="modal-body"><div class="ai-insights-list" id="aiInsightsList"></div></div><div class="modal-foot"><button class="btn" id="aiDone">Close</button></div></div>
 <div class="modal-bg" id="reportModal"><div class="modal report-modal"><div class="modal-head"><span class="modal-title">📋 Daily Report</span><button class="modal-close" id="reportClose">×</button></div><div class="modal-body"><div class="report-meta"><span id="reportDate"></span><span id="reportRecipients"></span></div><div class="report-content" id="reportContent"></div></div><div class="modal-foot"><button class="btn" id="reportCopy">📋 Copy</button><button class="btn btn-primary" id="reportEmail">✉️ Email Team</button></div></div></div>
 <div class="modal-bg" id="etaModal"><div class="modal eta-modal"><div class="modal-head"><span class="modal-title">📅 Expected Arrival</span><button class="modal-close" id="etaClose">×</button></div><div class="modal-body"><div id="etaPartName" style="font-weight:600;margin-bottom:8px"></div><div id="etaCode" style="font-size:10px;color:var(--text3);margin-bottom:12px"></div><div class="eta-history" id="etaHistory"></div><div class="field"><label class="field-label">Expected Arrival Date</label><input type="date" class="field-input" id="etaDateInput"></div></div><div class="modal-foot"><button class="btn" id="etaClear">Clear</button><button class="btn btn-primary" id="etaSave">Save</button></div></div></div>
 <div class="modal-bg" id="bomModal"><div class="modal bom-modal"><div class="modal-head"><span class="modal-title" id="bomTitle">💾 Save Specification</span><button class="modal-close" id="bomClose">×</button></div><div class="modal-body"><div class="field" id="bomNameField"><label class="field-label">Specification Name</label><input type="text" class="field-input" id="bomName" placeholder="e.g. Standard Control Panel"></div><div class="bom-list" id="bomList"></div></div><div class="modal-foot"><button class="btn" id="bomCancel">Cancel</button><button class="btn btn-primary" id="bomSave">Save</button></div></div></div>
 <div class="modal-bg" id="leadtimeModal"><div class="modal leadtime-modal"><div class="modal-head"><span class="modal-title">📊 Lead Time Database</span><button class="modal-close" id="ltClose">×</button></div><div class="modal-body" id="ltBody"></div><div class="modal-foot"><button class="btn" id="ltClear">Clear Data</button><button class="btn btn-primary" id="ltDone">Done</button></div></div></div>
 <div class="modal-bg" id="otdModal"><div class="modal otd-modal"><div class="modal-head"><span class="modal-title">🚚 Supplier On-Time Delivery</span><button class="modal-close" id="otdClose">×</button></div><div class="modal-body" id="otdBody"></div><div class="modal-foot"><button class="btn btn-primary" id="otdDone">Done</button></div></div></div>
-<div class="modal-bg" id="partModal"><div class="modal"><div class="modal-head"><span class="modal-title" id="pmTitle">Add Part</span><button class="modal-close" id="pmClose">×</button></div><div class="modal-body"><div class="field"><label class="field-label">Name</label><input type="text" class="field-input" id="pmName"></div><div class="field-row"><div class="field"><label class="field-label">Item Code</label><input type="text" class="field-input" id="pmCode"></div><div class="field"><label class="field-label">Manufacturer</label><input type="text" class="field-input" id="pmMfr"></div></div><div class="field-row"><div class="field"><label class="field-label">Qty</label><input type="number" class="field-input" id="pmQty" value="1" min="1"></div><div class="field"><label class="field-label">Assignee</label><select class="field-select" id="pmAssignee"></select></div></div><div class="field-row"><div class="field"><label class="field-label">Status</label><select class="field-select" id="pmStatus"><option value="to-order">To Order</option><option value="ordered">Ordered</option><option value="arrived">Arrived</option><option value="tested">Tested</option><option value="installed">Installed</option></select></div><div class="field"><label class="field-label">Assembly</label><select class="field-select" id="pmParent"></select></div></div><div class="field"><label class="field-label">Notes</label><textarea class="field-textarea" id="pmNotes"></textarea></div><button class="notify-btn" id="pmNotify" disabled>🔔 Send Email Notification</button></div><div class="modal-foot"><button class="btn" id="pmCancel">Cancel</button><button class="btn btn-primary" id="pmSave">Save</button></div></div></div>
-<div class="modal-bg" id="asmModal"><div class="modal"><div class="modal-head"><span class="modal-title" id="amTitle">Add Assembly</span><button class="modal-close" id="amClose">×</button></div><div class="modal-body"><div class="field"><label class="field-label">Name</label><input type="text" class="field-input" id="amName"></div><div class="field"><label class="field-label">Assignee</label><select class="field-select" id="amAssignee"></select></div><div class="field"><label class="field-label">Notes</label><textarea class="field-textarea" id="amNotes"></textarea></div><button class="notify-btn" id="amNotify" disabled>🔔 Send Email Notification</button></div><div class="modal-foot"><button class="btn" id="amCancel">Cancel</button><button class="btn btn-primary" id="amSave">Save</button></div></div></div>
-<div class="modal-bg" id="actionModal"><div class="modal"><div class="modal-head"><span class="modal-title" id="actTitle">Add Action</span><button class="modal-close" id="actClose">×</button></div><div class="modal-body"><div class="field"><label class="field-label">Task</label><input type="text" class="field-input" id="actTask"></div><div class="field"><label class="field-label">Linked Part</label><select class="field-select" id="actLinkedPart"></select></div><div class="field-row"><div class="field"><label class="field-label">Due Date</label><input type="date" class="field-input" id="actDue"></div><div class="field"><label class="field-label">Assignee</label><select class="field-select" id="actAssignee"></select></div></div><div class="field"><label class="field-label">Status</label><select class="field-select" id="actStatus"><option value="not-started">Not Started</option><option value="in-progress">In Progress</option><option value="completed">Completed</option></select></div></div><div class="modal-foot"><button class="btn" id="actCancel">Cancel</button><button class="btn btn-primary" id="actSave">Save</button></div></div></div>
+<div class="popover-backdrop" id="popoverBackdrop"></div>
+<div class="modal-popover" id="partModal"><div class="modal-head"><span class="modal-title" id="pmTitle">Add Part</span><button class="modal-close" id="pmClose">×</button></div><div class="modal-body"><div class="field"><label class="field-label">Name</label><input type="text" class="field-input" id="pmName"></div><div class="field-row"><div class="field"><label class="field-label">Item Code</label><input type="text" class="field-input" id="pmCode"></div><div class="field"><label class="field-label">Manufacturer</label><input type="text" class="field-input" id="pmMfr"></div></div><div class="field-row"><div class="field"><label class="field-label">Qty</label><input type="number" class="field-input" id="pmQty" value="1" min="1"></div><div class="field"><label class="field-label">Assignee</label><select class="field-select" id="pmAssignee"></select></div></div><div class="field-row"><div class="field"><label class="field-label">Status</label><select class="field-select" id="pmStatus"><option value="to-order">To Order</option><option value="ordered">Ordered</option><option value="arrived">Arrived</option><option value="tested">Tested</option><option value="installed">Installed</option></select></div><div class="field"><label class="field-label">Assembly</label><select class="field-select" id="pmParent"></select></div></div><div class="field"><label class="field-label">Notes</label><textarea class="field-textarea" id="pmNotes"></textarea></div><button class="notify-btn" id="pmNotify" disabled>🔔 Notify</button></div><div class="modal-foot"><button class="btn" id="pmCancel">Cancel</button><button class="btn btn-primary" id="pmSave">Save</button></div></div>
+<div class="modal-popover" id="asmModal"><div class="modal-head"><span class="modal-title" id="amTitle">Add Assembly</span><button class="modal-close" id="amClose">×</button></div><div class="modal-body"><div class="field"><label class="field-label">Name</label><input type="text" class="field-input" id="amName"></div><div class="field"><label class="field-label">Assignee</label><select class="field-select" id="amAssignee"></select></div><div class="field"><label class="field-label">Notes</label><textarea class="field-textarea" id="amNotes"></textarea></div><button class="notify-btn" id="amNotify" disabled>🔔 Notify</button></div><div class="modal-foot"><button class="btn" id="amCancel">Cancel</button><button class="btn btn-primary" id="amSave">Save</button></div></div>
+<div class="modal-popover" id="actionModal"><div class="modal-head"><span class="modal-title" id="actTitle">Add Action</span><button class="modal-close" id="actClose">×</button></div><div class="modal-body"><div class="field"><label class="field-label">Task</label><input type="text" class="field-input" id="actTask"></div><div class="field"><label class="field-label">Linked Part</label><select class="field-select" id="actLinkedPart"></select></div><div class="field-row"><div class="field"><label class="field-label">Due Date</label><input type="date" class="field-input" id="actDue"></div><div class="field"><label class="field-label">Assignee</label><select class="field-select" id="actAssignee"></select></div></div><div class="field"><label class="field-label">Status</label><select class="field-select" id="actStatus"><option value="not-started">Not Started</option><option value="in-progress">In Progress</option><option value="completed">Completed</option></select></div></div><div class="modal-foot"><button class="btn" id="actCancel">Cancel</button><button class="btn btn-primary" id="actSave">Save</button></div></div>
 <div class="modal-bg" id="teamModal"><div class="modal"><div class="modal-head"><span class="modal-title">Team</span><button class="modal-close" id="teamClose">×</button></div><div class="modal-body"><div class="field"><label class="field-label">Name</label><input type="text" class="field-input" id="teamName"></div><div class="field"><label class="field-label">Email</label><input type="email" class="field-input" id="teamEmail"></div><button class="btn btn-primary" id="teamAdd" style="width:100%">Add</button><div class="team-list" id="teamList"></div></div><div class="modal-foot"><button class="btn" id="teamDone">Done</button></div></div></div>
 <div class="modal-bg" id="datesModal"><div class="modal"><div class="modal-head"><span class="modal-title">Project Dates</span><button class="modal-close" id="datesClose">×</button></div><div class="modal-body"><div class="field"><label class="field-label">Start</label><input type="date" class="field-input" id="startDate"></div><div class="field"><label class="field-label">End</label><input type="date" class="field-input" id="endDate"></div></div><div class="modal-foot"><button class="btn" id="datesCancel">Cancel</button><button class="btn btn-primary" id="datesSave">Save</button></div></div></div>
 <div class="modal-bg" id="themeModal"><div class="modal theme-modal"><div class="modal-head"><span class="modal-title">🎨 Choose Theme</span><button class="modal-close" id="themeClose">×</button></div><div class="modal-body"><div class="theme-grid" id="themeGrid"></div></div></div></div>
 <div class="modal-bg" id="poModal"><div class="modal po-modal"><div class="modal-head"><span class="modal-title">📦 Order Details</span><button class="modal-close" id="poClose">×</button></div><div class="modal-body"><div id="poPartName" style="font-weight:600;margin-bottom:12px;font-size:14px"></div><div class="field"><label class="field-label">PO Number</label><input type="text" class="field-input" id="poNumber" placeholder="e.g. PO-2024-001"></div><div class="field"><label class="field-label">Expected Arrival Date</label><input type="date" class="field-input" id="poArrivalDate"></div><div class="po-note">Leave arrival date empty to use historical lead time data</div></div><div class="modal-foot"><button class="btn" id="poCancel">Cancel</button><button class="btn btn-primary" id="poSave">Confirm Order</button></div></div></div>
-<div class="modal-bg" id="deleteModal"><div class="modal delete-modal"><div class="modal-head"><span class="modal-title">🗑️ Confirm Delete</span><button class="modal-close" id="deleteClose">×</button></div><div class="modal-body"><div id="deleteMsg" style="font-size:14px;text-align:center;padding:10px 0"></div></div><div class="modal-foot"><button class="btn" id="deleteCancel">Cancel</button><button class="btn btn-danger" id="deleteConfirm">Delete</button></div></div></div>
+<div class="popover" id="deletePopover"><div class="popover-msg" id="deleteMsg"></div><div class="popover-btns"><button class="btn" id="deleteCancel">Cancel</button><button class="btn btn-danger" id="deleteConfirm">Delete</button></div></div>
 <div class="toast-box" id="toastBox"></div>
 
 <!-- Chat -->
@@ -672,7 +705,7 @@ let editId=null,editAsmId=null,editActId=null,editEtaPartId=null,filterStage='',
 let isAuthenticated=false,isConnected=false,isSyncing=false;
 
 const $=id=>document.getElementById(id);
-const esc=s=>s?String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';
+const esc=s=>s?String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):'';
 const toast=(msg,e)=>{const t=document.createElement('div');t.className='toast '+(e?'err':'success');t.textContent=msg;$('toastBox').appendChild(t);setTimeout(()=>t.remove(),2500)};
 
 // ============================================
@@ -1423,7 +1456,7 @@ function renderActions(){
     }
     // Due date in "29.12." format
     const dueDate=a.due?formatDateShort(a.due):'—';
-    return '<div class="action-row action-grid'+highlight+'" data-action-id="'+a.id+'"><div class="action-task'+(a.status==='completed'?' completed':'')+'">'+esc(a.task)+'</div><div>'+linkedHtml+'</div><div style="font-size:11px;color:var(--text3)">'+createdDate+'</div><div>'+progressHtml+'</div><div class="action-due'+dueClass+'">'+dueDate+'</div><div style="font-size:10px;color:var(--text2)">'+(a.assignee||'—')+'</div><div class="action-status '+a.status+'">'+ALABELS[a.status]+'</div><div style="display:flex;gap:2px;justify-content:flex-end">'+advBtn+'<button class="adv-btn" onclick="window.editAction('+a.id+')">✎</button><button class="adv-btn" onclick="window.delAction('+a.id+')">×</button></div></div>';
+    return '<div class="action-row action-grid'+highlight+'" data-action-id="'+a.id+'"><div class="action-task'+(a.status==='completed'?' completed':'')+'">'+esc(a.task)+'</div><div>'+linkedHtml+'</div><div style="font-size:11px;color:var(--text3)">'+createdDate+'</div><div>'+progressHtml+'</div><div class="action-due'+dueClass+'">'+dueDate+'</div><div style="font-size:10px;color:var(--text2)">'+(a.assignee||'—')+'</div><div class="action-status '+a.status+'">'+ALABELS[a.status]+'</div><div style="display:flex;gap:2px;justify-content:flex-end">'+advBtn+'<button class="adv-btn" onclick="window.editAction('+a.id+',event)">✎</button><button class="adv-btn" onclick="window.delAction('+a.id+',event)">×</button></div></div>';
   }).join('');
   highlightActionId=null;
 }
@@ -1452,7 +1485,7 @@ function renderAsm(r){
   const pColor=progress<20?'var(--red)':progress<40?'var(--orange)':'var(--green)';
   const count=(filterStage||filterAssignee)?r.match+'/'+r.kids:r.kids;
   const priorityBtns='<div class="asm-priority" onclick="event.stopPropagation()"><button class="asm-priority-btn" onclick="window.moveAsmUp('+a.id+')" title="Move up">▲</button><button class="asm-priority-btn" onclick="window.moveAsmDown('+a.id+')" title="Move down">▼</button></div>';
-  return '<div class="asm-row" data-asm-id="'+a.id+'" onclick="window.toggleAsmRow(event,'+a.id+')"><span class="asm-toggle">'+(r.exp?'▼':'▶')+'</span><div></div>'+priorityBtns+'<div><span class="asm-name">'+esc(a.name)+'</span> <span class="asm-meta">('+count+')</span></div><div></div><div></div><div></div><div></div><div></div><div class="asm-progress"><div class="asm-bar"><div class="asm-bar-fill" style="width:'+progress+'%;background:'+pColor+';"></div></div><span class="asm-pct" style="color:'+pColor+'">'+progress+'%</span></div><div class="notes-cell" title="'+(a.notes?esc(a.notes):'')+'">'+(a.notes?esc(a.notes):'—')+'</div><div class="asm-actions" onclick="event.stopPropagation()"><button class="sm-btn" onclick="window.editAsm('+a.id+')">✎</button></div><div onclick="event.stopPropagation()"><button class="sm-btn red" onclick="window.confirmDelete('+a.id+',\'assembly\',\''+esc(a.name)+'\')">×</button></div></div>';
+  return '<div class="asm-row" data-asm-id="'+a.id+'" onclick="window.toggleAsmRow(event,'+a.id+')"><span class="asm-toggle">'+(r.exp?'▼':'▶')+'</span><div></div>'+priorityBtns+'<div><span class="asm-name">'+esc(a.name)+'</span> <span class="asm-meta">('+count+')</span></div><div></div><div></div><div></div><div></div><div></div><div class="asm-progress"><div class="asm-bar"><div class="asm-bar-fill" style="width:'+progress+'%;background:'+pColor+';"></div></div><span class="asm-pct" style="color:'+pColor+'">'+progress+'%</span></div><div class="notes-cell" title="'+(a.notes?esc(a.notes):'')+'">'+(a.notes?esc(a.notes):'—')+'</div><div class="asm-actions" onclick="event.stopPropagation()"><button class="sm-btn" onclick="window.editAsm('+a.id+',event)">✎</button></div><div onclick="event.stopPropagation()"><button class="sm-btn red" onclick="window.confirmDelete('+a.id+',\'assembly\',event)">×</button></div></div>';
 }
 
 function renderPart(r){
@@ -1511,7 +1544,7 @@ function renderPart(r){
   
   const childClass=r.child?' child'+(depth>0?' subchild':''):'';
   
-  return '<div class="part-row parts-grid'+childClass+'" data-part-id="'+p.id+'" style="'+(depth>0?'background:var(--bg);':'')+'"><div class="part-indent" style="'+indentStyle+'">'+indentSymbol+'</div><div>'+addSubBtn+'</div><div class="cell" onclick="window.editCell(event,'+p.id+',\'name\')">'+esc(p.name)+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'code\')">'+(p.code||'—')+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'mfr\')">'+(p.mfr||'—')+'</div><div class="cell muted" onclick="window.editCellAssignee(event,'+p.id+')">'+(p.assignee||'—')+'</div><div class="cell muted" onclick="window.editCell(event,'+p.id+',\'qty\')">'+(p.qty||1)+'</div><div><span class="status-badge '+p.status+'">'+SLABELS[p.status]+'</span></div><div class="stage-dots">'+stageDots+'</div><div>'+etaHtml+'</div><div>'+notesHtml+'</div><div>'+advBtn+'</div><div><button class="sm-btn" onclick="window.editPart('+p.id+')">✎</button></div><div><button class="sm-btn red" onclick="window.confirmDelete('+p.id+',\'part\',\''+esc(p.name)+'\')">×</button></div></div>';
+  return '<div class="part-row parts-grid'+childClass+'" data-part-id="'+p.id+'" style="'+(depth>0?'background:var(--bg);':'')+'"><div class="part-indent" style="'+indentStyle+'">'+indentSymbol+'</div><div>'+addSubBtn+'</div><div class="cell" onclick="window.editCell(event,'+p.id+',\'name\')">'+esc(p.name)+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'code\')">'+(p.code||'—')+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'mfr\')">'+(p.mfr||'—')+'</div><div class="cell muted" onclick="window.editCellAssignee(event,'+p.id+')">'+(p.assignee||'—')+'</div><div class="cell muted" onclick="window.editCell(event,'+p.id+',\'qty\')">'+(p.qty||1)+'</div><div><span class="status-badge '+p.status+'">'+SLABELS[p.status]+'</span></div><div class="stage-dots">'+stageDots+'</div><div>'+etaHtml+'</div><div>'+notesHtml+'</div><div>'+advBtn+'</div><div><button class="sm-btn" onclick="window.editPart('+p.id+',event)">✎</button></div><div><button class="sm-btn red" onclick="window.confirmDelete('+p.id+',\'part\',event)">×</button></div></div>';
 }
 
 function renderGantt(){
@@ -1552,20 +1585,20 @@ function generateAIInsights(){
   const pct=calcOverallProgress(),expected=getExpectedProgress();
   const forecast=getVelocityForecast();
   const overdueActions=actions.filter(a=>a.status!=='completed'&&a.due&&a.due<today);
-  if(overdueActions.length>0){insights.push({level:'critical',icon:'⚠',title:overdueActions.length+' overdue action'+(overdueActions.length>1?'s':''),desc:overdueActions.map(a=>a.task).slice(0,2).join(', '),action:'View in Action Plan →',handler:()=>{document.querySelector('[data-tab="actions"]').click();closeModal('aiModal')}})}
-  if(forecast&&forecast.status==='at-risk'){insights.push({level:'critical',icon:'📉',title:'Completion at risk',desc:'At current rate, finishing '+(forecast.daysToComplete-forecast.daysLeft)+' days late',action:'Review velocity →',handler:()=>{document.querySelector('[data-tab="progress"]').click();closeModal('aiModal')}})}
-  if(expected!==null&&pct<expected-10){insights.push({level:'critical',icon:'📊',title:'Behind schedule',desc:(expected-pct)+'% behind target progress',action:'Review progress →',handler:()=>{document.querySelector('[data-tab="progress"]').click();closeModal('aiModal')}})}
+  if(overdueActions.length>0){insights.push({level:'critical',icon:'⚠',title:overdueActions.length+' overdue action'+(overdueActions.length>1?'s':''),desc:overdueActions.map(a=>a.task).slice(0,2).join(', '),action:'View in Action Plan →',handler:()=>{document.querySelector('[data-tab="actions"]').click();hidePopoverModal($('aiModal'))}})}
+  if(forecast&&forecast.status==='at-risk'){insights.push({level:'critical',icon:'📉',title:'Completion at risk',desc:'At current rate, finishing '+(forecast.daysToComplete-forecast.daysLeft)+' days late',action:'Review velocity →',handler:()=>{document.querySelector('[data-tab="progress"]').click();hidePopoverModal($('aiModal'))}})}
+  if(expected!==null&&pct<expected-10){insights.push({level:'critical',icon:'📊',title:'Behind schedule',desc:(expected-pct)+'% behind target progress',action:'Review progress →',handler:()=>{document.querySelector('[data-tab="progress"]').click();hidePopoverModal($('aiModal'))}})}
   const stuckParts=parts.filter(p=>p.status==='to-order'&&p.changedAt&&(now-p.changedAt)>5*day);
-  if(stuckParts.length>0){insights.push({level:'warning',icon:'⏳',title:stuckParts.length+' part'+(stuckParts.length>1?'s':'')+' waiting >5 days',desc:stuckParts.map(p=>p.name).slice(0,2).join(', '),action:'View parts →',handler:()=>{filterStage='to-order';render();closeModal('aiModal')}})}
+  if(stuckParts.length>0){insights.push({level:'warning',icon:'⏳',title:stuckParts.length+' part'+(stuckParts.length>1?'s':'')+' waiting >5 days',desc:stuckParts.map(p=>p.name).slice(0,2).join(', '),action:'View parts →',handler:()=>{filterStage='to-order';render();hidePopoverModal($('aiModal'))}})}
   const longTransit=parts.filter(p=>p.status==='ordered'&&p.changedAt&&(now-p.changedAt)>7*day);
-  if(longTransit.length>0){insights.push({level:'warning',icon:'📦',title:longTransit.length+' part'+(longTransit.length>1?'s':'')+' in transit >7d',desc:'Follow up with suppliers',action:'View parts →',handler:()=>{filterStage='ordered';render();closeModal('aiModal')}})}
+  if(longTransit.length>0){insights.push({level:'warning',icon:'📦',title:longTransit.length+' part'+(longTransit.length>1?'s':'')+' in transit >7d',desc:'Follow up with suppliers',action:'View parts →',handler:()=>{filterStage='ordered';render();hidePopoverModal($('aiModal'))}})}
   const missingEta=parts.filter(p=>(p.status==='to-order'||p.status==='ordered')&&getPartETA(p).type==='unknown');
-  if(missingEta.length>0){insights.push({level:'warning',icon:'❓',title:missingEta.length+' part'+(missingEta.length>1?'s':'')+' missing ETA',desc:'Add lead time data for planning',action:'Set ETA →',handler:()=>{if(missingEta[0])window.openEtaModal(missingEta[0].id);closeModal('aiModal')}})}
+  if(missingEta.length>0){insights.push({level:'warning',icon:'❓',title:missingEta.length+' part'+(missingEta.length>1?'s':'')+' missing ETA',desc:'Add lead time data for planning',action:'Set ETA →',handler:()=>{if(missingEta[0])window.openEtaModal(missingEta[0].id);hidePopoverModal($('aiModal'))}})}
   const otd=calcSupplierOTD();
-  if(otd!==null&&otd<80){insights.push({level:'warning',icon:'🚚',title:'Supplier OTD: '+otd+'%',desc:'Consider adding buffer to estimates',action:'View lead times →',handler:()=>{renderLeadTimeModal();$('leadtimeModal').classList.add('open');closeModal('aiModal')}})}
+  if(otd!==null&&otd<80){insights.push({level:'warning',icon:'🚚',title:'Supplier OTD: '+otd+'%',desc:'Consider adding buffer to estimates',action:'View lead times →',handler:()=>{renderLeadTimeModal();$('leadtimeModal').classList.add('open');hidePopoverModal($('aiModal'))}})}
   if(forecast&&forecast.status==='ahead'){insights.push({level:'success',icon:'🎯',title:'Ahead of schedule',desc:'Est. completion '+(forecast.daysLeft-forecast.daysToComplete)+' days early',action:null,handler:null})}
   const readyToInstall=parts.filter(p=>p.status==='tested');
-  if(readyToInstall.length>0){insights.push({level:'info',icon:'✓',title:readyToInstall.length+' ready to install',desc:readyToInstall.map(p=>p.name).slice(0,3).join(', '),action:'Install now →',handler:()=>{filterStage='tested';render();closeModal('aiModal')}})}
+  if(readyToInstall.length>0){insights.push({level:'info',icon:'✓',title:readyToInstall.length+' ready to install',desc:readyToInstall.map(p=>p.name).slice(0,3).join(', '),action:'Install now →',handler:()=>{filterStage='tested';render();hidePopoverModal($('aiModal'))}})}
   if(insights.length===0){insights.push({level:'success',icon:'✓',title:'All systems nominal',desc:'No issues detected',action:null,handler:null})}
   return insights;
 }
@@ -1581,8 +1614,8 @@ window.openEtaModal=openEtaModal;
 function updateSelects(){const opts='<option value="">—</option>'+team.map(t=>'<option value="'+esc(t.name)+'">'+esc(t.name)+'</option>').join('');$('pmAssignee').innerHTML=opts;$('amAssignee').innerHTML=opts;$('actAssignee').innerHTML=opts;$('assigneeFilter').innerHTML='<option value="">All</option>'+team.map(t=>'<option value="'+esc(t.name)+'">'+esc(t.name)+'</option>').join('');$('actionAssigneeFilter').innerHTML='<option value="">All Assignees</option>'+team.map(t=>'<option value="'+esc(t.name)+'">'+esc(t.name)+'</option>').join('');$('actLinkedPart').innerHTML='<option value="">— None —</option>'+getParts().map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join('')}
 function updateExpandToggle(){const btn=$('expandToggle');const asms=getAsms();const expandedCount=asms.filter(a=>expanded[a.id]).length;allExpanded=expandedCount>asms.length/2;btn.innerHTML=allExpanded?'<span class="arrow">▲</span> Collapse':'<span class="arrow">▼</span> Expand';btn.classList.toggle('expanded',allExpanded)}
 
-function renderTeamList(){$('teamList').innerHTML=!team.length?'<p style="color:var(--text3);text-align:center;padding:12px;font-size:10px">No team members</p>':team.map((t,i)=>'<div class="team-item"><div class="team-item-info"><div style="font-weight:600">'+esc(t.name)+'</div><div style="font-size:10px;color:var(--text3)">'+esc(t.email)+'</div></div><button class="team-item-del" onclick="window.delTeam('+i+')">×</button></div>').join('')}
-function renderBomList(){if(!savedBoms.length){$('bomList').innerHTML='<p style="color:var(--text3);text-align:center;padding:20px">No saved specifications</p>';return}$('bomList').innerHTML=savedBoms.map(b=>'<div class="bom-item" onclick="window.loadBom('+b.id+')"><div class="bom-item-info"><div class="bom-item-name">'+esc(b.name)+'</div><div class="bom-item-meta">'+b.items.filter(i=>i.isAsm).length+' asm, '+b.items.filter(i=>!i.isAsm).length+' parts</div></div><button class="bom-item-del" onclick="event.stopPropagation();window.delBom('+b.id+')">×</button></div>').join('')}
+function renderTeamList(){$('teamList').innerHTML=!team.length?'<p style="color:var(--text3);text-align:center;padding:12px;font-size:10px">No team members</p>':team.map((t,i)=>'<div class="team-item"><div class="team-item-info"><div style="font-weight:600">'+esc(t.name)+'</div><div style="font-size:10px;color:var(--text3)">'+esc(t.email)+'</div></div><button class="team-item-del" onclick="window.delTeam('+i+',event)">×</button></div>').join('')}
+function renderBomList(){if(!savedBoms.length){$('bomList').innerHTML='<p style="color:var(--text3);text-align:center;padding:20px">No saved specifications</p>';return}$('bomList').innerHTML=savedBoms.map(b=>'<div class="bom-item" onclick="window.loadBom('+b.id+')"><div class="bom-item-info"><div class="bom-item-name">'+esc(b.name)+'</div><div class="bom-item-meta">'+b.items.filter(i=>i.isAsm).length+' asm, '+b.items.filter(i=>!i.isAsm).length+' parts</div></div><button class="bom-item-del" onclick="event.stopPropagation();window.delBom('+b.id+',event)">×</button></div>').join('')}
 
 window.toggleAsmRow=function(e,id){if(e.target.closest('.asm-actions')||e.target.closest('.cell')||e.target.closest('.asm-priority'))return;expanded[id]=!expanded[id];saveExpanded();render()};
 window.moveAsmUp=function(id){
@@ -1605,7 +1638,7 @@ window.moveAsmDown=function(id){
   next.priority=tempPriority;
   save();render();
 };
-window.addNewAsm=function(){const id=Date.now(),asms=getAsms();const maxP=asms.length?Math.max(...asms.map(a=>a.priority||0)):0;data.push({id,name:'New Assembly',isAsm:true,assignee:'',priority:maxP+1});expanded[id]=true;save();render();setTimeout(()=>{editAsmId=id;$('amTitle').textContent='Edit Assembly';$('amName').value='New Assembly';$('amAssignee').value='';$('amNotes').value='';$('amNotify').disabled=true;$('asmModal').classList.add('open');$('amName').select()},50)};
+window.addNewAsm=function(){const id=Date.now(),asms=getAsms();const maxP=asms.length?Math.max(...asms.map(a=>a.priority||0)):0;data.push({id,name:'New Assembly',isAsm:true,assignee:'',priority:maxP+1});expanded[id]=true;save();render();setTimeout(()=>{editAsmId=id;$('amTitle').textContent='Edit Assembly';$('amName').value='New Assembly';$('amAssignee').value='';$('amNotes').value='';$('amNotify').disabled=true;showPopoverModal($('asmModal'),null);$('amName').select()},50)};
 window.addNewPart=function(parentId){const id=Date.now();data.push({id,name:'New Part',code:'',mfr:'',qty:1,assignee:'',parentId,status:'to-order',changedAt:id});save();render();highlightPartId=id;setTimeout(()=>{const row=document.querySelector('[data-part-id="'+id+'"] .cell');if(row)row.click()},50)};
 window.addSubPart=function(parentPartId){const parentPart=data.find(d=>d.id===parentPartId);if(!parentPart)return;const id=Date.now();data.push({id,name:'New Sub-Part',code:'',mfr:'',qty:1,assignee:parentPart.assignee||'',parentId:parentPartId,status:'to-order',changedAt:id});save();render();highlightPartId=id;setTimeout(()=>{const row=document.querySelector('[data-part-id="'+id+'"] .cell');if(row)row.click()},50)};
 
@@ -1733,13 +1766,62 @@ function generateReport(){
 
 
 window.loadBom=function(bomId){const bom=savedBoms.find(b=>b.id===bomId);if(!bom)return;if(!confirm('Load "'+bom.name+'"?'))return;currentProjectName=bom.name;data=[];expanded={};history=[];let id=1;const asmMap={};bom.items.filter(i=>i.isAsm).forEach((item,idx)=>{const asmId=id++;asmMap[item.name]=asmId;data.push({id:asmId,name:item.name,isAsm:true,assignee:'',priority:idx+1});expanded[asmId]=true});bom.items.filter(i=>!i.isAsm).forEach(item=>{const parentId=asmMap[item.parent]||null;data.push({id:id++,name:item.name,code:item.code||'',mfr:item.mfr||'',qty:item.qty||1,assignee:'',parentId,status:'to-order',changedAt:Date.now()})});save();render();closeModal('bomModal');toast('Loaded: '+bom.name)};
-window.delBom=function(bomId){if(!confirm('Delete?'))return;savedBoms=savedBoms.filter(b=>b.id!==bomId);saveBoms();renderBomList()};
+window.delBom=function(bomId,e){
+  deleteTarget={id:bomId,type:'bom'};
+  const bom=savedBoms.find(b=>b.id===bomId);
+  const name=bom?bom.name:'Specification';
+  $('deleteMsg').innerHTML='Delete "<strong>'+esc(name)+'</strong>"?';
+  
+  const popover=$('deletePopover');
+  const btn=e?e.target.closest('button'):null;
+  if(btn){
+    const rect=btn.getBoundingClientRect();
+    let top=rect.bottom+8;
+    let left=rect.left-popover.offsetWidth+rect.width;
+    if(left<10)left=10;
+    if(top+120>window.innerHeight)top=rect.top-120-8;
+    popover.style.top=top+'px';
+    popover.style.left=left+'px';
+  }
+  popover.classList.add('open');
+};
 window.saveBom=function(){const name=$('bomName').value.trim();if(!name){toast('Enter name',1);return}const items=[];const asms=getAsms();asms.forEach(asm=>{items.push({name:asm.name,isAsm:true});data.filter(d=>d.parentId===asm.id).forEach(p=>{items.push({name:p.name,code:p.code,mfr:p.mfr,qty:p.qty,parent:asm.name})})});savedBoms.push({id:Date.now(),name,items});saveBoms();closeModal('bomModal');toast('Saved')};
 
 window.clearStageFilter=()=>{filterStage='';render()};
 window.clearAssigneeFilter=()=>{filterAssignee='';$('assigneeFilter').value='';render()};
-window.editAsm=id=>{const a=data.find(d=>d.id===id);if(!a)return;editAsmId=id;$('amTitle').textContent='Edit Assembly';$('amName').value=a.name;$('amAssignee').value=a.assignee||'';$('amNotes').value=a.notes||'';$('amNotify').disabled=!getTeamEmail(a.assignee);$('asmModal').classList.add('open')};
-window.editPart=id=>{const p=data.find(d=>d.id===id);if(!p)return;editId=id;$('pmTitle').textContent='Edit Part';$('pmName').value=p.name;$('pmCode').value=p.code||'';$('pmMfr').value=p.mfr||'';$('pmQty').value=p.qty||1;$('pmAssignee').value=p.assignee||'';$('pmStatus').value=p.status;$('pmParent').value=p.parentId||'';$('pmNotes').value=p.notes||'';$('pmNotify').disabled=!getTeamEmail(p.assignee);$('partModal').classList.add('open')};
+function showPopoverModal(modal,btn){
+  $('popoverBackdrop').classList.add('active');
+  if(btn){
+    const rect=btn.getBoundingClientRect();
+    const mw=320,mh=Math.min(modal.scrollHeight||400,window.innerHeight-100);
+    let top=rect.top;
+    let left=rect.right-mw-10;
+    // Keep in viewport
+    if(left<16)left=16;
+    if(left+mw>window.innerWidth-16)left=window.innerWidth-mw-16;
+    if(top+mh>window.innerHeight-50)top=Math.max(50,window.innerHeight-mh-50);
+    modal.style.top=top+'px';
+    modal.style.left=left+'px';
+  }else{
+    modal.style.top='50%';
+    modal.style.left='50%';
+    modal.style.transform='translate(-50%,-50%) scale(1)';
+  }
+  modal.classList.add('open');
+}
+function hidePopoverModal(modal){
+  modal.classList.remove('open');
+  modal.style.transform='';
+  $('popoverBackdrop').classList.remove('active');
+}
+$('popoverBackdrop').onclick=()=>{
+  hidePopoverModal($('partModal'));editId=null;
+  hidePopoverModal($('asmModal'));editAsmId=null;
+  hidePopoverModal($('actionModal'));editActId=null;
+  hidePopoverModal($('aiModal'));
+};
+window.editAsm=(id,e)=>{const a=data.find(d=>d.id===id);if(!a)return;editAsmId=id;$('amTitle').textContent='Edit Assembly';$('amName').value=a.name;$('amAssignee').value=a.assignee||'';$('amNotes').value=a.notes||'';$('amNotify').disabled=!getTeamEmail(a.assignee);showPopoverModal($('asmModal'),e?e.target.closest('button'):null)};
+window.editPart=(id,e)=>{const p=data.find(d=>d.id===id);if(!p)return;editId=id;$('pmTitle').textContent='Edit Part';$('pmName').value=p.name;$('pmCode').value=p.code||'';$('pmMfr').value=p.mfr||'';$('pmQty').value=p.qty||1;$('pmAssignee').value=p.assignee||'';$('pmStatus').value=p.status;$('pmParent').value=p.parentId||'';$('pmNotes').value=p.notes||'';$('pmNotify').disabled=!getTeamEmail(p.assignee);showPopoverModal($('partModal'),e?e.target.closest('button'):null)};
 
 let pendingAdvPartId=null;
 window.advPart=id=>{
@@ -1775,19 +1857,38 @@ function advancePartStatus(id){
 }
 
 let deleteTarget={id:null,type:null};
-window.confirmDelete=(id,type,name)=>{
+window.confirmDelete=(id,type,e)=>{
   deleteTarget={id,type};
   const item=data.find(d=>d.id===id);
-  let msg='Delete <strong>"'+name+'"</strong>?';
+  const name=item?item.name:'Item';
+  let msg='Delete "<strong>'+esc(name)+'</strong>"?';
   if(type==='assembly'){
     const kids=data.filter(d=>d.parentId===id);
-    if(kids.length)msg+='<br><span style="color:var(--text3);font-size:12px">This will also delete '+kids.length+' part'+(kids.length>1?'s':'')+'</span>';
+    if(kids.length)msg+='<br><span style="color:var(--text3);font-size:11px">+'+kids.length+' part'+(kids.length>1?'s':'')+'</span>';
   }else if(type==='part'){
     const subParts=data.filter(d=>d.parentId===id);
-    if(subParts.length)msg+='<br><span style="color:var(--text3);font-size:12px">This will also delete '+subParts.length+' sub-part'+(subParts.length>1?'s':'')+'</span>';
+    if(subParts.length)msg+='<br><span style="color:var(--text3);font-size:11px">+'+subParts.length+' sub-part'+(subParts.length>1?'s':'')+'</span>';
   }
   $('deleteMsg').innerHTML=msg;
-  $('deleteModal').classList.add('open');
+  
+  // Position popover near the button
+  const popover=$('deletePopover');
+  const btn=e?e.target.closest('button'):null;
+  if(btn){
+    const rect=btn.getBoundingClientRect();
+    let top=rect.bottom+8;
+    let left=rect.left-popover.offsetWidth+rect.width;
+    // Keep in viewport
+    if(left<10)left=10;
+    if(top+150>window.innerHeight)top=rect.top-popover.offsetHeight-8;
+    popover.style.top=top+'px';
+    popover.style.left=left+'px';
+  }else{
+    popover.style.top='50%';
+    popover.style.left='50%';
+    popover.style.transform='translate(-50%,-50%) scale(1)';
+  }
+  popover.classList.add('open');
 };
 
 window.copyPO=(po,e)=>{
@@ -1796,15 +1897,50 @@ window.copyPO=(po,e)=>{
   toast('Copied: '+po);
 };
 
-window.delItem=id=>{const item=data.find(d=>d.id===id);if(!item)return;const kids=data.filter(d=>d.parentId===id);if(confirm('Delete "'+item.name+'"?'+(item.isAsm&&kids.length?' (+'+kids.length+' parts)':''))){data=data.filter(d=>d.id!==id&&d.parentId!==id);delete expanded[id];save();render();toast('Deleted')}};
-window.delTeam=idx=>{if(confirm('Remove?')){team.splice(idx,1);save();renderTeamList();updateSelects()}};
+window.delTeam=(idx,e)=>{
+  deleteTarget={id:idx,type:'team'};
+  const member=team[idx];
+  const name=member?member.name:'Member';
+  $('deleteMsg').innerHTML='Remove "<strong>'+esc(name)+'</strong>" from team?';
+  
+  const popover=$('deletePopover');
+  const btn=e?e.target.closest('button'):null;
+  if(btn){
+    const rect=btn.getBoundingClientRect();
+    let top=rect.bottom+8;
+    let left=rect.left-popover.offsetWidth+rect.width;
+    if(left<10)left=10;
+    if(top+120>window.innerHeight)top=rect.top-120-8;
+    popover.style.top=top+'px';
+    popover.style.left=left+'px';
+  }
+  popover.classList.add('open');
+};
 window.openDates=()=>{$('startDate').value=projectDates.start||'';$('endDate').value=projectDates.end||'';$('datesModal').classList.add('open')};
 
 function sendNotify(item,isAsm){const email=getTeamEmail(item.assignee);if(!email)return;const status=isAsm?calcAsmProgress(item.id)+'%':SLABELS[item.status],subject=encodeURIComponent('Action Required: '+item.name),body=encodeURIComponent('Hi '+item.assignee+',\n\nItem: '+item.name+'\nStatus: '+status+'\n'+(item.notes?'Notes: '+item.notes+'\n':'')+'\nThanks!');window.location.href='mailto:'+email+'?subject='+subject+'&body='+body}
 
-window.editAction=id=>{const a=actions.find(x=>x.id===id);if(!a)return;editActId=id;$('actTitle').textContent='Edit Action';$('actTask').value=a.task;$('actLinkedPart').value=a.linkedPartId||'';$('actDue').value=a.due||'';$('actAssignee').value=a.assignee||'';$('actStatus').value=a.status;$('actionModal').classList.add('open')};
+window.editAction=(id,e)=>{const a=actions.find(x=>x.id===id);if(!a)return;editActId=id;$('actTitle').textContent='Edit Action';$('actTask').value=a.task;$('actLinkedPart').value=a.linkedPartId||'';$('actDue').value=a.due||'';$('actAssignee').value=a.assignee||'';$('actStatus').value=a.status;showPopoverModal($('actionModal'),e?e.target.closest('button'):null)};
 window.advAction=id=>{const a=actions.find(x=>x.id===id);if(!a)return;const si=ASTAGES.indexOf(a.status),next=ASTAGES[si+1];if(next){a.status=next;save();render();toast('→ '+ALABELS[next])}};
-window.delAction=id=>{if(confirm('Delete?')){actions=actions.filter(a=>a.id!==id);save();render();toast('Deleted')}};
+window.delAction=(id,e)=>{
+  deleteTarget={id,type:'action'};
+  const item=actions.find(a=>a.id===id);
+  const name=item?item.task:'Action';
+  $('deleteMsg').innerHTML='Delete "<strong>'+esc(name.substring(0,30))+(name.length>30?'...':'')+'</strong>"?';
+  
+  const popover=$('deletePopover');
+  const btn=e?e.target.closest('button'):null;
+  if(btn){
+    const rect=btn.getBoundingClientRect();
+    let top=rect.bottom+8;
+    let left=rect.left-popover.offsetWidth+rect.width;
+    if(left<10)left=10;
+    if(top+120>window.innerHeight)top=rect.top-120-8;
+    popover.style.top=top+'px';
+    popover.style.left=left+'px';
+  }
+  popover.classList.add('open');
+};
 
 window.goToAction=actionId=>{highlightActionId=actionId;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelector('[data-tab="actions"]').classList.add('active');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));$('actionsPanel').classList.add('active');renderActions();setTimeout(()=>{const row=document.querySelector('[data-action-id="'+actionId+'"]');if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},50)};
 window.goToPart=partId=>{document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelector('[data-tab="list"]').classList.add('active');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));$('listPanel').classList.add('active');const part=data.find(d=>d.id===partId);if(part&&part.parentId)expanded[part.parentId]=true;highlightPartId=partId;render();setTimeout(()=>{const row=document.querySelector('[data-part-id="'+partId+'"]');if(row)row.scrollIntoView({behavior:'smooth',block:'center'})},50)};
@@ -1813,9 +1949,8 @@ window.goToAsm=asmId=>{document.querySelectorAll('.tab').forEach(t=>t.classList.
 const closeModal=id=>$(id).classList.remove('open');
 
 // Event listeners
-$('aiAlert').onclick=()=>{renderAIModal();$('aiModal').classList.add('open')};
-$('aiClose').onclick=$('aiDone').onclick=()=>closeModal('aiModal');
-$('aiModal').onclick=e=>{if(e.target.id==='aiModal')closeModal('aiModal')};
+$('aiAlert').onclick=(e)=>{renderAIModal();showPopoverModal($('aiModal'),e.target.closest('button')||e.target)};
+$('aiClose').onclick=$('aiDone').onclick=()=>hidePopoverModal($('aiModal'));
 
 $('reportBtn').onclick=()=>{const report=generateReport();$('reportContent').textContent=report;$('reportDate').textContent=new Date().toLocaleDateString();$('reportRecipients').textContent=team.length?'To: '+team.map(t=>t.name).join(', '):'No team';$('reportModal').classList.add('open')};
 $('reportClose').onclick=()=>closeModal('reportModal');
@@ -1861,7 +1996,7 @@ window.showOTDModal=function(){
 $('otdClose').onclick=$('otdDone').onclick=()=>closeModal('otdModal');
 $('otdModal').onclick=e=>{if(e.target.id==='otdModal')closeModal('otdModal')};
 
-$('pmClose').onclick=$('pmCancel').onclick=()=>{closeModal('partModal');editId=null};
+$('pmClose').onclick=$('pmCancel').onclick=()=>{hidePopoverModal($('partModal'));editId=null};
 $('pmSave').onclick=()=>{
   const name=$('pmName').value.trim();if(!name){toast('Enter name',1);return}
   const now=Date.now();
@@ -1879,11 +2014,11 @@ $('pmSave').onclick=()=>{
     if(part.status==='ordered')part.orderedAt=now;
     data.push(part);toast('Added');
   }
-  save();render();closeModal('partModal');editId=null;
+  save();render();hidePopoverModal($('partModal'));editId=null;
 };
-$('partModal').onclick=e=>{if(e.target.id==='partModal'){closeModal('partModal');editId=null}};
 
-$('amClose').onclick=$('amCancel').onclick=()=>{closeModal('asmModal');editAsmId=null};
+
+$('amClose').onclick=$('amCancel').onclick=()=>{hidePopoverModal($('asmModal'));editAsmId=null};
 $('amSave').onclick=()=>{
   const name=$('amName').value.trim();if(!name){toast('Enter name',1);return}
   if(editAsmId){
@@ -1897,16 +2032,16 @@ $('amSave').onclick=()=>{
     expanded[id]=true;
     toast('Added');
   }
-  save();render();closeModal('asmModal');editAsmId=null;
+  save();render();hidePopoverModal($('asmModal'));editAsmId=null;
 };
-$('asmModal').onclick=e=>{if(e.target.id==='asmModal'){closeModal('asmModal');editAsmId=null}};
+
 
 $('amNotify').onclick=()=>{if(editAsmId){const a=data.find(d=>d.id===editAsmId);if(a)sendNotify(a,true)}};
 $('amAssignee').onchange=()=>{$('amNotify').disabled=!getTeamEmail($('amAssignee').value)};
 $('pmAssignee').onchange=()=>{$('pmNotify').disabled=!getTeamEmail($('pmAssignee').value)};
 $('pmNotify').onclick=()=>{if(editId){const p=data.find(d=>d.id===editId);if(p)sendNotify(p,false)}};
 
-$('actClose').onclick=$('actCancel').onclick=()=>{closeModal('actionModal');editActId=null};
+$('actClose').onclick=$('actCancel').onclick=()=>{hidePopoverModal($('actionModal'));editActId=null};
 $('actSave').onclick=()=>{
   const task=$('actTask').value.trim();if(!task){toast('Enter task',1);return}
   if(editActId){
@@ -1917,11 +2052,11 @@ $('actSave').onclick=()=>{
     actions.push({id:Date.now(),task,linkedPartId:$('actLinkedPart').value?parseInt($('actLinkedPart').value):null,due:$('actDue').value,assignee:$('actAssignee').value,status:$('actStatus').value,createdAt:new Date().toISOString().split('T')[0]});
     toast('Added');
   }
-  save();render();closeModal('actionModal');editActId=null;
+  save();render();hidePopoverModal($('actionModal'));editActId=null;
 };
-$('actionModal').onclick=e=>{if(e.target.id==='actionModal'){closeModal('actionModal');editActId=null}};
 
-$('addActionBtn').onclick=()=>{editActId=null;$('actTitle').textContent='Add Action';$('actTask').value='';$('actLinkedPart').value='';$('actDue').value='';$('actAssignee').value='';$('actStatus').value='not-started';$('actionModal').classList.add('open')};
+
+$('addActionBtn').onclick=(e)=>{editActId=null;$('actTitle').textContent='Add Action';$('actTask').value='';$('actLinkedPart').value='';$('actDue').value='';$('actAssignee').value='';$('actStatus').value='not-started';showPopoverModal($('actionModal'),e.target)};
 
 $('teamBtn').onclick=()=>{renderTeamList();$('teamModal').classList.add('open')};
 $('teamClose').onclick=$('teamDone').onclick=()=>closeModal('teamModal');
@@ -1949,21 +2084,39 @@ $('poSave').onclick=()=>{
 };
 $('poModal').onclick=e=>{if(e.target.id==='poModal'){closeModal('poModal');pendingAdvPartId=null}};
 
-// Delete confirmation modal handlers
-$('deleteClose').onclick=$('deleteCancel').onclick=()=>{closeModal('deleteModal');deleteTarget={id:null,type:null}};
+// Delete confirmation popover handlers
+function closeDeletePopover(){$('deletePopover').classList.remove('open');deleteTarget={id:null,type:null}}
+$('deleteCancel').onclick=closeDeletePopover;
 $('deleteConfirm').onclick=()=>{
-  if(deleteTarget.id){
-    const item=data.find(d=>d.id===deleteTarget.id);
-    if(item){
-      data=data.filter(d=>d.id!==deleteTarget.id&&d.parentId!==deleteTarget.id);
-      delete expanded[deleteTarget.id];
-      save();render();toast('Deleted');
+  if(deleteTarget.id!==null){
+    if(deleteTarget.type==='action'){
+      actions=actions.filter(a=>a.id!==deleteTarget.id);
+      save();render();
+    }else if(deleteTarget.type==='team'){
+      team.splice(deleteTarget.id,1);
+      save();renderTeamList();updateSelects();
+    }else if(deleteTarget.type==='bom'){
+      savedBoms=savedBoms.filter(b=>b.id!==deleteTarget.id);
+      saveBoms();renderBomList();
+    }else{
+      const item=data.find(d=>d.id===deleteTarget.id);
+      if(item){
+        data=data.filter(d=>d.id!==deleteTarget.id&&d.parentId!==deleteTarget.id);
+        delete expanded[deleteTarget.id];
+        save();render();
+      }
     }
+    toast('Deleted');
   }
-  closeModal('deleteModal');
-  deleteTarget={id:null,type:null};
+  closeDeletePopover();
 };
-$('deleteModal').onclick=e=>{if(e.target.id==='deleteModal'){closeModal('deleteModal');deleteTarget={id:null,type:null}}};
+// Close popover when clicking outside
+document.addEventListener('click',e=>{
+  const popover=$('deletePopover');
+  if(popover.classList.contains('open')&&!popover.contains(e.target)&&!e.target.closest('.sm-btn.red')&&!e.target.closest('.adv-btn')&&!e.target.closest('.team-item-del')&&!e.target.closest('.bom-item-del')){
+    closeDeletePopover();
+  }
+});
 
 $('menuBtn').onclick=e=>{e.stopPropagation();$('menuDrop').classList.toggle('open')};
 document.onclick=()=>$('menuDrop').classList.remove('open');
@@ -2007,7 +2160,7 @@ document.querySelectorAll('.tab').forEach(tab=>tab.onclick=()=>{
   if(tab.dataset.tab==='progress')setTimeout(renderBurndown,10);
 });
 
-document.onkeydown=e=>{if(e.key==='Escape'){['partModal','asmModal','teamModal','datesModal','actionModal','aiModal','reportModal','leadtimeModal','etaModal','bomModal','themeModal','poModal','deleteModal','otdModal'].forEach(closeModal);editId=editAsmId=editActId=editEtaPartId=pendingAdvPartId=null;deleteTarget={id:null,type:null}}};
+document.onkeydown=e=>{if(e.key==='Escape'){['teamModal','datesModal','reportModal','leadtimeModal','etaModal','bomModal','themeModal','poModal','otdModal'].forEach(closeModal);hidePopoverModal($('partModal'));hidePopoverModal($('asmModal'));hidePopoverModal($('actionModal'));hidePopoverModal($('aiModal'));closeDeletePopover();editId=editAsmId=editActId=editEtaPartId=pendingAdvPartId=null}};
 
 // ============================================
 // CHAT SYSTEM
