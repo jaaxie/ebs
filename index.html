@@ -274,8 +274,8 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .login-btn:disabled{opacity:0.5;cursor:not-allowed}
 .login-error{color:var(--red);font-size:12px;text-align:center;margin-top:12px;min-height:18px}
 .login-status{font-size:11px;color:var(--text3);text-align:center;margin-top:16px}
-.sync-indicator{position:fixed;top:62px;right:74px;padding:6px 12px;background:var(--bg2);border-radius:8px;font-size:11px;color:var(--text2);display:none;align-items:center;gap:6px;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.sync-indicator.active{display:flex}
+.sync-indicator{position:fixed;top:62px;right:74px;padding:6px 12px;background:var(--bg2);border-radius:8px;font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2);opacity:0;transform:translateY(-5px);transition:opacity 0.4s ease,transform 0.4s ease;pointer-events:none}
+.sync-indicator.active{opacity:1;transform:translateY(0);pointer-events:auto}
 .sync-indicator.syncing{color:var(--yellow)}
 .sync-indicator.syncing .sync-dot{animation:spin 1s linear infinite;border:2px solid var(--yellow);border-top-color:transparent;background:transparent}
 .sync-indicator.synced{color:var(--green)}
@@ -692,6 +692,7 @@ function showSync(status,text){
 let saveTimeout=null;
 let isSaving=false;
 let lastSyncShow=0;
+let lastLocalSaveTime=0;
 const SYNC_SHOW_INTERVAL=10000; // Only show sync indicator every 10 seconds max
 
 function save(){
@@ -708,6 +709,9 @@ function save(){
   saveTimeout=setTimeout(()=>{
     if(isSaving) return;
     isSaving=true;
+    
+    // Mark this as a local save so we don't re-render when it echoes back
+    lastLocalSaveTime = Date.now();
     
     // Only show syncing indicator if enough time has passed
     const now=Date.now();
@@ -1056,6 +1060,9 @@ function loadFromSnapshot(val){
   render();
 }
 
+// Track local changes to avoid re-render on echo
+let pendingRenderTimeout = null;
+
 function setupRealtimeListener(){
   let skipNext = true;
   
@@ -1065,9 +1072,14 @@ function setupRealtimeListener(){
       return;
     }
     
+    // If this is our own change echoing back (within 2 seconds), skip re-render
+    if(Date.now() - lastLocalSaveTime < 2000){
+      return;
+    }
+    
     const val = snapshot.val();
     if(val && val.data){
-      console.log('Received update from Firebase');
+      console.log('Received update from another user');
       loadFromSnapshot(val);
       saveToLocalStorage();
     }
