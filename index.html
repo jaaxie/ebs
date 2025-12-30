@@ -1465,83 +1465,116 @@ function generateReport(){
 function initializeSampleData(){
   const now=Date.now(),day=86400000;
   
-  // Simple starter data
-  currentProjectName='Industrial Automation Project';
+  currentProjectName='Industrial Automation Line - Phase 2';
   team=[
+    {name:'Marisa',email:'marisa@company.com'},
     {name:'John',email:'john@company.com'},
     {name:'Sarah',email:'sarah@company.com'},
-    {name:'Mike',email:'mike@company.com'},
-    {name:'Lisa',email:'lisa@company.com'}
+    {name:'Mike',email:'mike@company.com'}
   ];
   
-  const start=new Date();start.setDate(start.getDate()-7);
-  const end=new Date();end.setDate(end.getDate()+30);
+  const start=new Date();start.setDate(start.getDate()-14);
+  const end=new Date();end.setDate(end.getDate()+45);
   projectDates={start:start.toISOString().split('T')[0],end:end.toISOString().split('T')[0]};
   
-  data=[];
-  let id=1;
-  expanded={};
-  
-  // Create assemblies and parts
-  const assemblies=[
-    {name:'Main Control Panel',parts:['PLC CPU S7-1500','HMI Panel 15"','Power Supply 24V','IO Module DI-32','IO Module DO-32','Network Switch']},
-    {name:'Conveyor Line 1',parts:['Servo Motor 3kW','Servo Drive','Gearbox 15:1','Proximity Sensors x4','Safety Light Curtain','Motor Cable 15m']},
-    {name:'Robot Cell',parts:['Robot Arm 6-Axis','Robot Controller','Gripper Assembly','Vision Camera','Safety Scanner','Teach Pendant']},
-    {name:'Safety System',parts:['Safety PLC','E-Stop Stations x4','Door Interlock x2','Safety Relay Module','Reset Button x2']},
-    {name:'Pneumatic System',parts:['Air Compressor','FRL Unit','Solenoid Valves x8','Cylinders 50mm x4','Flow Controls x10']}
+  const partTemplates=[
+    {asm:'Main Control Panel',parts:[{name:'PLC CPU S7-1500',code:'6ES7-1500',mfr:'Siemens'},{name:'HMI Panel 15"',code:'HMI-TP1500',mfr:'Siemens'},{name:'PSU 24V 40A',code:'PSU-24-40',mfr:'Mean Well'},{name:'DI Module 32pt',code:'IO-DI-32',mfr:'Siemens'},{name:'DO Module 32pt',code:'IO-DO-32',mfr:'Siemens'},{name:'AI Module 8ch',code:'IO-AI-8',mfr:'Siemens'},{name:'AO Module 4ch',code:'IO-AO-4',mfr:'Siemens'},{name:'Profinet Switch',code:'PN-SW-8',mfr:'Scalance'},{name:'UPS System',code:'UPS-3KVA',mfr:'APC'},{name:'Panel Cooler',code:'PC-500W',mfr:'Rittal'}]},
+    {asm:'Conveyor Line 1',parts:[{name:'Servo Motor 3kW',code:'SM-3KW-01',mfr:'Yaskawa'},{name:'Servo Drive',code:'SD-3KW-01',mfr:'Yaskawa'},{name:'Gearbox 15:1',code:'GB-15-1',mfr:'SEW'},{name:'Timing Belt',code:'TB-500',mfr:'Gates'},{name:'Conveyor Frame',code:'CF-3M',mfr:'Bosch'},{name:'Guide Rails',code:'GR-3M',mfr:'Bosch'},{name:'Proximity Sensors x4',code:'PS-IND-4',mfr:'IFM'},{name:'Photo Eyes x2',code:'PE-RET-2',mfr:'Banner'},{name:'Motor Cable 15m',code:'MC-15M',mfr:'Lapp'},{name:'Encoder Cable',code:'EC-10M',mfr:'Lapp'}]},
+    {asm:'Conveyor Line 2',parts:[{name:'Servo Motor 2kW',code:'SM-2KW-02',mfr:'Yaskawa'},{name:'Servo Drive 2kW',code:'SD-2KW-02',mfr:'Yaskawa'},{name:'Gearbox 10:1',code:'GB-10-2',mfr:'SEW'},{name:'V-Belt System',code:'VB-400',mfr:'Gates'},{name:'Conveyor Frame 2m',code:'CF-2M',mfr:'Bosch'},{name:'Side Guards',code:'SG-2M',mfr:'Bosch'},{name:'Inductive Sensors x6',code:'PS-IND-6',mfr:'IFM'},{name:'Reflective Sensor',code:'RS-01',mfr:'Sick'},{name:'Junction Box',code:'JB-IP65',mfr:'Wago'},{name:'Cable Tray 2m',code:'CT-2M',mfr:'Legrand'}]},
+    {asm:'Robot Cell 1',parts:[{name:'Robot Arm 6-Axis',code:'RA-6AX-20',mfr:'Fanuc'},{name:'Robot Controller R30iB',code:'RC-R30IB',mfr:'Fanuc'},{name:'Gripper Assembly',code:'GRP-PNU',mfr:'Schunk'},{name:'Tool Changer',code:'TC-AUTO',mfr:'ATI'},{name:'Vision Camera',code:'VC-2MP',mfr:'Cognex'},{name:'Vision Light',code:'VL-RING',mfr:'CCS'},{name:'Robot Pedestal',code:'RP-750',mfr:'Custom'},{name:'Safety Mat',code:'SM-1200',mfr:'Omron'},{name:'Teach Pendant Cable',code:'TPC-10M',mfr:'Fanuc'},{name:'Robot Base Plate',code:'RBP-01',mfr:'Custom'}]},
+    {asm:'Robot Cell 2',parts:[{name:'Robot Arm SCARA',code:'RA-SCARA',mfr:'Epson'},{name:'Robot Controller RC90',code:'RC-90',mfr:'Epson'},{name:'Vacuum Gripper',code:'VG-SUC',mfr:'Schmalz'},{name:'Force Sensor',code:'FS-6AX',mfr:'ATI'},{name:'2D Camera',code:'CAM-2D',mfr:'Keyence'},{name:'Backlight Panel',code:'BL-200',mfr:'CCS'},{name:'Robot Stand',code:'RS-400',mfr:'Custom'},{name:'Vacuum Generator',code:'VG-01',mfr:'SMC'},{name:'IO Link Master',code:'IOL-8PT',mfr:'IFM'},{name:'Cable Carrier',code:'CC-R38',mfr:'Igus'}]},
+    {asm:'Safety System',parts:[{name:'Safety PLC',code:'SP-PNOZ',mfr:'Pilz'},{name:'Light Curtain 600mm',code:'LC-600',mfr:'Sick'},{name:'Light Curtain 400mm',code:'LC-400',mfr:'Sick'},{name:'E-Stop Stations x4',code:'ES-4SET',mfr:'ABB'},{name:'Safety Door Switch x3',code:'SDS-3SET',mfr:'Schmersal'},{name:'Safety Relay Module',code:'SRM-01',mfr:'Pilz'},{name:'Muting Sensors x4',code:'MS-4SET',mfr:'Sick'},{name:'Safety Scanner',code:'SS-3M',mfr:'Sick'},{name:'Reset Button x2',code:'RB-2SET',mfr:'ABB'},{name:'Safety Edge',code:'SE-2M',mfr:'Haake'}]},
+    {asm:'Pneumatic System',parts:[{name:'Air Compressor 7.5HP',code:'AC-7HP',mfr:'Atlas Copco'},{name:'Air Dryer',code:'AD-REF',mfr:'Atlas Copco'},{name:'FRL Unit Large',code:'FRL-LG',mfr:'SMC'},{name:'Main Manifold',code:'MM-16PT',mfr:'SMC'},{name:'Solenoid Valves x8',code:'SV-5-8',mfr:'SMC'},{name:'Cylinders 50mm x4',code:'CYL-50-4',mfr:'Festo'},{name:'Cylinders 32mm x6',code:'CYL-32-6',mfr:'Festo'},{name:'Flow Controls x10',code:'FC-10SET',mfr:'SMC'},{name:'Air Tank 100L',code:'AT-100L',mfr:'SMC'},{name:'Pressure Transducer',code:'PT-0-10',mfr:'SMC'}]},
+    {asm:'Hydraulic Unit',parts:[{name:'Hydraulic Power Unit',code:'HPU-15HP',mfr:'Bosch Rexroth'},{name:'Hydraulic Manifold',code:'HM-6PT',mfr:'Custom'},{name:'Proportional Valve',code:'PV-01',mfr:'Bosch Rexroth'},{name:'Pressure Relief Valve',code:'PRV-210',mfr:'Sun'},{name:'Hydraulic Cylinder',code:'HC-100-500',mfr:'Parker'},{name:'Hydraulic Hoses Set',code:'HH-SET',mfr:'Eaton'},{name:'Oil Cooler',code:'OC-24V',mfr:'AKG'},{name:'Hydraulic Filter',code:'HF-10UM',mfr:'Hydac'},{name:'Level Switch',code:'LS-01',mfr:'Hydac'},{name:'Pressure Gauge x2',code:'PG-2SET',mfr:'WIKA'}]},
+    {asm:'Electrical Distribution',parts:[{name:'Main Breaker 400A',code:'MB-400A',mfr:'ABB'},{name:'Contactor 150A x2',code:'CT-150-2',mfr:'ABB'},{name:'Soft Starter 75kW',code:'SS-75KW',mfr:'ABB'},{name:'VFD 15kW',code:'VFD-15KW',mfr:'ABB'},{name:'VFD 7.5kW x2',code:'VFD-7K5-2',mfr:'ABB'},{name:'MCB Set 20pc',code:'MCB-20SET',mfr:'Schneider'},{name:'Overload Relays x6',code:'OLR-6SET',mfr:'ABB'},{name:'Power Meter',code:'PM-3PH',mfr:'Schneider'},{name:'Surge Protector',code:'SPD-01',mfr:'Phoenix'},{name:'Bus Bar System',code:'BBS-400A',mfr:'Rittal'}]},
+    {asm:'Vision Inspection',parts:[{name:'Smart Camera',code:'SC-5MP',mfr:'Cognex'},{name:'Telecentric Lens',code:'TL-0.5X',mfr:'Edmund'},{name:'Dome Light',code:'DL-150',mfr:'CCS'},{name:'Bar Light x2',code:'BAR-200-2',mfr:'CCS'},{name:'Light Controller',code:'LC-4CH',mfr:'CCS'},{name:'Camera Mount',code:'CM-ADJ',mfr:'Cognex'},{name:'Trigger Sensor',code:'TS-01',mfr:'Banner'},{name:'Ethernet Switch',code:'ETH-5PT',mfr:'Cisco'},{name:'Reject Cylinder',code:'RJ-CYL',mfr:'Festo'},{name:'Inspection Stand',code:'IS-ADJ',mfr:'Custom'}]},
+    {asm:'Labeling Station',parts:[{name:'Label Applicator',code:'LA-AUTO',mfr:'Videojet'},{name:'Label Roll Holder',code:'LRH-01',mfr:'Videojet'},{name:'Print Engine',code:'PE-300',mfr:'Zebra'},{name:'Ribbon Holder',code:'RIB-01',mfr:'Zebra'},{name:'Label Sensor',code:'LS-FORK',mfr:'Sick'},{name:'Tamp Cylinder',code:'TC-50',mfr:'Festo'},{name:'Vacuum Pad Set',code:'VP-SET',mfr:'Schmalz'},{name:'Control Box',code:'LCB-01',mfr:'Custom'},{name:'Warning Lights',code:'WL-3CLR',mfr:'Patlite'},{name:'Label Waste Bin',code:'LWB-01',mfr:'Custom'}]},
+    {asm:'Packaging Unit',parts:[{name:'Box Former',code:'BF-AUTO',mfr:'Wexxar'},{name:'Tape Head x2',code:'TH-2SET',mfr:'3M'},{name:'Case Conveyor',code:'CC-1.5M',mfr:'Bosch'},{name:'Pusher Cylinder',code:'PC-100',mfr:'Festo'},{name:'Box Magazine',code:'BM-50',mfr:'Custom'},{name:'Glue System',code:'GS-HOT',mfr:'Nordson'},{name:'Glue Nozzles x4',code:'GN-4SET',mfr:'Nordson'},{name:'Photoeye Set',code:'PES-3',mfr:'Banner'},{name:'Reject Gate',code:'RG-01',mfr:'Custom'},{name:'Pack Counter',code:'PC-DIG',mfr:'Red Lion'}]},
+    {asm:'Palletizer',parts:[{name:'Palletizer Frame',code:'PF-MAIN',mfr:'Custom'},{name:'Layer Gripper',code:'LG-01',mfr:'Schmalz'},{name:'Z-Axis Servo',code:'ZS-5KW',mfr:'Yaskawa'},{name:'X-Axis Linear',code:'XL-2M',mfr:'Bosch'},{name:'Y-Axis Linear',code:'YL-1.5M',mfr:'Bosch'},{name:'Pallet Dispenser',code:'PD-01',mfr:'Custom'},{name:'Slip Sheet Inserter',code:'SSI-01',mfr:'Custom'},{name:'Layer Press',code:'LP-01',mfr:'Custom'},{name:'Pallet Sensor',code:'PS-RF',mfr:'Sick'},{name:'Stack Height Sensor',code:'SHS-01',mfr:'Banner'}]},
+    {asm:'Stretch Wrapper',parts:[{name:'Turntable',code:'TT-1500',mfr:'Lantech'},{name:'Film Carriage',code:'FC-PRE',mfr:'Lantech'},{name:'Film Roll Holder',code:'FRH-01',mfr:'Lantech'},{name:'Mast Assembly',code:'MA-2M',mfr:'Lantech'},{name:'Cut & Clamp',code:'CC-AUTO',mfr:'Lantech'},{name:'Top Press',code:'TP-01',mfr:'Custom'},{name:'Ramp',code:'RAMP-01',mfr:'Custom'},{name:'Film Break Sensor',code:'FBS-01',mfr:'Banner'},{name:'Wrap Counter',code:'WC-DIG',mfr:'Red Lion'},{name:'Safety Fence Gate',code:'SFG-01',mfr:'Troax'}]},
+    {asm:'Outfeed Conveyor',parts:[{name:'Roller Conveyor 3m',code:'RC-3M',mfr:'Hytrol'},{name:'Drive Motor 1.5kW',code:'DM-1K5',mfr:'SEW'},{name:'Gearmotor',code:'GM-01',mfr:'SEW'},{name:'Accumulation Zone x3',code:'AZ-3SET',mfr:'Hytrol'},{name:'Zone Sensors',code:'ZS-6SET',mfr:'Banner'},{name:'Transfer Section',code:'TS-90',mfr:'Hytrol'},{name:'End Stop',code:'ESTOP-01',mfr:'Custom'},{name:'Pallet Stop x2',code:'PSTOP-2',mfr:'Custom'},{name:'Guide Rails 3m',code:'GR-3M-2',mfr:'Bosch'},{name:'Floor Mounts Set',code:'FM-SET',mfr:'Custom'}]}
   ];
-  
+
+  data=[];let id=1;expanded={};
   const statuses=['to-order','ordered','arrived','tested','installed'];
-  const mfrs=['Siemens','ABB','Festo','Fanuc','Bosch','SMC','Sick','IFM'];
   
-  assemblies.forEach((asm,ai)=>{
+  partTemplates.forEach((template,ai)=>{
     const asmId=id++;
-    data.push({id:asmId,name:asm.name,isAsm:true,assignee:team[ai%team.length].name,priority:ai+1});
-    expanded[asmId]=true;
+    // 80% of assemblies assigned to Marisa
+    const asmAssignee=Math.random()<0.8?'Marisa':team[ai%team.length].name;
+    data.push({id:asmId,name:template.asm,isAsm:true,assignee:asmAssignee,priority:ai+1});
+    expanded[asmId]=ai<3;
     
-    asm.parts.forEach((partName,pi)=>{
+    template.parts.forEach((p,pi)=>{
       const statusIdx=Math.floor(Math.random()*5);
       const partId=id++;
-      let orderedAt,arrivedAt;
+      let orderedAt,arrivedAt,expectedArrival;
+      
+      // 80% of parts assigned to Marisa
+      const partAssignee=Math.random()<0.8?'Marisa':team[(ai+pi)%team.length].name;
       
       if(statusIdx>=1){
-        orderedAt=now-Math.floor(Math.random()*15+5)*day;
+        const orderDaysAgo=Math.floor(Math.random()*15)+5;
+        orderedAt=now-orderDaysAgo*day;
+        const expectedLeadDays=Math.floor(Math.random()*9)+3;
+        expectedArrival=new Date(orderedAt+expectedLeadDays*day).toISOString().split('T')[0];
+        
         if(statusIdx>=2){
-          arrivedAt=orderedAt+Math.floor(Math.random()*10+3)*day;
-          if(arrivedAt>now)arrivedAt=now-day;
+          const onTime=Math.random()>0.3;
+          const actualLeadDays=onTime?Math.floor(Math.random()*expectedLeadDays)+1:expectedLeadDays+Math.floor(Math.random()*5)+1;
+          arrivedAt=orderedAt+actualLeadDays*day;
+          if(arrivedAt>now)arrivedAt=now-Math.floor(Math.random()*3)*day;
         }
       }
       
-      data.push({
-        id:partId,
-        name:partName,
-        code:'PART-'+(1000+partId),
-        mfr:mfrs[Math.floor(Math.random()*mfrs.length)],
-        qty:Math.ceil(Math.random()*3),
-        assignee:team[(ai+pi)%team.length].name,
-        parentId:asmId,
-        status:statuses[statusIdx],
-        changedAt:now-Math.floor(Math.random()*10)*day,
-        orderedAt,
-        arrivedAt
-      });
+      data.push({id:partId,name:p.name,code:p.code,mfr:p.mfr,qty:Math.ceil(Math.random()*3),assignee:partAssignee,parentId:asmId,status:statuses[statusIdx],changedAt:now-Math.floor(Math.random()*14)*day,orderedAt,arrivedAt,expectedArrival});
     });
   });
-  
-  history=[];
-  actions=[
-    {id:now+1,task:'Order remaining components',linkedPartId:null,due:new Date(now+3*day).toISOString().split('T')[0],assignee:'Mike',status:'in-progress',createdAt:new Date(now-2*day).toISOString().split('T')[0]},
-    {id:now+2,task:'Complete safety certification',linkedPartId:null,due:new Date(now+7*day).toISOString().split('T')[0],assignee:'Sarah',status:'not-started',createdAt:new Date(now-day).toISOString().split('T')[0]}
+
+  history=[
+    {date:new Date(now-14*day).toISOString().split('T')[0],pct:5},
+    {date:new Date(now-12*day).toISOString().split('T')[0],pct:12},
+    {date:new Date(now-10*day).toISOString().split('T')[0],pct:18},
+    {date:new Date(now-8*day).toISOString().split('T')[0],pct:28},
+    {date:new Date(now-6*day).toISOString().split('T')[0],pct:35},
+    {date:new Date(now-4*day).toISOString().split('T')[0],pct:42},
+    {date:new Date(now-2*day).toISOString().split('T')[0],pct:48},
+    {date:new Date(now-day).toISOString().split('T')[0],pct:55}
   ];
+
+  const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+  const nextWeek=new Date();nextWeek.setDate(nextWeek.getDate()+7);
+  const inTwoDays=new Date();inTwoDays.setDate(inTwoDays.getDate()+2);
+  
+  actions=[
+    {id:now+1,task:'Order remaining pneumatic components',linkedPartId:null,due:yesterday.toISOString().split('T')[0],assignee:'Marisa',status:'not-started',createdAt:new Date(now-7*day).toISOString().split('T')[0]},
+    {id:now+2,task:'Complete safety system certification',linkedPartId:null,due:nextWeek.toISOString().split('T')[0],assignee:'Marisa',status:'in-progress',createdAt:new Date(now-5*day).toISOString().split('T')[0]},
+    {id:now+3,task:'Review robot cell integration plan',linkedPartId:null,due:inTwoDays.toISOString().split('T')[0],assignee:'Marisa',status:'not-started',createdAt:new Date(now-3*day).toISOString().split('T')[0]},
+    {id:now+4,task:'Schedule hydraulic system commissioning',linkedPartId:null,due:nextWeek.toISOString().split('T')[0],assignee:'John',status:'not-started',createdAt:new Date(now-5*day).toISOString().split('T')[0]},
+    {id:now+5,task:'Verify vision camera calibration',linkedPartId:null,due:inTwoDays.toISOString().split('T')[0],assignee:'Sarah',status:'in-progress',createdAt:new Date(now-7*day).toISOString().split('T')[0]}
+  ];
+
+  leadTimeDb={
+    '6ES7-1500':{samples:[{days:7,date:'2024-12-20'},{days:6,date:'2024-12-10'},{days:8,date:'2024-11-25'}],avg:7},
+    'HMI-TP1500':{samples:[{days:10,date:'2024-12-15'},{days:12,date:'2024-11-20'}],avg:11},
+    'SM-3KW-01':{samples:[{days:5,date:'2024-12-22'},{days:4,date:'2024-12-01'}],avg:5},
+    'RA-6AX-20':{samples:[{days:21,date:'2024-12-15'},{days:18,date:'2024-11-10'}],avg:20},
+    'LC-600':{samples:[{days:8,date:'2024-12-18'},{days:7,date:'2024-12-05'}],avg:8},
+    'HPU-15HP':{samples:[{days:14,date:'2024-12-10'}],avg:14},
+    'SC-5MP':{samples:[{days:6,date:'2024-12-20'},{days:5,date:'2024-12-08'}],avg:6},
+    'VFD-15KW':{samples:[{days:3,date:'2024-12-22'},{days:4,date:'2024-12-15'},{days:3,date:'2024-12-01'}],avg:3}
+  };
   
   // Write to Firebase immediately
   projectRef.child('main').set({
     data,team,history,projectDates,actions,projectName:currentProjectName,
     updatedAt:firebase.database.ServerValue.TIMESTAMP
   }).then(()=>{
+    projectRef.child('leadTime').set(leadTimeDb);
     console.log('Sample data saved to Firebase');
     updateProjectName();
     render();
+    toast('Project initialized: 15 assemblies, 150 parts');
   }).catch(e=>{
     console.error('Failed to save sample data:',e);
     toast('Failed to initialize data',true);
