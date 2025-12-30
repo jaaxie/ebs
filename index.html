@@ -548,7 +548,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 <button class="btn" id="themeBtn">🎨</button>
 <button class="btn btn-save" id="saveBtn">💾 <span>Save</span></button>
 <button class="btn btn-report" id="reportBtn">📋 <span>Report</span></button>
-<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="loadBomBtn">Load Specification</div><div class="dropdown-div"></div><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Load Sample</div><div class="dropdown-div"></div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
+<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Load Sample Data</div><div class="dropdown-div"></div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
 </div>
 </header>
 <main class="main">
@@ -1554,7 +1554,14 @@ function loadSample(){
     'SC-5MP':{samples:[{days:6,date:'2024-12-20'},{days:5,date:'2024-12-08'}],avg:6},
     'VFD-15KW':{samples:[{days:3,date:'2024-12-22'},{days:4,date:'2024-12-15'},{days:3,date:'2024-12-01'}],avg:3}
   };
-  saveLeadTime();save();render();toast('Sample loaded: 15 assemblies, '+getParts().length+' parts');
+  
+  // Write directly to Firebase (bypass debounce)
+  projectRef.child('main').set({
+    data,team,history,projectDates,actions,projectName:currentProjectName,
+    updatedAt:firebase.database.ServerValue.TIMESTAMP
+  });
+  projectRef.child('leadTime').set(leadTimeDb);
+  toast('Sample loaded: 15 assemblies, '+getParts().length+' parts');
 }
 
 window.loadBom=function(bomId){const bom=savedBoms.find(b=>b.id===bomId);if(!bom)return;if(!confirm('Load "'+bom.name+'"?'))return;currentProjectName=bom.name;data=[];expanded={};history=[];let id=1;const asmMap={};bom.items.filter(i=>i.isAsm).forEach((item,idx)=>{const asmId=id++;asmMap[item.name]=asmId;data.push({id:asmId,name:item.name,isAsm:true,assignee:'',priority:idx+1});expanded[asmId]=true});bom.items.filter(i=>!i.isAsm).forEach(item=>{const parentId=asmMap[item.parent]||null;data.push({id:id++,name:item.name,code:item.code||'',mfr:item.mfr||'',qty:item.qty||1,assignee:'',parentId,status:'to-order',changedAt:Date.now()})});save();render();closeModal('bomModal');toast('Loaded: '+bom.name)};
@@ -1653,8 +1660,12 @@ $('etaModal').onclick=e=>{if(e.target.id==='etaModal'){closeModal('etaModal');ed
 $('etaSave').onclick=()=>{if(!editEtaPartId)return;const part=data.find(d=>d.id===editEtaPartId);if(!part)return;const val=$('etaDateInput').value;part.expectedArrival=val||undefined;part.manualEta=undefined;save();render();closeModal('etaModal');editEtaPartId=null;toast('Saved')};
 $('etaClear').onclick=()=>{if(!editEtaPartId)return;const part=data.find(d=>d.id===editEtaPartId);if(!part)return;part.expectedArrival=undefined;part.manualEta=undefined;save();render();closeModal('etaModal');editEtaPartId=null;toast('Cleared')};
 
-$('saveBtn').onclick=()=>{bomMode='save';$('bomTitle').textContent='💾 Save Specification';$('bomNameField').style.display='block';$('bomSave').style.display='block';$('bomName').value=currentProjectName||'';$('bomModal').classList.add('open')};
-$('loadBomBtn').onclick=()=>{bomMode='load';$('bomTitle').textContent='📂 Load Specification';$('bomNameField').style.display='none';$('bomSave').style.display='none';renderBomList();$('bomModal').classList.add('open')};
+$('saveBtn').onclick=()=>{
+  projectRef.child('main').set({
+    data,team,history,projectDates,actions,projectName:currentProjectName,
+    updatedAt:firebase.database.ServerValue.TIMESTAMP
+  }).then(()=>toast('Saved to cloud ☁️')).catch(()=>toast('Save failed',true));
+};
 $('bomClose').onclick=$('bomCancel').onclick=()=>closeModal('bomModal');
 $('bomModal').onclick=e=>{if(e.target.id==='bomModal')closeModal('bomModal')};
 $('bomSave').onclick=window.saveBom;
@@ -1795,7 +1806,7 @@ $('deleteModal').onclick=e=>{if(e.target.id==='deleteModal'){closeModal('deleteM
 $('menuBtn').onclick=e=>{e.stopPropagation();$('menuDrop').classList.toggle('open')};
 document.onclick=()=>$('menuDrop').classList.remove('open');
 
-$('sampleBtn').onclick=loadSample;
+$('sampleBtn').onclick=()=>{if(confirm('Load sample data? This will replace current data.'))loadSample()};
 
 $('expandToggle').onclick=()=>{
   const asms=getAsms();
@@ -1804,7 +1815,7 @@ $('expandToggle').onclick=()=>{
   save();render();
 };
 
-$('clearBtn').onclick=()=>{if(confirm('Delete ALL data?')){data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';save();render();toast('Cleared')}};
+$('clearBtn').onclick=()=>{if(confirm('Delete ALL data? This cannot be undone.')){data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';projectRef.child('main').set({data,team,history,projectDates,actions,projectName:currentProjectName,updatedAt:firebase.database.ServerValue.TIMESTAMP});toast('All data cleared')}};
 $('signOutBtn').onclick=()=>{if(confirm('Sign out?'))logout()};
 
 // Header search
