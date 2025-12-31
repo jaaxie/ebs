@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>EBS v4 - Cloud</title>
+<title>EBS v3 - Cloud</title>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
 <style>
@@ -129,7 +128,20 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .data-table{background:var(--bg2);border:none;border-radius:14px;display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 .table-header{display:grid;gap:1px;padding:0 12px;background:var(--bg3);font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.3px;height:36px;align-items:center;flex-shrink:0}
 .table-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
-.parts-grid{grid-template-columns:22px 22px minmax(80px,1fr) 100px 100px 60px 30px 62px 70px 100px minmax(100px,180px) 32px 32px 32px 32px}
+.parts-grid{grid-template-columns:24px 22px 22px minmax(80px,1fr) 100px 100px 60px 30px 62px 70px 100px minmax(100px,180px) 32px 32px 32px 32px}
+.part-checkbox{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;margin:0}
+.part-row.selected{background:rgba(218,119,86,0.15)!important}
+.part-row.selected:hover{background:rgba(218,119,86,0.2)!important}
+.bulk-bar{display:none;align-items:center;gap:12px;padding:10px 16px;background:var(--accent);border-radius:10px;margin-bottom:10px;flex-shrink:0}
+.bulk-bar.active{display:flex}
+.bulk-bar-count{font-size:13px;font-weight:600;color:#fff;margin-left:auto}
+.bulk-bar-actions{display:flex;gap:6px}
+.bulk-bar .btn{background:rgba(255,255,255,0.2);color:#fff;height:30px;padding:0 12px;font-size:12px}
+.bulk-bar .btn:hover{background:rgba(255,255,255,0.3)}
+.bulk-bar .btn-clear{background:transparent;border:1px solid rgba(255,255,255,0.3)}
+.bulk-popover{width:320px}
+.bulk-preview{background:var(--bg);border-radius:8px;padding:12px;margin-bottom:12px;max-height:150px;overflow-y:auto}
+.bulk-preview-item{font-size:11px;color:var(--text2);padding:2px 0}
 .add-row{display:flex;align-items:center;padding:8px 12px;background:var(--bg)}
 .add-row-btn{width:24px;height:24px;background:var(--bg3);border:none;border-radius:8px;color:var(--text3);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-right:10px;transition:all .15s}
 .add-row-btn:hover{background:var(--accent);color:#fff}
@@ -360,7 +372,7 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .popover-btns .btn{padding:6px 12px;font-size:11px;min-width:60px}
 
 /* Backdrop blur for popovers */
-.popover-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.15);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:999;opacity:0;transition:opacity 0.2s ease;pointer-events:none}
+.popover-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.15);backdrop-filter:blur(1px);-webkit-backdrop-filter:blur(1px);z-index:999;opacity:0;transition:opacity 0.2s ease;pointer-events:none}
 .popover-backdrop.active{opacity:1;pointer-events:auto}
 
 /* Popover-style modal (positioned near trigger) */
@@ -381,15 +393,15 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .modal-popover .notify-btn{width:100%;padding:8px;font-size:11px;margin-top:4px}
 
 /* AI popover specific - Claude UI style */
-.ai-popover{width:700px;max-width:calc(100vw - 32px);background:#2f2f2f;border:1px solid #3d3d3d;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.5)}
-.ai-popover .modal-body{padding:0;display:flex;flex-direction:column;max-height:85vh}
-.ai-popover .modal-head{display:flex;align-items:center;gap:12px;border-bottom:1px solid #3d3d3d;padding:16px 24px}
+.ai-popover{width:700px;max-width:calc(100vw - 32px);background:#2f2f2f;border:1px solid #3d3d3d;border-radius:16px;box-shadow:0 24px 80px rgba(0,0,0,0.5);max-height:calc(100vh - 100px);display:flex;flex-direction:column}
+.ai-popover .modal-body{padding:0;display:flex;flex-direction:column;flex:1;overflow:hidden}
+.ai-popover .modal-head{display:flex;align-items:center;gap:12px;border-bottom:1px solid #3d3d3d;padding:16px 24px;flex-shrink:0}
 .ai-popover .modal-title{flex:1;font-size:15px;font-weight:500;color:#e8e8e8}
 .ai-popover .modal-close{background:#3d3d3d;color:#999;width:32px;height:32px;font-size:18px}
 .ai-popover .modal-close:hover{background:#4d4d4d;color:#ccc}
 .ai-title-icon{color:#d4776b;font-size:14px;margin-right:4px}
 .ai-model-badge{font-size:11px;color:#777;font-family:-apple-system,system-ui,sans-serif;background:#3d3d3d;padding:5px 12px;border-radius:6px;font-weight:500}
-.ai-content{flex:1;overflow-y:auto;padding:24px;min-height:300px;background:#212121}
+.ai-content{flex:1;overflow-y:auto;overflow-x:hidden;padding:24px;background:#212121;-webkit-overflow-scrolling:touch}
 .ai-welcome{color:#777;font-size:15px;line-height:1.7}
 .ai-welcome p{margin:0}
 .ai-welcome strong{color:#aaa;font-weight:600}
@@ -444,19 +456,21 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .toast-box{position:fixed;bottom:16px;left:16px;right:16px;z-index:1100;pointer-events:none}
 
 /* Login Screen */
-.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;padding:20px}
-.login-box{background:var(--bg2);border-radius:16px;padding:32px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
-.login-logo{font-size:24px;font-weight:600;text-align:center;margin-bottom:8px;color:var(--text)}
-.login-subtitle{font-size:13px;color:var(--text3);text-align:center;margin-bottom:24px}
+.login-screen{position:fixed;inset:0;background:rgba(0,0,0,0.25);backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;padding:20px}
+.login-box{background:var(--bg2);border-radius:20px;padding:36px;width:100%;max-width:340px;box-shadow:0 24px 80px rgba(0,0,0,.5);border:1px solid var(--border)}
+.login-logo{font-size:22px;font-weight:600;text-align:center;margin-bottom:8px;color:var(--text)}
+.login-subtitle{font-size:12px;color:var(--text3);text-align:center;margin-bottom:20px}
+.login-icon{font-size:48px;text-align:center;margin-bottom:16px}
 .login-field{margin-bottom:16px}
 .login-field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px}
 .login-field input{width:100%;height:44px;padding:0 14px;font-size:16px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:10px;outline:none}
 .login-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(218,119,86,.2)}
-.login-btn{width:100%;height:44px;font-size:14px;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:10px;cursor:pointer;transition:all .2s}
-.login-btn:hover{filter:brightness(1.1)}
+.login-btn{width:100%;height:48px;font-size:15px;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:12px;cursor:pointer;transition:all .2s}
+.login-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.login-btn:active{transform:translateY(0)}
 .login-btn:disabled{opacity:0.5;cursor:not-allowed}
 .login-error{color:var(--red);font-size:12px;text-align:center;margin-top:12px;min-height:18px}
-.login-status{font-size:11px;color:var(--text3);text-align:center;margin-top:16px}
+.login-status{display:none}
 .sync-indicator{position:fixed;top:62px;right:74px;padding:6px 12px;background:var(--bg2);border-radius:8px;font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2);opacity:0;transform:translateY(-5px);transition:opacity 0.4s ease,transform 0.4s ease;pointer-events:none}
 .sync-indicator.active{opacity:1;transform:translateY(0);pointer-events:auto}
 .sync-indicator.syncing{color:var(--yellow)}
@@ -655,12 +669,16 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
   .tab{height:32px;font-size:12px;padding:0 8px}
   .data-table{border-radius:10px;overflow:hidden}
   .table-header{height:32px;padding:0 8px;font-size:9px}
-  .table-header.parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px 28px!important}
-  .part-row.parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px 28px!important}
-  .parts-grid{grid-template-columns:20px 1fr 60px 60px 28px 28px 28px!important}
+  .table-header.parts-grid{grid-template-columns:22px 20px 1fr 60px 60px 28px 28px 28px!important}
+  .part-row.parts-grid{grid-template-columns:22px 20px 1fr 60px 60px 28px 28px 28px!important}
+  .parts-grid{grid-template-columns:22px 20px 1fr 60px 60px 28px 28px 28px!important}
   .asm-row{grid-template-columns:20px 1fr 80px 28px 28px!important;height:38px;padding:0 8px}
   .part-row{height:36px;padding:0 8px}
-  .table-header>div:nth-child(n+7),.part-row>div:nth-child(n+7),.asm-row>div:nth-child(n+6){display:none}
+  .table-header>div:nth-child(n+8),.part-row>div:nth-child(n+8),.asm-row>div:nth-child(n+6){display:none}
+  .bulk-bar{flex-wrap:wrap;padding:8px 12px;gap:8px}
+  .bulk-bar-count{font-size:12px}
+  .bulk-bar-actions{flex-wrap:wrap;gap:4px}
+  .bulk-bar .btn{height:28px;padding:0 10px;font-size:11px}
   .col-subpart,.col-code,.col-mfr,.col-qty,.col-assignee,.col-eta,.col-notes{display:none!important}
   .asm-priority{display:none}
   .asm-name{font-size:13px}
@@ -725,9 +743,12 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
   .pipe-label{font-size:7px;letter-spacing:0}
   .tabs{margin-bottom:6px}
   .tab{height:30px;font-size:11px;padding:0 6px}
-  .table-header.parts-grid,.part-row.parts-grid,.parts-grid{grid-template-columns:18px 1fr 55px 26px 26px 26px!important}
+  .table-header.parts-grid,.part-row.parts-grid,.parts-grid{grid-template-columns:20px 18px 1fr 55px 26px 26px 26px!important}
   .asm-row{grid-template-columns:18px 1fr 60px 26px!important;height:36px}
   .part-row{height:34px}
+  .part-checkbox{width:14px;height:14px}
+  .bulk-bar{padding:6px 10px;gap:6px;font-size:11px}
+  .bulk-bar .btn{height:26px;font-size:10px}
   .asm-name{font-size:12px}
   .cell{font-size:11px}
   .status-badge{font-size:8px;padding:2px 5px}
@@ -764,41 +785,20 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
   .main{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));padding-bottom:max(10px,env(safe-area-inset-bottom))}
   .modal{margin-bottom:env(safe-area-inset-bottom)}
 }
-
-/* Google Sign-In Button */
-.login-google-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px 24px;background:#fff;border:none;border-radius:12px;font-size:15px;font-weight:600;color:#1f1f1f;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 14px rgba(0,0,0,0.15);margin-bottom:16px}
-.login-google-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.2)}
-.login-google-btn:active{transform:translateY(0)}
-.login-divider{display:flex;align-items:center;gap:16px;margin:16px 0;color:rgba(255,255,255,0.3);font-size:12px}
-.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.1)}
-.login-info{font-size:12px;color:rgba(255,255,255,0.4);line-height:1.6;text-align:center}
-.login-loading{display:none;flex-direction:column;align-items:center;gap:12px;color:rgba(255,255,255,0.7);font-size:14px;margin-top:16px}
-.login-loading.visible{display:flex}
-.login-spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.1);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* User Avatar */
-.user-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);cursor:pointer;margin-left:8px}
-.user-avatar:hover{border-color:var(--text)}
-
-/* Online presence with avatars */
-.online-user-avatar{width:24px;height:24px;border-radius:50%;object-fit:cover;background:var(--bg4)}
 </style>
 </head>
 <body>
 <!-- Login Screen -->
 <div class="login-screen" id="loginScreen">
 <div class="login-box">
-<div class="login-logo">📦 EBS Cloud</div>
+<div class="login-icon">🏭</div>
+<div class="login-logo">EF Final Assembly</div>
 <div class="login-subtitle">Parts Pipeline Tracker</div>
-<button class="login-google-btn" id="googleSignInBtn">
-<svg viewBox="0 0 24 24" style="width:20px;height:20px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-Sign in with Google
-</button>
-<div class="login-divider">secure authentication</div>
-<div class="login-info">Your Google account is safe. We only access your name, email, and profile photo.</div>
-<div class="login-error" id="loginError"></div>
-<div class="login-loading" id="loginLoading"><div class="login-spinner"></div>Signing in...</div>
+<div class="login-field">
+<label>Access Code</label>
+<input type="password" id="loginCode" placeholder="Enter team access code" autocomplete="off">
+</div>
+<button class="login-btn" id="loginBtn">Login</button>
 </div>
 </div>
 
@@ -806,7 +806,7 @@ Sign in with Google
 <div class="sync-indicator" id="syncIndicator"><div class="sync-dot"></div><span id="syncText">Synced</span></div>
 
 <header class="header">
-<div class="logo" id="projectName">EBS v4</div>
+<div class="logo" id="projectName">EBS v2</div>
 <button class="ai-console-btn" id="aiAlert" title="AI Console"><div class="ai-console-icon">+</div>AI Console</button>
 <div class="header-spacer"></div>
 <div class="online-badge"><div class="online-dot"></div><span id="onlineCount">1 online</span><div class="online-hover" id="onlineHover"><div id="onlineUserList"></div></div></div>
@@ -823,8 +823,7 @@ Sign in with Google
 <button class="btn btn-receive" id="receivePOBtn">📦 <span>Receive PO</span></button>
 <button class="btn btn-report" id="reportBtn">📋 <span>Report</span></button>
 <div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-item" id="itemConfigBtn">Item Code Config</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Reset to Sample Data</div><div class="dropdown-div"></div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
-<img class="user-avatar" id="userAvatar" src="" alt="User" title="Account">
-<div class="version-badge">v4.0</div>
+<div class="version-badge">v1.0.2</div>
 </div>
 </header>
 <main class="main">
@@ -845,7 +844,8 @@ Sign in with Google
 <div class="panel active" id="listPanel">
 <div class="toolbar"><select class="filter-select" id="assigneeFilter"><option value="">All Assignees</option></select><button class="toggle-btn" id="expandToggle"><span class="arrow">▼</span> Expand</button></div>
 <div class="filter-badges" id="filterBadges"></div>
-<div class="data-table" id="partsTable"><div class="table-header parts-grid"><div></div><div></div><div>Name</div><div>Code</div><div>Mfr</div><div>Assignee</div><div>Qty</div><div>Status</div><div>Prog</div><div>ETA / PO</div><div>Notes</div><div></div><div></div><div></div><div></div></div><div class="table-body" id="partsList"></div></div>
+<div class="bulk-bar" id="bulkBar"><div class="bulk-bar-actions"><button class="btn" id="bulkStatusBtn">📋 Set Status</button><button class="btn" id="bulkAssignBtn">👤 Set Assignee</button><button class="btn" id="bulkPOBtn">📦 Set PO</button><button class="btn" id="bulkDeleteBtn">🗑 Delete</button><button class="btn btn-clear" id="bulkClearBtn">✕ Clear</button></div><span class="bulk-bar-count"><span id="bulkCount">0</span> selected</span></div>
+<div class="data-table" id="partsTable"><div class="table-header parts-grid"><div><input type="checkbox" class="part-checkbox" id="selectAllParts" title="Select all"></div><div></div><div></div><div>Name</div><div>Code</div><div>Mfr</div><div>Assignee</div><div>Qty</div><div>Status</div><div>Prog</div><div>ETA / PO</div><div>Notes</div><div></div><div></div><div></div><div></div></div><div class="table-body" id="partsList"></div></div>
 <div class="empty" id="emptyList" style="display:none;">No items found</div>
 </div>
 <div class="panel" id="actionsPanel">
@@ -961,6 +961,11 @@ Sign in with Google
 <div class="modal-bg" id="poModal"><div class="modal po-modal"><div class="modal-head"><span class="modal-title">📦 Order Details</span><button class="modal-close" id="poClose">×</button></div><div class="modal-body"><div id="poPartName" style="font-weight:600;margin-bottom:12px;font-size:14px"></div><div class="field"><label class="field-label">PO Number</label><input type="text" class="field-input" id="poNumber" placeholder="e.g. PO-2024-001"></div><div class="field"><label class="field-label">Expected Arrival Date</label><input type="date" class="field-input" id="poArrivalDate"></div><div class="po-note">Leave arrival date empty to use historical lead time data</div></div><div class="modal-foot"><button class="btn" id="poCancel">Cancel</button><button class="btn btn-primary" id="poSave">Confirm Order</button></div></div></div>
 <div class="modal-popover receive-po-popover" id="receivePOModal"><div class="modal-head"><span class="modal-title">📦 Receive PO</span><button class="modal-close" id="receivePOClose">×</button></div><div class="modal-body"><div class="field"><label class="field-label">PO Number</label><input type="text" class="field-input" id="receivePONumber" placeholder="Enter PO number..." list="poSuggestions"><datalist id="poSuggestions"></datalist></div><div class="receive-po-preview" id="receivePOPreview"><div class="receive-po-empty">Enter a PO number to see matching parts</div></div></div><div class="modal-foot"><button class="btn" id="receivePOCancel">Cancel</button><button class="btn btn-primary" id="receivePOConfirm" disabled>Receive All</button></div></div>
 <div class="popover" id="deletePopover"><div class="popover-msg" id="deleteMsg"></div><div class="popover-btns"><button class="btn" id="deleteCancel">Cancel</button><button class="btn btn-danger" id="deleteConfirm">Delete</button></div></div>
+<div class="modal-popover bulk-popover" id="bulkStatusModal"><div class="modal-head"><span class="modal-title">Set Status</span><button class="modal-close" id="bulkStatusClose">×</button></div><div class="modal-body"><div class="bulk-preview" id="bulkStatusPreview"></div><div class="field"><label class="field-label">New Status</label><select class="field-select" id="bulkStatusSelect"><option value="">Select status...</option><option value="to-order">To Order</option><option value="ordered">Ordered</option><option value="arrived">Arrived</option><option value="configured">Configured</option><option value="tested">Tested</option><option value="installed">Installed</option></select></div><div id="bulkPOFields" style="display:none"><div class="field"><label class="field-label">PO Number</label><input type="text" class="field-input" id="bulkStatusPO" placeholder="e.g. PO-2024-001"></div><div class="field"><label class="field-label">Expected Arrival Date</label><input type="date" class="field-input" id="bulkStatusETA"></div></div></div><div class="modal-foot"><button class="btn" id="bulkStatusCancel">Cancel</button><button class="btn btn-primary" id="bulkStatusApply">Apply</button></div></div>
+<div class="modal-popover bulk-popover" id="bulkAssignModal"><div class="modal-head"><span class="modal-title">Set Assignee</span><button class="modal-close" id="bulkAssignClose">×</button></div><div class="modal-body"><div class="bulk-preview" id="bulkAssignPreview"></div><div class="field"><label class="field-label">Assignee</label><select class="field-select" id="bulkAssignSelect"></select></div></div><div class="modal-foot"><button class="btn" id="bulkAssignCancel">Cancel</button><button class="btn btn-primary" id="bulkAssignApply">Apply</button></div></div>
+<div class="modal-popover bulk-popover" id="bulkPOModal"><div class="modal-head"><span class="modal-title">Set PO Number</span><button class="modal-close" id="bulkPOClose">×</button></div><div class="modal-body"><div class="bulk-preview" id="bulkPOPreview"></div><div class="field"><label class="field-label">PO Number</label><input type="text" class="field-input" id="bulkPOInput" placeholder="e.g. PO-2024-001"></div></div><div class="modal-foot"><button class="btn" id="bulkPOCancel">Cancel</button><button class="btn btn-primary" id="bulkPOApply">Apply</button></div></div>
+<div class="modal-popover bulk-popover" id="bulkDeleteModal"><div class="modal-head"><span class="modal-title">Delete Parts</span><button class="modal-close" id="bulkDeleteClose">×</button></div><div class="modal-body"><div class="bulk-preview" id="bulkDeletePreview"></div><p style="color:var(--red);font-size:12px;margin-top:8px">This action cannot be undone.</p></div><div class="modal-foot"><button class="btn" id="bulkDeleteCancel">Cancel</button><button class="btn btn-danger" id="bulkDeleteApply">Delete All</button></div></div>
+<div class="popover" id="statusPopover" style="min-width:140px"><div style="font-size:11px;color:var(--text3);margin-bottom:8px">Change Status</div><div id="statusPopoverOptions"></div></div>
 <div class="toast-box" id="toastBox"></div>
 
 <!-- Chat -->
@@ -1002,16 +1007,15 @@ const firebaseConfig = {
   appId: "1:70538130924:web:9e34e90b56e4f3f72ebcc9"
 };
 
+// Access code for the team
+const ACCESS_CODE = "jaakko123";
+
 // ============================================
 // Initialize Firebase
 // ============================================
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
 const db = firebase.database();
 const projectRef = db.ref('project');
-
-// Current user state
-let currentUser = null; // { uid, displayName, email, photoURL }
 
 // ============================================
 // App State
@@ -1079,6 +1083,7 @@ function getNextStage(part){
 }
 let globalCodes=[],globalMfrs=[];
 let editId=null,editAsmId=null,editActId=null,editEtaPartId=null,filterStage='',filterAssignee='',filterPO='',searchQ='',actionSearchQ='',actionAssigneeFilter='',highlightActionId=null,highlightPartId=null,bomMode='save';
+let selectedParts=new Set(),lastSelectedPartId=null;
 let isAuthenticated=false,isConnected=false,isSyncing=false;
 
 const $=id=>document.getElementById(id);
@@ -1191,72 +1196,34 @@ function loadSampleBoms(){savedBoms=[{id:1,name:'Standard Control Panel',items:[
 function updateProjectName(){$('projectName').textContent=(currentProjectName||'EBS Cloud')+' ☁️'}
 
 // ============================================
-// Google Authentication
+// Authentication
 // ============================================
-function signInWithGoogle() {
-  $('loginLoading').classList.add('visible');
-  $('googleSignInBtn').style.display = 'none';
-  $('loginError').textContent = '';
-  $('loginError').style.display = 'none';
-  
-  const provider = new firebase.auth.GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account' });
-  
-  auth.signInWithPopup(provider).catch(err => {
-    console.error('Sign in error:', err);
-    $('loginLoading').classList.remove('visible');
-    $('googleSignInBtn').style.display = 'flex';
-    $('loginError').textContent = err.message || 'Sign in failed. Please try again.';
-    $('loginError').style.display = 'block';
-  });
+function checkAuth(){
+  const stored=sessionStorage.getItem('ebs-auth');
+  return stored===ACCESS_CODE;
 }
 
-function signOut() {
-  auth.signOut().then(() => {
-    location.reload();
-  }).catch(err => {
-    console.error('Sign out error:', err);
-    toast('Sign out failed', true);
-  });
-}
-
-// Auth state listener - this is the main entry point
-auth.onAuthStateChanged(user => {
-  if (user) {
-    currentUser = {
-      uid: user.uid,
-      displayName: user.displayName || 'Anonymous',
-      email: user.email || '',
-      photoURL: user.photoURL || ''
-    };
-    isAuthenticated = true;
-    
-    // Update UI
-    $('loginScreen').style.display = 'none';
-    const avatarUrl = currentUser.photoURL || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23666"/><text x="50" y="65" text-anchor="middle" fill="white" font-size="40">' + (currentUser.displayName?.charAt(0) || '?') + '</text></svg>';
-    $('userAvatar').src = avatarUrl;
-    $('userAvatar').title = currentUser.displayName + '\n' + currentUser.email;
-    
-    // Initialize app
+function login(code){
+  if(code===ACCESS_CODE){
+    sessionStorage.setItem('ebs-auth',code);
+    isAuthenticated=true;
+    $('loginScreen').style.display='none';
     initFirebaseListeners();
-  } else {
-    currentUser = null;
-    isAuthenticated = false;
-    $('loginScreen').style.display = 'flex';
-    $('loginLoading').classList.remove('visible');
-    $('googleSignInBtn').style.display = 'flex';
+    return true;
   }
-});
+  return false;
+}
 
-// Bind Google sign-in button
-$('googleSignInBtn').onclick = signInWithGoogle;
-$('signOutBtn').onclick = signOut;
-$('userAvatar').onclick = () => $('menuDrop').classList.toggle('open');
+function logout(){
+  sessionStorage.removeItem('ebs-auth');
+  isAuthenticated=false;
+  location.reload();
+}
 
 // ============================================
 // Firebase Real-time Listeners
 // ============================================
-const LOCAL_STORAGE_KEY = 'ebs-v4-data';
+const LOCAL_STORAGE_KEY = 'ebs-v3-data';
 let useLocalStorage = false;
 let dataInitialized = false;
 
@@ -1636,27 +1603,14 @@ function setupRealtimeListener(){
 // Login UI Handlers
 // ============================================
 $('loginBtn').onclick=()=>{
-  const code=$('loginCode').value.trim();
-  if(!code){
-    $('loginError').textContent='Please enter access code';
-    return;
-  }
   $('loginBtn').disabled=true;
-  $('loginBtn').textContent='Signing in...';
+  $('loginBtn').textContent='Loading...';
   
   // Small delay for UX
   setTimeout(()=>{
-    if(login(code)){
-      $('loginError').textContent='';
-    }else{
-      $('loginError').textContent='Invalid access code';
-      $('loginBtn').disabled=false;
-      $('loginBtn').textContent='Sign In';
-    }
-  },500);
+    login(ACCESS_CODE); // Auto-login with default code
+  },300);
 };
-
-$('loginCode').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
 
 // Check connection status on load
 db.ref('.info/connected').once('value').then(()=>{
@@ -2080,7 +2034,11 @@ function renderPart(r){
   
   const childClass=r.child?' child'+(depth>0?' subchild':''):'';
   
-  return '<div class="part-row parts-grid'+childClass+'" data-part-id="'+p.id+'" style="'+(depth>0?'background:var(--bg);':'')+'"><div class="part-indent" style="'+indentStyle+'">'+indentSymbol+'</div><div>'+addSubBtn+'</div><div class="cell" onclick="window.editCell(event,'+p.id+',\'name\')">'+esc(p.name)+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'code\')">'+(p.code||'—')+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'mfr\')">'+(p.mfr||'—')+'</div><div class="cell muted" onclick="window.editCellAssignee(event,'+p.id+')">'+(p.assignee||'—')+'</div><div class="cell muted" onclick="window.editCell(event,'+p.id+',\'qty\')">'+(p.qty||1)+'</div><div><span class="status-badge '+p.status+'">'+SLABELS[p.status]+'</span></div><div class="stage-dots">'+stageDots+'</div><div>'+etaHtml+'</div><div>'+notesHtml+'</div><div>'+advBtn+'</div><div>'+commentBtn+'</div><div><button class="sm-btn" onclick="window.editPart('+p.id+',event)">✎</button></div><div><button class="sm-btn red" onclick="window.confirmDelete('+p.id+',\'part\',event)">×</button></div></div>';
+  // Checkbox for bulk selection
+  const isSelected=selectedParts.has(p.id);
+  const checkbox='<input type="checkbox" class="part-checkbox" data-part-id="'+p.id+'" '+(isSelected?'checked':'')+' onclick="window.togglePartSelection('+p.id+',event)">';
+  
+  return '<div class="part-row parts-grid'+childClass+(isSelected?' selected':'')+'" data-part-id="'+p.id+'" onclick="window.handleRowClick(event)" style="'+(depth>0?'background:var(--bg);':'')+'"><div>'+checkbox+'</div><div class="part-indent" style="'+indentStyle+'">'+indentSymbol+'</div><div>'+addSubBtn+'</div><div class="cell" onclick="window.editCell(event,'+p.id+',\'name\')">'+esc(p.name)+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'code\')">'+(p.code||'—')+'</div><div class="cell muted" onclick="window.editCellAutocomplete(event,'+p.id+',\'mfr\')">'+(p.mfr||'—')+'</div><div class="cell muted" onclick="window.editCellAssignee(event,'+p.id+')">'+(p.assignee||'—')+'</div><div class="cell muted" onclick="window.editCell(event,'+p.id+',\'qty\')">'+(p.qty||1)+'</div><div><span class="status-badge '+p.status+'" onclick="window.openStatusPopover('+p.id+',event)" style="cursor:pointer">'+SLABELS[p.status]+'</span></div><div class="stage-dots">'+stageDots+'</div><div>'+etaHtml+'</div><div>'+notesHtml+'</div><div>'+advBtn+'</div><div>'+commentBtn+'</div><div><button class="sm-btn" onclick="window.editPart('+p.id+',event)">✎</button></div><div><button class="sm-btn red" onclick="window.confirmDelete('+p.id+',\'part\',event)">×</button></div></div>';
 }
 
 let ganttZoom='day'; // day, week
@@ -3465,6 +3423,65 @@ $('popoverBackdrop').onclick=()=>{
 window.editAsm=(id,e)=>{const a=data.find(d=>d.id===id);if(!a)return;editAsmId=id;$('amTitle').textContent='Edit Assembly';$('amName').value=a.name;$('amAssignee').value=a.assignee||'';$('amNotes').value=a.notes||'';$('amNotify').disabled=!getTeamEmail(a.assignee);showPopoverModal($('asmModal'),e?e.target.closest('button'):null)};
 window.editPart=(id,e)=>{const p=data.find(d=>d.id===id);if(!p)return;editId=id;$('pmTitle').textContent='Edit Part';$('pmName').value=p.name;$('pmCode').value=p.code||'';$('pmMfr').value=p.mfr||'';$('pmQty').value=p.qty||1;$('pmAssignee').value=p.assignee||'';$('pmStatus').value=p.status;$('pmParent').value=p.parentId||'';$('pmNotes').value=p.notes||'';$('pmNotify').disabled=!getTeamEmail(p.assignee);showPopoverModal($('partModal'),e?e.target.closest('button'):null)};
 
+let statusPopoverPartId=null;
+window.openStatusPopover=(id,e)=>{
+  e.stopPropagation();
+  const p=data.find(d=>d.id===id);if(!p)return;
+  statusPopoverPartId=id;
+  const popover=$('statusPopover');
+  const rect=e.target.getBoundingClientRect();
+  let top=rect.bottom+6;
+  let left=rect.left;
+  if(left+140>window.innerWidth)left=window.innerWidth-150;
+  if(top+200>window.innerHeight)top=rect.top-210;
+  popover.style.top=Math.max(10,top)+'px';
+  popover.style.left=Math.max(10,left)+'px';
+  // Generate status options
+  $('statusPopoverOptions').innerHTML=STAGES.map(s=>{
+    const active=s===p.status?' style="background:var(--accent);color:#fff"':'';
+    return '<div class="dropdown-item"'+active+' onclick="window.setPartStatus('+id+',\''+s+'\')">'+SLABELS[s]+'</div>';
+  }).join('');
+  popover.classList.add('open');
+};
+
+window.setPartStatus=(id,status)=>{
+  const p=data.find(d=>d.id===id);if(!p)return;
+  const now=Date.now();
+  const oldStatus=p.status;
+  if(oldStatus===status){$('statusPopover').classList.remove('open');return;}
+  $('statusPopover').classList.remove('open');
+  
+  // If moving to "ordered" from "to-order", show PO modal
+  if(oldStatus==='to-order'&&status==='ordered'){
+    pendingAdvPartId=id;
+    $('poPartName').textContent=p.name+(p.code?' ('+p.code+')':'');
+    $('poNumber').value=p.poNumber||'';
+    $('poArrivalDate').value=p.expectedArrival||'';
+    $('poModal').classList.add('open');
+    setTimeout(()=>$('poNumber').focus(),100);
+    return;
+  }
+  
+  if(oldStatus==='ordered'&&status==='arrived'&&p.orderedAt&&p.code){
+    const days=Math.round((now-p.orderedAt)/86400000);
+    if(days>0)recordLeadTime(p.code,days);
+    p.arrivedAt=now;
+  }
+  if(status==='ordered'&&oldStatus!=='ordered')p.orderedAt=now;
+  p.status=status;
+  p.changedAt=now;
+  save();render();
+  toast('→ '+SLABELS[status]);
+};
+
+// Close status popover on outside click
+document.addEventListener('click',e=>{
+  const popover=$('statusPopover');
+  if(popover.classList.contains('open')&&!popover.contains(e.target)&&!e.target.closest('.status-badge')){
+    popover.classList.remove('open');
+  }
+});
+
 let pendingAdvPartId=null;
 window.advPart=id=>{
   const p=data.find(d=>d.id===id);if(!p)return;
@@ -3981,11 +3998,11 @@ function updateChatBadge(){
 }
 
 function initChat(){
-  if (!currentUser) return;
-  
-  // Use Google user name as chat name
-  chatNickname = currentUser.displayName;
-  showChatInterface();
+  const stored=localStorage.getItem('ebs-chat-nick');
+  if(stored){
+    chatNickname=stored;
+    showChatInterface();
+  }
   
   // Load initial messages first, then listen for new ones
   projectRef.child('chat').orderByChild('timestamp').limitToLast(50).once('value',snapshot=>{
@@ -3996,10 +4013,10 @@ function initChat(){
   // Listen for chat messages
   projectRef.child('chat').orderByChild('timestamp').limitToLast(50).on('child_added',snapshot=>{
     const msg=snapshot.val();
-    if(msg && currentUser){
+    if(msg&&chatNickname){
       addMessageToUI(msg,snapshot.key);
       // Show badge if panel is closed, message is from someone else, and we're past initial load
-      if(chatInitialized&&!chatOpen&&msg.uid!==currentUser.uid){
+      if(chatInitialized&&!chatOpen&&msg.nickname!==chatNickname){
         unreadCount++;
         updateChatBadge();
       }
@@ -4011,22 +4028,15 @@ function initChat(){
 }
 
 function setupPresence(){
-  if (!currentUser) return;
-  
-  const myPresenceRef=projectRef.child('presence').child(currentUser.uid);
-  const myData={
-    uid: currentUser.uid,
-    name: currentUser.displayName,
-    photo: currentUser.photoURL || '',
-    lastSeen: firebase.database.ServerValue.TIMESTAMP
-  };
+  const myPresenceRef=projectRef.child('presence').push();
+  const myData={nickname:chatNickname||'Anonymous',lastSeen:firebase.database.ServerValue.TIMESTAMP};
   
   myPresenceRef.set(myData);
   myPresenceRef.onDisconnect().remove();
   
   // Update presence periodically
   setInterval(()=>{
-    if(isAuthenticated && currentUser)myPresenceRef.update({lastSeen:firebase.database.ServerValue.TIMESTAMP});
+    if(isAuthenticated)myPresenceRef.update({lastSeen:firebase.database.ServerValue.TIMESTAMP});
   },30000);
   
   // Listen for online users
@@ -4036,21 +4046,20 @@ function setupPresence(){
     let onlineUsers=[];
     if(users){
       Object.values(users).forEach(u=>{
-        if(u.lastSeen&&now-u.lastSeen<120000){ // 2 min timeout
-          onlineUsers.push({name:u.name||'Anonymous',photo:u.photo||'',lastSeen:u.lastSeen,isMe:u.uid===currentUser?.uid});
+        if(u.lastSeen&&now-u.lastSeen<60000){
+          onlineUsers.push({name:u.nickname,lastSeen:u.lastSeen});
         }
       });
     }
-    if(onlineUsers.length===0 && currentUser)onlineUsers.push({name:'You',photo:currentUser.photoURL,lastSeen:now,isMe:true});
+    if(onlineUsers.length===0)onlineUsers.push({name:'You',lastSeen:now});
     
     $('onlineCount').textContent=onlineUsers.length===1?'1 online':onlineUsers.length+' online';
     
-    // Update hover card with avatars
+    // Update hover card
     $('onlineUserList').innerHTML=onlineUsers.map(u=>{
       const ago=Math.floor((now-u.lastSeen)/1000);
       const timeStr=ago<60?'now':ago<3600?Math.floor(ago/60)+'m ago':Math.floor(ago/3600)+'h ago';
-      const avatarSrc=u.photo||'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="%23666"/><text x="50" y="65" text-anchor="middle" fill="white" font-size="40">'+(u.name?.charAt(0)||'?')+'</text></svg>';
-      return '<div class="online-user"><img class="online-user-avatar" src="'+avatarSrc+'" alt=""><span class="online-user-name">'+esc(u.name)+(u.isMe?' (you)':'')+'</span><span class="online-user-time">'+timeStr+'</span></div>';
+      return '<div class="online-user"><div class="online-user-dot"></div><span class="online-user-name">'+esc(u.name)+'</span><span class="online-user-time">'+timeStr+'</span></div>';
     }).join('');
   });
 }
@@ -4085,7 +4094,7 @@ function addMessageToUI(msg,key){
   const empty=container.querySelector('.chat-empty');
   if(empty)empty.remove();
   
-  const isMine=msg.uid===currentUser?.uid;
+  const isMine=msg.nickname===chatNickname;
   const time=new Date(msg.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
   
   const div=document.createElement('div');
@@ -4106,12 +4115,10 @@ function scrollChatToBottom(){
 function sendMessage(){
   const input=$('chatInput');
   const text=input.value.trim();
-  if(!text||!currentUser)return;
+  if(!text||!chatNickname)return;
   
   projectRef.child('chat').push({
-    uid: currentUser.uid,
-    nickname: currentUser.displayName,
-    photo: currentUser.photoURL,
+    nickname:chatNickname,
     text:text,
     timestamp:firebase.database.ServerValue.TIMESTAMP
   });
@@ -4126,7 +4133,7 @@ $('chatToggle').onclick=()=>{
   if(chatOpen){
     unreadCount=0;
     updateChatBadge();
-    if(currentUser)scrollChatToBottom();
+    if(chatNickname)scrollChatToBottom();
   }
 };
 
@@ -4134,6 +4141,17 @@ $('chatClose').onclick=()=>{
   chatOpen=false;
   $('chatPanel').classList.remove('open');
 };
+
+$('chatNickBtn').onclick=()=>{
+  const nick=$('chatNickInput').value.trim();
+  if(!nick)return;
+  chatNickname=nick;
+  localStorage.setItem('ebs-chat-nick',nick);
+  showChatInterface();
+  setupPresence();
+};
+
+$('chatNickInput').onkeydown=e=>{if(e.key==='Enter')$('chatNickBtn').click()};
 
 $('chatSend').onclick=sendMessage;
 $('chatInput').onkeydown=e=>{if(e.key==='Enter')sendMessage()};
@@ -4193,16 +4211,14 @@ document.addEventListener('click',e=>{
 $('commentAdd').onclick=()=>{
   const input=$('commentInput');
   const text=input.value.trim();
-  if(!text||!currentCommentPartId||!currentUser)return;
+  if(!text||!currentCommentPartId)return;
   
   const part=data.find(d=>d.id===currentCommentPartId);
   if(!part)return;
   
   if(!part.comments)part.comments=[];
   part.comments.push({
-    author:currentUser.displayName,
-    uid:currentUser.uid,
-    photo:currentUser.photoURL,
+    author:chatNickname||'Anonymous',
     text:text,
     ts:Date.now()
   });
@@ -4217,6 +4233,258 @@ $('commentAdd').onclick=()=>{
 };
 
 $('commentInput').onkeydown=e=>{if(e.key==='Enter')$('commentAdd').click()};
+
+// ============================================
+// BULK OPERATIONS
+// ============================================
+function updateBulkBar(){
+  const bar=$('bulkBar');
+  const count=selectedParts.size;
+  $('bulkCount').textContent=count;
+  bar.classList.toggle('active',count>0);
+}
+
+function clearSelection(){
+  selectedParts.clear();
+  lastSelectedPartId=null;
+  updateBulkBar();
+  render();
+}
+
+window.togglePartSelection=function(partId,e){
+  e.stopPropagation();
+  const parts=getParts().filter(matchPart);
+  
+  // Shift+click for range selection
+  if(e.shiftKey&&lastSelectedPartId!==null){
+    const ids=parts.map(p=>p.id);
+    const startIdx=ids.indexOf(lastSelectedPartId);
+    const endIdx=ids.indexOf(partId);
+    if(startIdx>=0&&endIdx>=0){
+      const [from,to]=[Math.min(startIdx,endIdx),Math.max(startIdx,endIdx)];
+      for(let i=from;i<=to;i++){
+        selectedParts.add(ids[i]);
+      }
+    }
+  }else{
+    if(selectedParts.has(partId)){
+      selectedParts.delete(partId);
+    }else{
+      selectedParts.add(partId);
+    }
+    lastSelectedPartId=partId;
+  }
+  updateBulkBar();
+  render();
+};
+
+window.toggleSelectAll=function(e){
+  const parts=getParts().filter(matchPart);
+  if(selectedParts.size===parts.length){
+    selectedParts.clear();
+  }else{
+    parts.forEach(p=>selectedParts.add(p.id));
+  }
+  updateBulkBar();
+  render();
+};
+
+// Click on empty space in parts table to deselect
+$('partsList').addEventListener('click',function(e){
+  // If click is directly on the table body (not on a part row or its children)
+  if(e.target===this||e.target.classList.contains('add-row')||e.target.classList.contains('add-row-text')){
+    if(selectedParts.size>0){
+      clearSelection();
+    }
+  }
+});
+
+// Click on table container background to deselect
+$('partsTable').addEventListener('click',function(e){
+  if(e.target===this){
+    if(selectedParts.size>0){
+      clearSelection();
+    }
+  }
+});
+
+// Handle clicks on row background/padding to deselect
+window.handleRowClick=function(e){
+  if(!selectedParts.size)return;
+  // Check if click is on the row itself (padding area) or on an empty child div
+  const row=e.currentTarget;
+  // If clicked directly on the row (padding area)
+  if(e.target===row){
+    clearSelection();
+    return;
+  }
+  // If clicked on an empty div that's a direct child of the row
+  if(e.target.parentElement===row&&e.target.tagName==='DIV'){
+    // Check if this div has no interactive content
+    const hasContent=e.target.textContent.trim()||e.target.querySelector('input,button,span.status-badge,span.eta-po,span.eta-date,.cell,.stage-dot,.comment-btn,.adv-btn,.sm-btn');
+    if(!hasContent){
+      clearSelection();
+      return;
+    }
+  }
+};
+
+// Click on partsList background (between rows) to deselect
+$('partsList').addEventListener('click',function(e){
+  if(!selectedParts.size)return;
+  if(e.target===this){
+    clearSelection();
+  }
+});
+
+function positionBulkPopover(popover,btn){
+  const rect=btn.getBoundingClientRect();
+  let top=rect.bottom+8;
+  let left=rect.left;
+  if(left+320>window.innerWidth)left=window.innerWidth-330;
+  if(top+300>window.innerHeight)top=rect.top-310;
+  popover.style.top=Math.max(10,top)+'px';
+  popover.style.left=Math.max(10,left)+'px';
+}
+
+function renderBulkPreview(containerId){
+  const container=$(containerId);
+  const parts=Array.from(selectedParts).map(id=>data.find(d=>d.id===id)).filter(Boolean);
+  if(parts.length<=5){
+    container.innerHTML=parts.map(p=>'<div style="padding:4px 0;font-size:11px;border-bottom:1px solid var(--bg4)">'+esc(p.name)+'</div>').join('');
+  }else{
+    container.innerHTML=parts.slice(0,3).map(p=>'<div style="padding:4px 0;font-size:11px;border-bottom:1px solid var(--bg4)">'+esc(p.name)+'</div>').join('')+'<div style="padding:4px 0;font-size:11px;color:var(--text3)">...and '+(parts.length-3)+' more</div>';
+  }
+}
+
+window.openBulkStatusModal=function(e){
+  if(!selectedParts.size)return;
+  renderBulkPreview('bulkStatusPreview');
+  $('bulkStatusSelect').value='';
+  $('bulkStatusPO').value='';
+  $('bulkStatusETA').value='';
+  $('bulkPOFields').style.display='none';
+  positionBulkPopover($('bulkStatusModal'),e.target);
+  $('bulkStatusModal').classList.add('open');
+};
+
+window.openBulkAssignModal=function(e){
+  if(!selectedParts.size)return;
+  renderBulkPreview('bulkAssignPreview');
+  $('bulkAssignSelect').innerHTML='<option value="">Select assignee...</option>'+team.map(t=>'<option value="'+esc(t.name)+'">'+esc(t.name)+'</option>').join('');
+  positionBulkPopover($('bulkAssignModal'),e.target);
+  $('bulkAssignModal').classList.add('open');
+};
+
+window.openBulkPOModal=function(e){
+  if(!selectedParts.size)return;
+  renderBulkPreview('bulkPOPreview');
+  $('bulkPOInput').value='';
+  positionBulkPopover($('bulkPOModal'),e.target);
+  $('bulkPOModal').classList.add('open');
+  setTimeout(()=>$('bulkPOInput').focus(),100);
+};
+
+window.openBulkDeleteModal=function(e){
+  if(!selectedParts.size)return;
+  renderBulkPreview('bulkDeletePreview');
+  positionBulkPopover($('bulkDeleteModal'),e.target);
+  $('bulkDeleteModal').classList.add('open');
+};
+
+window.applyBulkStatus=function(){
+  const status=$('bulkStatusSelect').value;
+  if(!status)return;
+  const now=Date.now();
+  const po=$('bulkStatusPO').value.trim();
+  const eta=$('bulkStatusETA').value;
+  const count=selectedParts.size;
+  
+  selectedParts.forEach(id=>{
+    const p=data.find(d=>d.id===id);
+    if(p){
+      if(p.status==='ordered'&&status==='arrived'&&p.orderedAt&&p.code){
+        const days=Math.round((now-p.orderedAt)/86400000);
+        if(days>0)recordLeadTime(p.code,days);
+        p.arrivedAt=now;
+      }
+      if(status==='ordered'&&p.status!=='ordered'){
+        p.orderedAt=now;
+        if(po)p.poNumber=po;
+        if(eta)p.expectedArrival=eta;
+      }
+      p.status=status;
+      p.changedAt=now;
+    }
+  });
+  save();
+  $('bulkStatusModal').classList.remove('open');
+  clearSelection();
+  render();
+  toast(count+' parts updated → '+SLABELS[status]);
+};
+
+// Show/hide PO fields based on status selection
+$('bulkStatusSelect').onchange=function(){
+  const showPO=this.value==='ordered';
+  $('bulkPOFields').style.display=showPO?'block':'none';
+};
+
+window.applyBulkAssign=function(){
+  const assignee=$('bulkAssignSelect').value;
+  if(!assignee)return;
+  const count=selectedParts.size;
+  selectedParts.forEach(id=>{
+    const p=data.find(d=>d.id===id);
+    if(p)p.assignee=assignee;
+  });
+  save();
+  $('bulkAssignModal').classList.remove('open');
+  clearSelection();
+  render();
+  toast(count+' parts assigned');
+};
+
+window.applyBulkPO=function(){
+  const po=$('bulkPOInput').value.trim();
+  if(!po)return;
+  const count=selectedParts.size;
+  selectedParts.forEach(id=>{
+    const p=data.find(d=>d.id===id);
+    if(p)p.poNumber=po;
+  });
+  save();
+  $('bulkPOModal').classList.remove('open');
+  clearSelection();
+  render();
+  toast(count+' parts updated');
+};
+
+window.applyBulkDelete=function(){
+  const count=selectedParts.size;
+  selectedParts.forEach(id=>{
+    data=data.filter(d=>d.id!==id&&d.parentId!==id);
+  });
+  save();
+  $('bulkDeleteModal').classList.remove('open');
+  clearSelection();
+  render();
+  toast(count+' parts deleted');
+};
+
+// Close bulk popovers
+['bulkStatusModal','bulkAssignModal','bulkPOModal','bulkDeleteModal'].forEach(id=>{
+  $(id).querySelector('.modal-close').onclick=()=>$(id).classList.remove('open');
+});
+
+document.addEventListener('click',e=>{
+  ['bulkStatusModal','bulkAssignModal','bulkPOModal','bulkDeleteModal'].forEach(id=>{
+    const modal=$(id);
+    if(modal.classList.contains('open')&&!modal.contains(e.target)&&!e.target.closest('.bulk-bar')){
+      modal.classList.remove('open');
+    }
+  });
+});
 
 // Theme System
 const THEMES=[
@@ -4358,10 +4626,33 @@ $('icExport').onclick=()=>{
   toast('Exported');
 };
 
-// Initialize (auth is handled by onAuthStateChanged listener above)
+// Bulk operations button handlers
+$('bulkStatusBtn').onclick=window.openBulkStatusModal;
+$('bulkAssignBtn').onclick=window.openBulkAssignModal;
+$('bulkPOBtn').onclick=window.openBulkPOModal;
+$('bulkDeleteBtn').onclick=window.openBulkDeleteModal;
+$('bulkClearBtn').onclick=clearSelection;
+$('selectAllParts').onclick=window.toggleSelectAll;
+$('bulkStatusApply').onclick=window.applyBulkStatus;
+$('bulkAssignApply').onclick=window.applyBulkAssign;
+$('bulkPOApply').onclick=window.applyBulkPO;
+$('bulkDeleteApply').onclick=window.applyBulkDelete;
+$('bulkStatusCancel').onclick=()=>$('bulkStatusModal').classList.remove('open');
+$('bulkAssignCancel').onclick=()=>$('bulkAssignModal').classList.remove('open');
+$('bulkPOCancel').onclick=()=>$('bulkPOModal').classList.remove('open');
+$('bulkDeleteCancel').onclick=()=>$('bulkDeleteModal').classList.remove('open');
+
+// Initialize
 applyTheme(currentTheme);
 loadExpanded();
 loadItemCodeConfig();
+
+// Check if already authenticated
+if(checkAuth()){
+  isAuthenticated=true;
+  $('loginScreen').style.display='none';
+  initFirebaseListeners();
+}
 
 })();
 </script>
