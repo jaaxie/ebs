@@ -409,10 +409,10 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .ai-prose p{margin-bottom:16px}
 .ai-prose p:last-child{margin-bottom:0}
 .ai-prose strong{color:#fff;font-weight:600}
-.ai-prose ul,.ai-prose ol{margin:8px 0 16px 0;padding-left:8px;list-style:none}
-.ai-prose li{margin:8px 0;padding-left:20px;position:relative;line-height:1.6}
-.ai-prose li::before{content:'•';position:absolute;left:0;color:#64d2ff}
-.ai-section-header{font-size:11px;font-weight:700;color:#888;letter-spacing:1px;margin:24px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #3a3a3a}
+.ai-prose ul,.ai-prose ol{margin:12px 0 20px 0;padding-left:0;list-style:none}
+.ai-prose li{margin:10px 0;padding:10px 14px 10px 32px;position:relative;line-height:1.6;background:rgba(255,255,255,0.03);border-radius:8px;border-left:3px solid rgba(100,210,255,0.4)}
+.ai-prose li::before{content:'→';position:absolute;left:12px;color:#64d2ff;font-size:12px}
+.ai-section-header{font-size:11px;font-weight:700;color:#64d2ff;letter-spacing:1px;text-transform:uppercase;margin:24px 0 12px 0;padding-bottom:6px;border-bottom:1px solid #3a3a3a}
 .ai-section-header:first-child{margin-top:0}
 .ai-part-link{color:#60a5fa;cursor:pointer;text-decoration:underline;text-decoration-color:rgba(96,165,250,0.4);text-underline-offset:3px;transition:all .15s}
 .ai-part-link:hover{color:#93c5fd;text-decoration-color:rgba(147,197,253,0.6)}
@@ -455,21 +455,29 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 .notify-btn:hover{background:var(--bg4)}.notify-btn:disabled{opacity:.4;cursor:not-allowed}
 .toast-box{position:fixed;bottom:16px;left:16px;right:16px;z-index:1100;pointer-events:none}
 
-/* Login Screen */
-.login-screen{position:fixed;inset:0;background:rgba(0,0,0,0.25);backdrop-filter:blur(1.5px);-webkit-backdrop-filter:blur(1.5px);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;padding:20px}
-.login-box{background:var(--bg2);border-radius:20px;padding:36px;width:100%;max-width:340px;box-shadow:0 24px 80px rgba(0,0,0,.5);border:1px solid var(--border)}
-.login-logo{font-size:22px;font-weight:600;text-align:center;margin-bottom:8px;color:var(--text)}
-.login-subtitle{font-size:12px;color:var(--text3);text-align:center;margin-bottom:20px}
-.login-icon{font-size:48px;text-align:center;margin-bottom:16px}
-.login-field{margin-bottom:16px}
-.login-field label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px}
-.login-field input{width:100%;height:44px;padding:0 14px;font-size:16px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:10px;outline:none}
-.login-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(218,119,86,.2)}
-.login-btn{width:100%;height:48px;font-size:15px;font-weight:600;color:#fff;background:var(--accent);border:none;border-radius:12px;cursor:pointer;transition:all .2s}
-.login-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
-.login-btn:active{transform:translateY(0)}
+/* Login Screen - Clean minimal style */
+.login-screen{position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;padding:20px}
+.login-box{background:#f5f5f4;border-radius:16px;padding:28px 24px;width:100%;max-width:320px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.login-logo{font-size:15px;font-weight:500;text-align:center;margin-bottom:20px;color:#1a1a1a;letter-spacing:-0.2px}
+.login-subtitle{display:none}
+.login-icon{display:none}
+.login-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:#888;font-size:12px}
+.login-divider::before,.login-divider::after{content:'';flex:1;height:1px;background:#ddd}
+.login-field{margin-bottom:12px}
+.login-field label{display:none}
+.login-field input{width:100%;height:44px;padding:0 14px;font-size:14px;color:#1a1a1a;background:#fff;border:1px solid #d4d4d4;border-radius:8px;outline:none;transition:border-color .15s}
+.login-field input::placeholder{color:#888}
+.login-field input:focus{border-color:#1a1a1a}
+.login-btn{width:100%;height:44px;font-size:14px;font-weight:500;color:#fff;background:#1a1a1a;border:none;border-radius:8px;cursor:pointer;transition:all .15s}
+.login-btn:hover{background:#333}
+.login-btn:active{transform:scale(0.98)}
 .login-btn:disabled{opacity:0.5;cursor:not-allowed}
-.login-error{color:var(--red);font-size:12px;text-align:center;margin-top:12px;min-height:18px}
+.login-btn-outline{width:100%;height:44px;font-size:14px;font-weight:500;color:#1a1a1a;background:#fff;border:1px solid #d4d4d4;border-radius:8px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px}
+.login-btn-outline:hover{background:#f9f9f9;border-color:#bbb}
+.login-btn-outline svg{width:18px;height:18px}
+.login-footer{font-size:11px;color:#888;text-align:center;margin-top:16px;line-height:1.5}
+.login-footer a{color:#666;text-decoration:underline}
+.login-error{color:#dc2626;font-size:12px;text-align:center;margin-top:8px;min-height:16px}
 .login-status{display:none}
 .sync-indicator{position:fixed;top:62px;right:74px;padding:6px 12px;background:var(--bg2);border-radius:8px;font-size:11px;color:var(--text2);display:flex;align-items:center;gap:6px;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2);opacity:0;transform:translateY(-5px);transition:opacity 0.4s ease,transform 0.4s ease;pointer-events:none}
 .sync-indicator.active{opacity:1;transform:translateY(0);pointer-events:auto}
@@ -791,14 +799,14 @@ html,body{height:100%;overflow:hidden;overflow-x:hidden;font-family:-apple-syste
 <!-- Login Screen -->
 <div class="login-screen" id="loginScreen">
 <div class="login-box">
-<div class="login-icon">🏭</div>
 <div class="login-logo">EF Final Assembly</div>
-<div class="login-subtitle">Parts Pipeline Tracker</div>
+<button class="login-btn-outline" id="loginQuick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>Continue as Guest</button>
+<div class="login-divider">OR</div>
 <div class="login-field">
-<label>Access Code</label>
-<input type="password" id="loginCode" placeholder="Enter team access code" autocomplete="off">
+<input type="password" id="loginCode" placeholder="Enter access code" autocomplete="off">
 </div>
-<button class="login-btn" id="loginBtn">Login</button>
+<button class="login-btn" id="loginBtn">Continue with code</button>
+<div class="login-error" id="loginError"></div>
 </div>
 </div>
 
@@ -1602,15 +1610,26 @@ function setupRealtimeListener(){
 // ============================================
 // Login UI Handlers
 // ============================================
+// Guest login - instant access
+$('loginQuick').onclick=()=>{
+  $('loginQuick').disabled=true;
+  $('loginQuick').innerHTML='<span>Loading...</span>';
+  setTimeout(()=>login(ACCESS_CODE),200);
+};
+
+// Code login
 $('loginBtn').onclick=()=>{
+  const code=$('loginCode').value.trim();
+  if(code&&code!==ACCESS_CODE){
+    $('loginError').textContent='Invalid code';
+    return;
+  }
   $('loginBtn').disabled=true;
   $('loginBtn').textContent='Loading...';
-  
-  // Small delay for UX
-  setTimeout(()=>{
-    login(ACCESS_CODE); // Auto-login with default code
-  },300);
+  setTimeout(()=>login(ACCESS_CODE),200);
 };
+
+$('loginCode').onkeydown=e=>{if(e.key==='Enter')$('loginBtn').click()};
 
 // Check connection status on load
 db.ref('.info/connected').once('value').then(()=>{
@@ -3389,7 +3408,23 @@ window.clearStageFilter=()=>{filterStage='';render()};
 window.clearAssigneeFilter=()=>{filterAssignee='';$('assigneeFilter').value='';render()};
 window.clearPOFilter=()=>{filterPO='';render()};
 window.togglePOFilter=(po,e)=>{e&&e.stopPropagation();filterPO=filterPO===po?'':po;render()};
+function closeAllPopovers(){
+  // Close popover modals
+  ['partModal','asmModal','actionModal','aiModal'].forEach(id=>{
+    const el=$(id);if(el)el.classList.remove('open');
+  });
+  // Close other popovers
+  ['themeModal','reportModal','receivePOModal','commentsPopover','deletePopover','statusPopover','bulkStatusPopover','bulkAssigneePopover','bulkPOPopover','bulkDeletePopover'].forEach(id=>{
+    const el=$(id);if(el)el.classList.remove('open');
+  });
+  // Close gantt popups
+  ['ganttColorPopup','ganttDatePopup'].forEach(id=>{
+    const el=$(id);if(el)el.classList.remove('open');
+  });
+  $('popoverBackdrop').classList.remove('active');
+}
 function showPopoverModal(modal,btn){
+  closeAllPopovers();
   $('popoverBackdrop').classList.add('active');
   if(btn){
     const rect=btn.getBoundingClientRect();
