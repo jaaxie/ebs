@@ -3667,28 +3667,32 @@ function buildProjectContext(question){
     .sort((a,b)=>(b.changedAt||0)-(a.changedAt||0));
   const otherParts=parts.filter(p=>!stuckParts.includes(p)&&!recentParts.includes(p));
   
-  // Combine: stuck first, then recent activity, then others - limit to 30 total
-  const prioritizedParts=[...stuckParts,...recentParts,...otherParts].slice(0,30);
+  // Combine: stuck first, then recent activity, then others - include ALL parts
+  const prioritizedParts=[...stuckParts,...recentParts,...otherParts];
   context.partsList=prioritizedParts.map(p=>{
     const asm=asms.find(a=>a.id===p.parentId);
     const daysInStatus=p.changedAt?Math.floor((now-p.changedAt)/day):0;
-    return {
+    const part={
       id:p.id,
       name:p.name,
       status:p.status,
-      daysInStatus,
-      assembly:asm?.name||'',
-      assignee:p.assignee||''
+      daysInStatus
     };
+    // Only include non-empty fields
+    if(asm?.name)part.assembly=asm.name;
+    if(p.assignee)part.assignee=p.assignee;
+    if(p.poNumber)part.poNumber=p.poNumber;
+    if(p.mfr)part.mfr=p.mfr;
+    if(p.code)part.code=p.code;
+    if(p.qty&&p.qty>1)part.qty=p.qty;
+    if(p.expectedArrival)part.expectedArrival=p.expectedArrival;
+    if(p.orderedAt)part.orderedAt=new Date(p.orderedAt).toISOString().split('T')[0];
+    if(p.arrivedAt)part.arrivedAt=new Date(p.arrivedAt).toISOString().split('T')[0];
+    if(p.pendingNote)part.pendingNote=p.pendingNote;
+    if(p.notes)part.notes=p.notes;
+    if(p.comments?.length)part.commentCount=p.comments.length;
+    return part;
   });
-  
-  // PARTS: include full part list for specific queries
-  if(questionType==='parts'){
-    context.allParts=parts.map(p=>{
-      const asm=asms.find(a=>a.id===p.parentId);
-      return {name:p.name,code:p.code||'',mfr:p.mfr||'',status:p.status,assembly:asm?.name||''};
-    });
-  }
   
   return context;
 }
@@ -5683,6 +5687,7 @@ function buildFullProjectContext(){
   const pct=calcOverallProgress(),expected=getExpectedProgress(),daysLeft=getDaysLeft();
   const forecast=getVelocityForecast();
   const otd=calcSupplierOTD();
+  const now=Date.now(),day=86400000;
   
   // Build comprehensive context
   const ctx={
@@ -5695,11 +5700,12 @@ function buildFullProjectContext(){
       totalAssemblies:asms.length
     },
     counts:{
+      pending:parts.filter(p=>p.status==='pending').length,
       'to-order':parts.filter(p=>p.status==='to-order').length,
       ordered:parts.filter(p=>p.status==='ordered').length,
       arrived:parts.filter(p=>p.status==='arrived').length,
-      configured:parts.filter(p=>p.status==='configured').length,
       tested:parts.filter(p=>p.status==='tested').length,
+      configured:parts.filter(p=>p.status==='configured').length,
       installed:parts.filter(p=>p.status==='installed').length,
       total:parts.length
     },
@@ -5709,15 +5715,32 @@ function buildFullProjectContext(){
       partCount:parts.filter(p=>p.parentId===a.id).length,
       priority:a.priority||999
     })).sort((a,b)=>a.priority-b.priority),
+    // ALL parts with full details (only non-empty fields)
+    allParts:parts.map(p=>{
+      const asm=asms.find(a=>a.id===p.parentId);
+      const daysInStatus=p.changedAt?Math.floor((now-p.changedAt)/day):0;
+      const part={id:p.id,name:p.name,status:p.status,daysInStatus};
+      if(asm?.name)part.assembly=asm.name;
+      if(p.assignee)part.assignee=p.assignee;
+      if(p.poNumber)part.poNumber=p.poNumber;
+      if(p.mfr)part.mfr=p.mfr;
+      if(p.code)part.code=p.code;
+      if(p.qty&&p.qty>1)part.qty=p.qty;
+      if(p.expectedArrival)part.expectedArrival=p.expectedArrival;
+      if(p.pendingNote)part.pendingNote=p.pendingNote;
+      if(p.notes)part.notes=p.notes;
+      return part;
+    }),
     stuck:parts.filter(p=>{
-      const days=Math.floor((Date.now()-(p.changedAt||Date.now()))/(1000*60*60*24));
+      const days=Math.floor((now-(p.changedAt||now))/day);
       return days>5&&p.status!=='installed';
     }).map(p=>({
       name:p.name,
       status:p.status,
-      days:Math.floor((Date.now()-(p.changedAt||Date.now()))/(1000*60*60*24)),
-      assembly:asms.find(a=>a.id===p.parentId)?.name||'Unassigned'
-    })).slice(0,15),
+      days:Math.floor((now-(p.changedAt||now))/day),
+      assembly:asms.find(a=>a.id===p.parentId)?.name||'Unassigned',
+      assignee:p.assignee||''
+    })),
     velocity:forecast?{
       rate:forecast.rate,
       daysToComplete:forecast.daysToComplete,
@@ -5730,7 +5753,7 @@ function buildFullProjectContext(){
       task:a.task,
       due:a.due,
       assignee:a.assignee,
-      daysOverdue:Math.floor((Date.now()-new Date(a.due))/(1000*60*60*24))
+      daysOverdue:Math.floor((now-new Date(a.due))/day)
     })),
     upcomingActions:actions.filter(a=>a.status!=='completed'&&a.due).sort((a,b)=>a.due.localeCompare(b.due)).slice(0,5).map(a=>({
       task:a.task,
