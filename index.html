@@ -303,8 +303,16 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 .mp-otd-item:nth-child(odd){background:var(--bg3)}
 .mp-otd-item-mfr{color:var(--text)}
 .mp-otd-item-stats{color:var(--text3)}
-.mp-chart-container{background:var(--bg);border-radius:10px;padding:16px;min-height:160px;display:flex;align-items:center;justify-content:center}
+.mp-chart-container{background:var(--bg);border-radius:10px;padding:16px;min-height:160px;display:flex;align-items:center;justify-content:center;position:relative}
 .mp-chart-container svg{display:block;width:100%;height:100%}
+.mp-chart-tooltip{position:absolute;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-size:11px;color:var(--text);pointer-events:none;white-space:nowrap;z-index:100;opacity:0;transition:opacity 0.1s;box-shadow:0 2px 8px rgba(0,0,0,0.3)}
+.mp-chart-tooltip.visible{opacity:1}
+.mp-forecast-popover{position:absolute;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text);z-index:101;box-shadow:0 4px 16px rgba(0,0,0,0.4);max-width:240px;line-height:1.5}
+.mp-forecast-popover-title{font-weight:600;margin-bottom:6px;color:var(--green)}
+.mp-forecast-popover-close{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:2px 6px}
+.mp-forecast-popover-close:hover{color:var(--text)}
+.mp-forecast-popover-stat{display:flex;justify-content:space-between;margin:4px 0;color:var(--text2)}
+.mp-forecast-popover-stat span:last-child{color:var(--text);font-weight:500}
 .mp-chart-legend{display:flex;gap:16px;margin-top:12px;font-size:11px;color:var(--text2);justify-content:center}
 .mp-legend-item{display:flex;align-items:center;gap:6px}
 .mp-legend-dot{width:8px;height:8px;border-radius:50%}
@@ -1106,7 +1114,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 <button class="btn" id="themeBtn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11M8 2.5a5.5 5.5 0 0 1 0 11" fill="currentColor" stroke="none"/></svg></button>
 <button class="btn btn-receive" id="receivePOBtn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v9M4.5 7.5 8 11l3.5-3.5M3 13h10"/></svg><span>Receive PO</span></button>
 <button class="btn btn-report" id="reportBtn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2.5" y="2" width="11" height="12" rx="1.5"/><path d="M5 5.5h6M5 8h6M5 10.5h3"/></svg><span>Report</span></button>
-<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-item" id="itemConfigBtn">Item Code Config</div><div class="dropdown-div"></div><div class="dropdown-item" id="navImportBtn">📥 Import NAV Data</div><div class="dropdown-div"></div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
+<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-item" id="itemConfigBtn">Item Code Config</div><div class="dropdown-div"></div><div class="dropdown-item" id="navImportBtn">📥 Import NAV Data</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Load Sample Data</div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
 </div>
 </header>
 <main class="main">
@@ -1131,7 +1139,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 </div>
 <div style="flex:1"></div>
-<div class="version-badge" id="versionBadge">v1.3.9
+<div class="version-badge" id="versionBadge">v1.4.6
 <div class="version-info">
 <div class="version-info-row"><span class="version-info-label">Version</span><span class="version-info-value">1.0.2</span></div>
 <div class="version-info-row"><span class="version-info-label">Server</span><span class="version-info-value" id="serverStatus">Firebase</span></div>
@@ -1270,7 +1278,15 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 <div class="metrics-popover" id="metricsPopover">
 <div class="metrics-section metrics-section-full">
 <div class="metrics-section-title">Progress Chart</div>
+<div class="mp-chart-wrapper" style="position:relative">
 <div class="mp-chart-container" id="mpChart"></div>
+<div class="mp-chart-tooltip" id="mpChartTooltip"></div>
+<div class="mp-forecast-popover" id="mpForecastPopover" style="display:none">
+  <button class="mp-forecast-popover-close" onclick="$('mpForecastPopover').style.display='none'">×</button>
+  <div class="mp-forecast-popover-title" id="mpForecastPopoverTitle">Est. Completion</div>
+  <div id="mpForecastPopoverContent"></div>
+</div>
+</div>
 <div class="mp-chart-legend"><span class="mp-legend-item"><span class="mp-legend-dot" style="background:var(--green)"></span>Ahead</span><span class="mp-legend-item"><span class="mp-legend-dot" style="background:var(--red)"></span>Behind</span><span class="mp-legend-item"><span class="mp-legend-dot" style="background:var(--text3)"></span>Target</span><span class="mp-legend-item"><span style="width:16px;height:2px;background:repeating-linear-gradient(90deg,var(--text3) 0,var(--text3) 3px,transparent 3px,transparent 6px);opacity:0.7;border-radius:1px"></span>Forecast</span><span class="mp-legend-item"><span style="width:1px;height:10px;background:var(--accent);opacity:0.5"></span>Today</span></div>
 </div>
 <div class="metrics-row">
@@ -2249,6 +2265,15 @@ async function saveAllToGranular() {
     updates['actions/' + String(action.id)] = action;
   });
   
+  // Save history too!
+  history.forEach(h => {
+    updates['history/' + h.date] = {
+      date: h.date,
+      pct: h.pct,
+      action: h.action || null
+    };
+  });
+  
   try {
     await projectRef.update(updates);
   } catch(e) {
@@ -2324,11 +2349,11 @@ function createSampleData(){
     {name:'Mike',email:'mike@company.com'}
   ];
   
-  // Project: Nov 1, 2025 - April 30, 2026 (started 2 months ago)
-  projectDates={start:'2025-11-01',end:'2026-04-30'};
+  // Project: Oct 1, 2025 - June 30, 2026 (started 3 months ago, 9 month project)
+  projectDates={start:'2025-10-01',end:'2026-06-30'};
   
-  // Calculate "today" as Jan 1, 2026 - about 61 days into a 180-day project
-  const projectStart=new Date('2025-11-01').getTime();
+  // Calculate timestamps for sample data
+  const projectStart=new Date('2025-10-01').getTime();
   const simToday=now; // Use actual current time
   
   // PO number generator
@@ -2653,42 +2678,43 @@ function createSampleData(){
   });
 
   // Progress history - realistic ramp up from Nov 1, 2025 to Jan 1, 2026 (2 months)
+  // Progress history - Oct 2025 to Jan 2026 (3 months of progress, weekly entries)
   history=[
-    {date:'2025-11-01',pct:0,action:'Project kickoff'},
-    {date:'2025-11-08',pct:3,action:'Initial orders placed'},
-    {date:'2025-11-15',pct:8,action:'First parts ordered'},
-    {date:'2025-11-22',pct:14,action:'Control panel started'},
-    {date:'2025-11-29',pct:20,action:'First arrivals'},
-    {date:'2025-12-06',pct:28,action:'Robot ordered'},
-    {date:'2025-12-13',pct:36,action:'Major deliveries'},
-    {date:'2025-12-20',pct:45,action:'Holiday slowdown'},
-    {date:'2025-12-27',pct:52,action:'Year-end push'},
-    {date:'2026-01-01',pct:65,action:'New year milestone'}
+    {date:'2025-10-01',pct:0,action:'Project kickoff'},
+    {date:'2025-10-10',pct:4,action:'Requirements finalized'},
+    {date:'2025-10-20',pct:9,action:'Initial orders placed'},
+    {date:'2025-10-31',pct:15,action:'Engineering started'},
+    {date:'2025-11-10',pct:21,action:'First parts ordered'},
+    {date:'2025-11-20',pct:28,action:'Control panel design'},
+    {date:'2025-11-30',pct:35,action:'Robot ordered'},
+    {date:'2025-12-10',pct:43,action:'Major deliveries'},
+    {date:'2025-12-20',pct:52,action:'Assembly begins'},
+    {date:'2026-01-01',pct:65,action:'New year checkpoint'}
   ];
 
   // Realistic action items with various states
   actions=[
-    {id:now+1,task:'Order remaining pneumatic components (compressor decision)',linkedPartId:null,due:'2026-01-10',assignee:'Marisa',status:'not-started',createdAt:'2025-12-20'},
-    {id:now+2,task:'Complete safety system risk assessment documentation',linkedPartId:null,due:'2026-01-20',assignee:'Mike',status:'in-progress',createdAt:'2025-12-15'},
-    {id:now+3,task:'Schedule Fanuc robot training (2 days)',linkedPartId:null,due:'2026-01-18',assignee:'Sarah',status:'in-progress',createdAt:'2025-12-28'},
-    {id:now+4,task:'Get customer signoff on HMI screen changes (CR-0042)',linkedPartId:null,due:'2026-01-08',assignee:'John',status:'not-started',createdAt:'2025-12-22'},
-    {id:now+5,task:'Follow up on Robot Stand fabrication progress',linkedPartId:null,due:'2026-01-12',assignee:'John',status:'not-started',createdAt:'2025-12-18'},
-    {id:now+6,task:'Arrange rigging crew for hydraulic unit installation',linkedPartId:null,due:'2026-01-16',assignee:'John',status:'not-started',createdAt:'2025-12-30'},
-    {id:now+7,task:'Order calibration target for Keyence camera (backorder)',linkedPartId:null,due:'2025-12-20',assignee:'Sarah',status:'completed',createdAt:'2025-12-10'},
-    {id:now+8,task:'Verify Servo Motor 3kW replacement shipment',linkedPartId:null,due:'2026-01-15',assignee:'Sarah',status:'in-progress',createdAt:'2025-12-28'},
-    {id:now+9,task:'Review Palletizer frame drawings before fab starts',linkedPartId:null,due:'2025-12-15',assignee:'Marisa',status:'completed',createdAt:'2025-11-25'},
-    {id:now+10,task:'Schedule VFD programming with Yaskawa specialist',linkedPartId:null,due:'2026-01-25',assignee:'Mike',status:'not-started',createdAt:'2026-01-02'},
-    {id:now+11,task:'Get quote for Stretch Wrapper package from Lantech',linkedPartId:null,due:'2026-02-18',assignee:'Marisa',status:'not-started',createdAt:'2026-02-10'},
-    {id:now+12,task:'Confirm Label Applicator tech visit date',linkedPartId:null,due:'2026-02-07',assignee:'Sarah',status:'not-started',createdAt:'2026-02-05'}
+    {id:now+1,task:'Order remaining pneumatic components (compressor decision)',linkedPartId:null,due:'2026-01-10',assignee:'Marisa',status:'not-started',createdAt:'2025-12-15'},
+    {id:now+2,task:'Complete safety system risk assessment documentation',linkedPartId:null,due:'2026-01-20',assignee:'Mike',status:'in-progress',createdAt:'2025-11-20'},
+    {id:now+3,task:'Schedule Fanuc robot training (2 days)',linkedPartId:null,due:'2026-01-18',assignee:'Sarah',status:'in-progress',createdAt:'2025-12-01'},
+    {id:now+4,task:'Get customer signoff on HMI screen changes (CR-0042)',linkedPartId:null,due:'2026-01-08',assignee:'John',status:'not-started',createdAt:'2025-12-10'},
+    {id:now+5,task:'Follow up on Robot Stand fabrication progress',linkedPartId:null,due:'2026-01-12',assignee:'John',status:'not-started',createdAt:'2025-11-25'},
+    {id:now+6,task:'Arrange rigging crew for hydraulic unit installation',linkedPartId:null,due:'2026-01-16',assignee:'John',status:'not-started',createdAt:'2025-12-20'},
+    {id:now+7,task:'Order calibration target for Keyence camera (backorder)',linkedPartId:null,due:'2025-12-15',assignee:'Sarah',status:'completed',createdAt:'2025-11-15'},
+    {id:now+8,task:'Verify Servo Motor 3kW replacement shipment',linkedPartId:null,due:'2026-01-15',assignee:'Sarah',status:'in-progress',createdAt:'2025-12-18'},
+    {id:now+9,task:'Review Palletizer frame drawings before fab starts',linkedPartId:null,due:'2025-11-30',assignee:'Marisa',status:'completed',createdAt:'2025-10-20'},
+    {id:now+10,task:'Schedule VFD programming with Yaskawa specialist',linkedPartId:null,due:'2026-02-15',assignee:'Mike',status:'not-started',createdAt:'2025-12-28'},
+    {id:now+11,task:'Get quote for Stretch Wrapper package from Lantech',linkedPartId:null,due:'2026-03-01',assignee:'Marisa',status:'not-started',createdAt:'2025-12-15'},
+    {id:now+12,task:'Confirm Label Applicator tech visit date',linkedPartId:null,due:'2026-02-20',assignee:'Sarah',status:'not-started',createdAt:'2025-12-20'}
   ];
 
   // Lead time database
   leadTimeDb={
-    '6ES7-1500':{samples:[{days:7,date:'2025-12-20'},{days:6,date:'2025-12-10'},{days:8,date:'2025-11-25'}],avg:7},
-    'HMI-TP1500':{samples:[{days:10,date:'2025-12-15'},{days:12,date:'2025-11-20'}],avg:11},
-    'SM-3KW-01':{samples:[{days:5,date:'2025-12-22'},{days:4,date:'2025-12-01'}],avg:5},
-    'RA-6AX-20':{samples:[{days:28,date:'2025-12-15'},{days:25,date:'2025-11-10'}],avg:27},
-    'LC-600':{samples:[{days:10,date:'2025-12-18'},{days:8,date:'2025-12-05'}],avg:9},
+    '6ES7-1500':{samples:[{days:7,date:'2025-12-15'},{days:6,date:'2025-11-20'},{days:8,date:'2025-10-25'}],avg:7},
+    'HMI-TP1500':{samples:[{days:10,date:'2025-12-10'},{days:12,date:'2025-11-15'}],avg:11},
+    'SM-3KW-01':{samples:[{days:5,date:'2025-12-18'},{days:4,date:'2025-11-22'}],avg:5},
+    'RA-6AX-20':{samples:[{days:28,date:'2025-12-01'},{days:25,date:'2025-10-20'}],avg:27},
+    'LC-600':{samples:[{days:10,date:'2025-12-12'},{days:8,date:'2025-11-18'}],avg:9},
     'HPU-15HP':{samples:[{days:14,date:'2025-12-10'}],avg:14},
     'SC-5MP':{samples:[{days:6,date:'2025-12-20'},{days:5,date:'2025-12-08'}],avg:6},
     'VFD-15KW':{samples:[{days:3,date:'2025-12-22'},{days:4,date:'2025-12-15'},{days:3,date:'2025-12-01'}],avg:3},
@@ -5800,117 +5826,192 @@ function updateMetricsPopover(){
 
 function renderMetricsChart(){
   const chart=$('mpChart');
-  if(!projectDates.start||!projectDates.end){
-    chart.innerHTML='<div class="mp-chart-empty" onclick="window.openDates()"><span>📅</span><span>Set project dates to see chart</span></div>';
+  if(!projectDates.end){
+    chart.innerHTML='<div class="mp-chart-empty" onclick="window.openDates()"><span>📅</span><span>Set project end date to see chart</span></div>';
     return;
   }
   
-  // Allow chart with just 1 point (show current state even without trend)
-  const start=new Date(projectDates.start),end=new Date(projectDates.end);
-  const totalDays=Math.max(1,(end-start)/86400000);
-  const w=480,h=170,pad={top:14,right:14,bottom:38,left:34};
-  const chartW=w-pad.left-pad.right,chartH=h-pad.top-pad.bottom;
-  const xScale=x=>pad.left+(x/totalDays)*chartW;
-  const yScale=y=>pad.top+(1-y/100)*chartH;
+  const dayMs = 86400000;
+  const projectEndT = Date.parse(projectDates.end);
+  const projectStartT = projectDates.start ? Date.parse(projectDates.start) : null;
+  const todayT = Date.now();
+  const todayStr = new Date().toISOString().split('T')[0];
   
-  // If no history, create a point for today
-  let workingHistory = history.length > 0 ? history : [{date: new Date().toISOString().split('T')[0], pct: calcOverallProgress()}];
+  // Build working history - always include at least today's progress
+  let workingHistory = history.length > 0 
+    ? [...history] 
+    : [{date: todayStr, pct: calcOverallProgress()}];
   
-  const points=workingHistory.filter(pt=>{const d=new Date(pt.date);return d>=start&&d<=end}).map(pt=>{const d=new Date(pt.date),dayNum=(d-start)/86400000;return{x:xScale(dayNum),y:yScale(pt.pct),pct:pt.pct,dayNum,date:pt.date}});
-  // Defensive sort by dayNum to prevent zigzag lines even if history order is wrong
-  points.sort((a,b) => a.dayNum - b.dayNum);
-  
-  if(points.length === 0) {
-    chart.innerHTML='<div class="mp-chart-empty"><span>📊</span><span>No data in project date range</span></div>';
-    return;
-  }
-  
-  let svg='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="xMidYMid meet">';
-  
-  // Grid lines
-  [0,25,50,75,100].forEach(g=>{const y=yScale(g);svg+='<line x1="'+pad.left+'" y1="'+y+'" x2="'+(w-pad.right)+'" y2="'+y+'" stroke="var(--border)" stroke-width="1"/><text x="'+(pad.left-6)+'" y="'+(y+3)+'" fill="var(--text3)" font-size="9" text-anchor="end">'+g+'</text>'});
-  
-  // X-axis date labels
-  const formatMonth = d => d.toLocaleDateString('en-US', {month:'short', day:'numeric'});
-  const startLabel = formatMonth(start);
-  const endLabel = formatMonth(end);
-  const midDate = new Date(start.getTime() + (end-start)/2);
-  const midLabel = formatMonth(midDate);
-  
-  svg += '<text x="'+pad.left+'" y="'+(h-8)+'" fill="var(--text3)" font-size="9" text-anchor="start">'+startLabel+'</text>';
-  svg += '<text x="'+(w/2)+'" y="'+(h-8)+'" fill="var(--text3)" font-size="9" text-anchor="middle">'+midLabel+'</text>';
-  svg += '<text x="'+(w-pad.right)+'" y="'+(h-8)+'" fill="var(--text3)" font-size="9" text-anchor="end">'+endLabel+'</text>';
-  
-  // Today marker (if within range)
-  const today = new Date();
-  if(today >= start && today <= end) {
-    const todayDayNum = (today - start) / 86400000;
-    const todayX = xScale(todayDayNum);
-    svg += '<line x1="'+todayX+'" y1="'+pad.top+'" x2="'+todayX+'" y2="'+(h-pad.bottom)+'" stroke="var(--accent)" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>';
-  }
-  
-  // Target line (diagonal)
-  svg+='<line x1="'+xScale(0)+'" y1="'+yScale(0)+'" x2="'+xScale(totalDays)+'" y2="'+yScale(100)+'" stroke="var(--text3)" stroke-width="1.5" stroke-dasharray="4,3"/>';
-  
-  // Progress line with color based on ahead/behind
-  for(let i=0;i<points.length-1;i++){
-    const p1=points[i],p2=points[i+1];
-    const idealY1=(p1.dayNum/totalDays)*100,idealY2=(p2.dayNum/totalDays)*100;
-    const above1=p1.pct>=idealY1,above2=p2.pct>=idealY2;
-    const col1=above1?'var(--green)':'var(--red)';
-    const col2=above2?'var(--green)':'var(--red)';
-    if(above1===above2){
-      svg+='<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="'+col1+'" stroke-width="2.5" stroke-linecap="round"/>';
-    }else{
-      const t=(idealY1-p1.pct)/((p2.pct-p1.pct)-(idealY2-idealY1));
-      const ix=p1.x+t*(p2.x-p1.x),iy=p1.y+t*(p2.y-p1.y);
-      svg+='<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+ix+'" y2="'+iy+'" stroke="'+col1+'" stroke-width="2.5" stroke-linecap="round"/>';
-      svg+='<line x1="'+ix+'" y1="'+iy+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="'+col2+'" stroke-width="2.5" stroke-linecap="round"/>';
-    }
-  }
-  
-  // Prediction line (grey dotted) - from last point projecting forward based on velocity
-  const lastPt = points[points.length - 1];
-  const forecast = getVelocityForecast();
-  
-  if(forecast && forecast.rate > 0 && lastPt.pct < 100) {
-    // Calculate when we'll hit 100%
-    const daysTo100 = (100 - lastPt.pct) / forecast.rate;
-    const dayAt100 = lastPt.dayNum + daysTo100;
-    const estFinishDate = new Date(start.getTime() + dayAt100 * 86400000);
-    const estFinishStr = estFinishDate.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-    
-    if(dayAt100 <= totalDays) {
-      // We'll hit 100% before project end - draw line to completion point
-      const x100 = xScale(dayAt100);
-      const y100 = yScale(100);
-      svg += '<line x1="'+lastPt.x+'" y1="'+lastPt.y+'" x2="'+x100+'" y2="'+y100+'" stroke="var(--text3)" stroke-width="1.5" stroke-dasharray="3,4" stroke-linecap="round" opacity="0.7"><title>Est. completion: '+estFinishStr+'</title></line>';
-      // Small marker at predicted completion with tooltip
-      svg += '<circle cx="'+x100+'" cy="'+y100+'" r="4" fill="var(--bg2)" stroke="var(--text3)" stroke-width="1.5" opacity="0.9" style="cursor:pointer"><title>Est. completion: '+estFinishStr+'</title></circle>';
-    } else {
-      // Won't finish by project end - draw line to end of project
-      const daysRemaining = totalDays - lastPt.dayNum;
-      const predictedEndPct = lastPt.pct + (forecast.rate * daysRemaining);
-      const endX = xScale(totalDays);
-      const endY = yScale(predictedEndPct);
-      svg += '<line x1="'+lastPt.x+'" y1="'+lastPt.y+'" x2="'+endX+'" y2="'+endY+'" stroke="var(--text3)" stroke-width="1.5" stroke-dasharray="3,4" stroke-linecap="round" opacity="0.7"><title>Est. completion: '+estFinishStr+' (after deadline)</title></line>';
-    }
-  } else if(forecast && forecast.rate <= 0 && lastPt.pct < 100) {
-    // Stalled - draw flat line to end
-    const endX = xScale(totalDays);
-    svg += '<line x1="'+lastPt.x+'" y1="'+lastPt.y+'" x2="'+endX+'" y2="'+lastPt.y+'" stroke="var(--text3)" stroke-width="1.5" stroke-dasharray="3,4" stroke-linecap="round" opacity="0.5"><title>Progress stalled</title></line>';
-  }
-  
-  // Data points with tooltips
-  points.forEach(p=>{
-    const idealY=(p.dayNum/totalDays)*100;
-    const dateStr = new Date(p.date).toLocaleDateString('en-US', {month:'short', day:'numeric'});
-    const dotColor = p.pct>=idealY ? 'var(--green)' : 'var(--red)';
-    svg+='<circle cx="'+p.x+'" cy="'+p.y+'" r="3.5" fill="'+dotColor+'" style="cursor:pointer"><title>'+dateStr+': '+Math.round(p.pct)+'%</title></circle>';
+  // Sort by date and dedupe points too close together (< 3 days apart)
+  workingHistory.sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+  workingHistory = workingHistory.filter((h, i, arr) => {
+    if (i === arr.length - 1) return true;
+    const gap = (Date.parse(arr[i + 1].date) - Date.parse(h.date)) / dayMs;
+    return gap >= 3;
   });
   
-  svg+='</svg>';
-  chart.innerHTML=svg;
+  // Chart X range: from earliest data to max(latest data, project end, today)
+  const earliestT = Date.parse(workingHistory[0].date);
+  const latestDataT = Date.parse(workingHistory[workingHistory.length - 1].date);
+  const chartStartT = earliestT;
+  const chartEndT = Math.max(latestDataT, projectEndT, todayT);
+  const chartTotalDays = Math.max(1, (chartEndT - chartStartT) / dayMs);
+  
+  // For target line calculations
+  const projectDuration = projectStartT ? (projectEndT - projectStartT) / dayMs : chartTotalDays;
+  
+  // Chart dimensions
+  const w = 480, h = 170;
+  const pad = {top: 14, right: 14, bottom: 38, left: 34};
+  const chartW = w - pad.left - pad.right;
+  const chartH = h - pad.top - pad.bottom;
+  const xScale = t => pad.left + ((t - chartStartT) / dayMs / chartTotalDays) * chartW;
+  const yScale = pct => pad.top + (1 - pct / 100) * chartH;
+  
+  // Map history to chart points
+  const points = workingHistory.map(h => ({
+    x: xScale(Date.parse(h.date)),
+    y: yScale(h.pct),
+    pct: h.pct,
+    t: Date.parse(h.date),
+    date: h.date
+  }));
+  
+  // Get forecast for prediction line
+  const forecast = getVelocityForecast();
+  let forecastData = null;
+  
+  // Start SVG
+  let svg = '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="xMidYMid meet">';
+  
+  // Grid lines
+  [0, 25, 50, 75, 100].forEach(g => {
+    const y = yScale(g);
+    svg += '<line x1="'+pad.left+'" y1="'+y+'" x2="'+(w-pad.right)+'" y2="'+y+'" stroke="var(--border)" stroke-width="1"/>';
+    svg += '<text x="'+(pad.left-6)+'" y="'+(y+3)+'" fill="var(--text3)" font-size="9" text-anchor="end">'+g+'</text>';
+  });
+  
+  // X-axis labels
+  const formatLabel = t => new Date(t).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+  svg += '<text x="'+pad.left+'" y="'+(h-8)+'" fill="var(--text3)" font-size="9" text-anchor="start">'+formatLabel(chartStartT)+'</text>';
+  svg += '<text x="'+(w/2)+'" y="'+(h-8)+'" fill="var(--text3)" font-size="9" text-anchor="middle">'+formatLabel(chartStartT + (chartEndT - chartStartT)/2)+'</text>';
+  svg += '<text x="'+(w-pad.right)+'" y="'+(h-8)+'" fill="var(--text3)" font-size="9" text-anchor="end">'+formatLabel(chartEndT)+'</text>';
+  
+  // Today marker
+  if (todayT >= chartStartT && todayT <= chartEndT) {
+    svg += '<line x1="'+xScale(todayT)+'" y1="'+pad.top+'" x2="'+xScale(todayT)+'" y2="'+(h-pad.bottom)+'" stroke="var(--accent)" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>';
+  }
+  
+  // Target line (if we have project start)
+  if (projectStartT && projectEndT > projectStartT) {
+    const tStartX = Math.max(pad.left, xScale(projectStartT));
+    const tEndX = Math.min(w - pad.right, xScale(projectEndT));
+    const startPct = projectStartT < chartStartT ? ((chartStartT - projectStartT) / dayMs / projectDuration) * 100 : 0;
+    const endPct = projectEndT > chartEndT ? ((chartEndT - projectStartT) / dayMs / projectDuration) * 100 : 100;
+    svg += '<line x1="'+tStartX+'" y1="'+yScale(startPct)+'" x2="'+tEndX+'" y2="'+yScale(endPct)+'" stroke="var(--text3)" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6"/>';
+  }
+  
+  // Helper: ideal progress at time t
+  const getIdealPct = t => {
+    if (!projectStartT) return 0;
+    const elapsed = (t - projectStartT) / dayMs;
+    return Math.max(0, Math.min(100, (elapsed / projectDuration) * 100));
+  };
+  
+  // Progress line segments
+  for (let i = 0; i < points.length - 1; i++) {
+    const p1 = points[i], p2 = points[i + 1];
+    const ideal1 = getIdealPct(p1.t), ideal2 = getIdealPct(p2.t);
+    const ahead1 = p1.pct >= ideal1, ahead2 = p2.pct >= ideal2;
+    const col1 = ahead1 ? 'var(--green)' : 'var(--red)';
+    const col2 = ahead2 ? 'var(--green)' : 'var(--red)';
+    
+    if (ahead1 === ahead2) {
+      svg += '<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="'+col1+'" stroke-width="2.5" stroke-linecap="round"/>';
+    } else {
+      const t = (ideal1 - p1.pct) / ((p2.pct - p1.pct) - (ideal2 - ideal1));
+      const ix = p1.x + t * (p2.x - p1.x), iy = p1.y + t * (p2.y - p1.y);
+      svg += '<line x1="'+p1.x+'" y1="'+p1.y+'" x2="'+ix+'" y2="'+iy+'" stroke="'+col1+'" stroke-width="2.5" stroke-linecap="round"/>';
+      svg += '<line x1="'+ix+'" y1="'+iy+'" x2="'+p2.x+'" y2="'+p2.y+'" stroke="'+col2+'" stroke-width="2.5" stroke-linecap="round"/>';
+    }
+  }
+  
+  // Prediction line
+  const lastPt = points[points.length - 1];
+  if (forecast && forecast.rate > 0 && lastPt.pct < 100) {
+    const daysTo100 = (100 - lastPt.pct) / forecast.rate;
+    const estFinishT = lastPt.t + daysTo100 * dayMs;
+    const estFinishStr = new Date(estFinishT).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+    const afterDeadline = estFinishT > projectEndT;
+    const daysEarly = afterDeadline ? null : Math.round((projectEndT - estFinishT) / dayMs);
+    
+    forecastData = { estDate: estFinishStr, rate: forecast.rate, daysToComplete: Math.round(daysTo100), afterDeadline, daysEarly };
+    
+    const targetX = Math.min(xScale(estFinishT), w - pad.right);
+    const targetPct = estFinishT <= chartEndT ? 100 : lastPt.pct + forecast.rate * ((chartEndT - lastPt.t) / dayMs);
+    
+    svg += '<line x1="'+lastPt.x+'" y1="'+lastPt.y+'" x2="'+targetX+'" y2="'+yScale(Math.min(100, targetPct))+'" stroke="var(--text3)" stroke-width="1.5" stroke-dasharray="3,4" stroke-linecap="round" opacity="0.7"/>';
+    
+    if (estFinishT <= chartEndT) {
+      svg += '<circle class="forecast-dot" cx="'+xScale(estFinishT)+'" cy="'+yScale(100)+'" r="5" fill="var(--bg2)" stroke="var(--text3)" stroke-width="1.5" style="cursor:pointer" data-tooltip="Est. completion: '+estFinishStr+'"/>';
+    }
+  } else if (forecast && forecast.rate <= 0 && lastPt.pct < 100) {
+    svg += '<line x1="'+lastPt.x+'" y1="'+lastPt.y+'" x2="'+(w-pad.right)+'" y2="'+lastPt.y+'" stroke="var(--text3)" stroke-width="1.5" stroke-dasharray="3,4" stroke-linecap="round" opacity="0.5"/>';
+  }
+  
+  // Data points
+  points.forEach(p => {
+    const idealPct = getIdealPct(p.t);
+    const dotColor = p.pct >= idealPct ? 'var(--green)' : 'var(--red)';
+    const dateStr = new Date(p.date).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    svg += '<circle class="data-dot" cx="'+p.x+'" cy="'+p.y+'" r="3.5" fill="'+dotColor+'" style="cursor:pointer" data-tooltip="'+dateStr+': '+Math.round(p.pct)+'%"/>';
+  });
+  
+  svg += '</svg>';
+  chart.innerHTML = svg;
+  
+  // Custom tooltips (instant, no delay)
+  const tooltip = $('mpChartTooltip');
+  const wrapper = chart.parentElement;
+  
+  chart.querySelectorAll('[data-tooltip]').forEach(el => {
+    el.addEventListener('mouseenter', e => {
+      tooltip.textContent = e.target.getAttribute('data-tooltip');
+      tooltip.classList.add('visible');
+      const r = e.target.getBoundingClientRect(), w = wrapper.getBoundingClientRect();
+      tooltip.style.left = (r.left - w.left + r.width/2 - tooltip.offsetWidth/2) + 'px';
+      tooltip.style.top = (r.top - w.top - 28) + 'px';
+    });
+    el.addEventListener('mouseleave', () => tooltip.classList.remove('visible'));
+  });
+  
+  // Forecast dot click → popover
+  const forecastDot = chart.querySelector('.forecast-dot');
+  if (forecastDot && forecastData) {
+    forecastDot.addEventListener('click', e => {
+      e.stopPropagation();
+      const popover = $('mpForecastPopover');
+      const r = forecastDot.getBoundingClientRect(), w = wrapper.getBoundingClientRect();
+      
+      $('mpForecastPopoverTitle').textContent = forecastData.estDate;
+      $('mpForecastPopoverTitle').style.color = forecastData.afterDeadline ? 'var(--red)' : 'var(--green)';
+      
+      let content = '<div class="mp-forecast-popover-stat"><span>Velocity</span><span>'+forecastData.rate.toFixed(1)+'%/day</span></div>';
+      content += '<div class="mp-forecast-popover-stat"><span>Days to complete</span><span>'+forecastData.daysToComplete+'d</span></div>';
+      if (forecastData.daysEarly) {
+        content += '<div class="mp-forecast-popover-stat"><span>Status</span><span style="color:var(--green)">'+forecastData.daysEarly+' days early</span></div>';
+      } else if (forecastData.afterDeadline) {
+        content += '<div class="mp-forecast-popover-stat"><span>Status</span><span style="color:var(--red)">After deadline</span></div>';
+      }
+      const historyDays = Math.round((Date.parse(history[history.length-1].date) - Date.parse(history[0].date)) / dayMs);
+      content += '<div style="margin-top:8px;font-size:11px;color:var(--text3)">Based on '+history.length+' data points over '+historyDays+' days</div>';
+      
+      $('mpForecastPopoverContent').innerHTML = content;
+      popover.style.display = 'block';
+      popover.style.left = Math.max(10, r.left - w.left - 100) + 'px';
+      popover.style.top = (r.bottom - w.top + 8) + 'px';
+    });
+  }
 }
 
 window.editCell=function(e,id,field){e.stopPropagation();const cell=e.currentTarget;if(cell.classList.contains('editing'))return;const item=data.find(d=>String(d.id)===String(id));if(!item)return;const currentValue=item[field]||'';cell.classList.add('editing');const inputType=field==='qty'?'number':'text';cell.innerHTML='<input type="'+inputType+'" value="'+esc(currentValue)+'" '+(field==='qty'?'min="1"':'')+'>';const input=cell.querySelector('input');input.focus();input.select();const saveValue=()=>{const newValue=field==='qty'?parseInt(input.value)||1:input.value.trim();if(item[field]!==newValue){item[field]=newValue;updateFieldTimestamp(item,field);markPartChanged(id,[field])}save();render()};input.onblur=saveValue;input.onkeydown=ev=>{if(ev.key==='Enter'){ev.preventDefault();saveValue()}if(ev.key==='Escape')render()}};
@@ -6210,7 +6311,14 @@ $('popoverBackdrop').onclick=()=>{
   $('commentsPopover').classList.remove('open');currentCommentPartId=null;
   $('deletePopover').classList.remove('open');deleteTarget={id:null,type:null};
   $('popoverBackdrop').classList.remove('active');
+  $('mpForecastPopover').style.display='none';
 };
+// Close forecast popover when clicking outside
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.mp-forecast-popover')&&!e.target.closest('.forecast-dot')){
+    $('mpForecastPopover').style.display='none';
+  }
+});
 window.editAsm=(id,e)=>{const a=data.find(d=>String(d.id)===String(id));if(!a)return;editAsmId=id;$('amTitle').textContent='Edit Assembly';$('amName').value=a.name;$('amAssignee').value=a.assignee||'';$('amNotes').value=a.notes||'';$('amNotify').disabled=!getTeamEmail(a.assignee);showPopoverModal($('asmModal'),e?e.target.closest('button'):null)};
 window.editPart=(id,e)=>{const p=data.find(d=>String(d.id)===String(id));if(!p)return;editId=id;$('pmTitle').textContent='Edit Part';$('pmName').value=p.name;$('pmCode').value=p.code||'';$('pmMfr').value=p.mfr||'';$('pmQty').value=p.qty||1;$('pmAssignee').value=p.assignee||'';$('pmStatus').value=p.status;$('pmParent').value=p.parentId||'';$('pmNotes').value=p.notes||'';$('pmNotify').disabled=!getTeamEmail(p.assignee);showPopoverModal($('partModal'),e?e.target.closest('button'):null)};
 
@@ -7276,6 +7384,23 @@ document.addEventListener('click',e=>{
   }
 });
 
+$('sampleBtn').onclick=()=>{if(confirm('Load sample data? This will replace all current data.')){
+  // Clear existing data first
+  if(projectRef) {
+    projectRef.set(null).then(() => {
+      createAndSaveSampleData();
+      saveAllToGranular().then(() => {
+        toast('Sample data loaded');
+        render();
+      });
+    });
+  } else {
+    createAndSaveSampleData();
+    toast('Sample data loaded');
+    render();
+  }
+}};
+
 // NAV Import functionality
 let navImportData=[];
 $('navImportBtn').onclick=()=>{
@@ -7481,17 +7606,24 @@ $('expandToggle').onclick=()=>{
 };
 
 $('clearBtn').onclick=()=>{if(confirm('Delete ALL data? This cannot be undone.')){
-  // Mark all current items for deletion
-  data.forEach(item=>{
-    if(item.isAsm)markDeleted('asm',item.id);
-    else markDeleted('part',item.id);
-  });
-  actions.forEach(a=>markActionDeleted(a.id));
-  
-  data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';
-  dirtyMeta=true;
-  save();
-  toast('All data cleared');
+  // Actually delete everything from Firebase (not tombstones)
+  if(projectRef) {
+    projectRef.set(null).then(() => {
+      console.log('Firebase data deleted');
+      data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';
+      localStorage.removeItem('ebs-data');
+      toast('All data cleared - reload to start fresh');
+      setTimeout(() => location.reload(), 500);
+    }).catch(err => {
+      console.error('Failed to clear Firebase:', err);
+      toast('Failed to clear data', 1);
+    });
+  } else {
+    data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';
+    localStorage.removeItem('ebs-data');
+    toast('All data cleared');
+    render();
+  }
 }};
 $('signOutBtn').onclick=()=>{if(confirm('Sign out?'))logout()};
 
