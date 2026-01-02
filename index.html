@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>EBS v3 - Cloud</title>
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -125,6 +125,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 .autocomplete-item em{color:var(--accent);font-style:normal;font-weight:600}
 .main{padding-top:50px;height:100vh;display:flex;overflow:hidden}
 .sidebar{width:200px;min-width:200px;background:var(--bg);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:24px;overflow-y:auto;position:relative;z-index:15}
+.mobile-nav{display:none;flex-direction:column;gap:8px;padding:0 0 8px 0}
 .sidebar-section{}
 .sidebar-label{font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:0.3px;margin-bottom:12px;padding:0 12px;text-transform:uppercase}
 .content{flex:1;padding:12px 16px;display:flex;flex-direction:column;overflow:hidden;position:relative}
@@ -937,7 +938,11 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
   .header-btns .btn{padding:0 8px;min-width:36px;justify-content:center}
   .header-btns{gap:2px}
   .version-badge{font-size:9px;padding:2px 6px}
-  .main{padding:8px 10px;padding-top:58px;overflow-x:hidden}
+  /* CRITICAL: Hide sidebar on mobile */
+  .sidebar{display:none!important}
+  .main{padding:8px 10px;padding-top:58px;overflow-x:hidden;flex-direction:column}
+  /* Show mobile pipeline and tabs */
+  .mobile-nav{display:flex!important}
   .pipeline{gap:4px;margin-bottom:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0}
   .pipe{min-width:60px;padding:8px 6px;border-radius:10px;flex-shrink:0}
   .pipe-count{font-size:16px}
@@ -1002,6 +1007,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
   .burndown-container{height:140px}
   .report-content{font-size:13px}
   .notes-cell{display:none}
+  .content{width:100%!important;flex:1}
 }
 
 /* Small mobile styles */
@@ -1139,7 +1145,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 </div>
 <div style="flex:1"></div>
-<div class="version-badge" id="versionBadge">v1.6.0
+<div class="version-badge" id="versionBadge">v1.6.1
 <div class="version-info">
 <div class="version-info-row"><span class="version-info-label">Version</span><span class="version-info-value">1.0.2</span></div>
 <div class="version-info-row"><span class="version-info-label">Server</span><span class="version-info-value" id="serverStatus">Firebase</span></div>
@@ -1152,6 +1158,22 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 </aside>
 <div class="content">
+<!-- Mobile navigation (hidden on desktop, shown on mobile) -->
+<div class="mobile-nav">
+<div class="tabs">
+<button class="tab active" data-tab="list"><span class="tab-icon">☰</span>Parts</button>
+<button class="tab" data-tab="actions"><span class="tab-icon">✓</span>Actions</button>
+</div>
+<div class="pipeline">
+<div class="pipe" data-s="pending"><div class="pipe-count" id="mp0">0</div><div class="pipe-label">Pending</div></div>
+<div class="pipe" data-s="to-order"><div class="pipe-count" id="mp1">0</div><div class="pipe-label">To Order</div></div>
+<div class="pipe" data-s="ordered"><div class="pipe-count" id="mp2">0</div><div class="pipe-label">Ordered</div></div>
+<div class="pipe" data-s="arrived"><div class="pipe-count" id="mp3">0</div><div class="pipe-label">Arrived</div></div>
+<div class="pipe" data-s="tested"><div class="pipe-count" id="mp4">0</div><div class="pipe-label">Tested</div></div>
+<div class="pipe" data-s="configured"><div class="pipe-count" id="mp5">0</div><div class="pipe-label">Config</div></div>
+<div class="pipe" data-s="installed"><div class="pipe-count" id="mp6">0</div><div class="pipe-label">Done</div></div>
+</div>
+</div>
 <div class="panel active" id="listPanel">
 <div class="filter-badges" id="filterBadges"></div>
 <div class="bulk-bar" id="bulkBar"><span class="bulk-bar-count"><span id="bulkCount">0</span> selected</span><div class="bulk-bar-actions"><button class="btn" id="bulkStatusBtn">Set Status</button><button class="btn" id="bulkAssignBtn">Set Assignee</button><button class="btn" id="bulkPOBtn">Set PO</button><button class="btn btn-danger" id="bulkDeleteBtn">Delete</button><button class="btn btn-clear" id="bulkClearBtn">✕ Clear</button></div></div>
@@ -3319,6 +3341,16 @@ function render(){
     $('p4').textContent=parts.filter(p=>p.status==='tested').length;
     $('p5').textContent=parts.filter(p=>p.status==='configured').length;
     $('p6').textContent=parts.filter(p=>p.status==='installed').length;
+    // Mobile pipeline counts
+    if($('mp0')){
+      $('mp0').textContent=$('p0').textContent;
+      $('mp1').textContent=$('p1').textContent;
+      $('mp2').textContent=$('p2').textContent;
+      $('mp3').textContent=$('p3').textContent;
+      $('mp4').textContent=$('p4').textContent;
+      $('mp5').textContent=$('p5').textContent;
+      $('mp6').textContent=$('p6').textContent;
+    }
 
     document.querySelectorAll('.pipe').forEach(p=>p.classList.toggle('active',p.dataset.s===filterStage));
     $('pmParent').innerHTML='<option value="">—</option>'+asms.map(a=>'<option value="'+a.id+'">'+esc(a.name)+'</option>').join('');
@@ -7623,11 +7655,14 @@ document.querySelectorAll('.pipe').forEach(p=>p.onclick=()=>{filterStage=filterS
 
 document.querySelectorAll('.tab').forEach(tab=>tab.onclick=()=>{
   closeAIWorkspace();
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  tab.classList.add('active');
+  const tabId=tab.dataset.tab;
+  // Sync both desktop and mobile tabs
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.toggle('active',t.dataset.tab===tabId);
+  });
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  $(tab.dataset.tab+'Panel').classList.add('active');
-  if(tab.dataset.tab==='gantt')setTimeout(renderGantt,10);
+  $(tabId+'Panel').classList.add('active');
+  if(tabId==='gantt')setTimeout(renderGantt,10);
 });
 
 document.onkeydown=e=>{if(e.key==='Escape'){closeAIWorkspace();['teamModal','datesModal','leadtimeModal','bomModal','otdModal','itemConfigModal'].forEach(closeModal);$('themeModal').classList.remove('open');$('receivePOModal').classList.remove('open');$('reportModal').classList.remove('open');$('metricsPopover').classList.remove('open');$('poModal').classList.remove('open');$('menuDrop').classList.remove('open');$('ganttColorPopup').classList.remove('open');$('ganttDatePopup').classList.remove('open');$('etaPopover').classList.remove('open');hidePopoverModal($('partModal'));hidePopoverModal($('asmModal'));hidePopoverModal($('actionModal'));hidePopoverModal($('aiModal'));closeDeletePopover();$('commentsPopover').classList.remove('open');$('popoverBackdrop').classList.remove('active');currentCommentPartId=null;editId=editAsmId=editActId=editEtaPartId=pendingAdvPartId=null}};
