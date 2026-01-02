@@ -1139,7 +1139,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 </div>
 <div style="flex:1"></div>
-<div class="version-badge" id="versionBadge">v1.4.6
+<div class="version-badge" id="versionBadge">v1.6.0
 <div class="version-info">
 <div class="version-info-row"><span class="version-info-label">Version</span><span class="version-info-value">1.0.2</span></div>
 <div class="version-info-row"><span class="version-info-label">Server</span><span class="version-info-value" id="serverStatus">Firebase</span></div>
@@ -2341,295 +2341,215 @@ function createAndSaveSampleData(){
 function createSampleData(){
   const now=Date.now(),day=86400000;
   
-  currentProjectName='Industrial Automation Line - Phase 2';
+  currentProjectName='Marine Radar System MRS-450 - Unit #7';
+  
+  // Finnish team matching document roles
   team=[
-    {name:'Marisa',email:'marisa@company.com'},
-    {name:'John',email:'john@company.com'},
-    {name:'Sarah',email:'sarah@company.com'},
-    {name:'Mike',email:'mike@company.com'}
+    {name:'Antti',email:'antti@radarfi.com'},      // Production Supervisor (primary user)
+    {name:'Mikko',email:'mikko@radarfi.com'},      // Tester 1
+    {name:'Sari',email:'sari@radarfi.com'},        // Tester 2
+    {name:'Jukka',email:'jukka@radarfi.com'},      // Assembler 1
+    {name:'Pekka',email:'pekka@radarfi.com'},      // Assembler 2
+    {name:'Tuomas',email:'tuomas@radarfi.com'},    // Project Manager
+    {name:'Matti',email:'matti@radarfi.com'}       // R&D Engineer
   ];
   
-  // Project: Oct 1, 2025 - June 30, 2026 (started 3 months ago, 9 month project)
-  projectDates={start:'2025-10-01',end:'2026-06-30'};
+  // Project: Oct 2025 - March 2026 (typical 5-month radar project per document)
+  projectDates={start:'2025-10-01',end:'2026-03-31'};
   
   // Calculate timestamps for sample data
   const projectStart=new Date('2025-10-01').getTime();
   const simToday=now; // Use actual current time
   
   // PO number generator
-  let poCounter=4521;
-  const getPO=()=>'PO-2026-'+(poCounter++);
+  let poCounter=2026001;
+  const getPO=()=>'PO-'+(poCounter++);
   
-  // Notes with context for interesting AI analysis
+  // Notes reflecting radar manufacturing context from document
   const partNotes={
-    'Robot Arm 6-Axis':'CRITICAL PATH - Long lead item. Fanuc quoted 6-8 weeks. Expedite fee available for $2,500.',
-    'Safety PLC':'Customer requires Cat 3 PLd certification. Pilz confirmed compatible.',
-    'Light Curtain 600mm':'Original spec was 400mm - changed per customer layout revision v3.',
-    'Hydraulic Power Unit':'15HP special order (standard is 10HP). Engineering confirmed sizing.',
-    'Robot Stand':'Custom fabrication in progress at MetalWorks Inc. Weekly status calls scheduled.',
-    'Main Breaker 400A':'Electrician confirmed panel has space. Installation requires 4-hour shutdown.',
-    '2D Camera':'Switched from Cognex to Keyence CV-X420 per demo results. Better price/performance.',
-    'Air Compressor 7.5HP':'Evaluating if existing plant air (6 bar) is sufficient vs dedicated unit.',
-    'VFD 15kW':'Programming requires Yaskawa specialist. Training scheduled Feb 20.',
-    'Servo Motor 3kW':'ISSUE: Wrong model delivered Dec 28. RMA in progress, replacement due Feb 18.'
+    'RF Transmitter Module':'CRITICAL - Safety-critical component per document rules. Full testing required, no shortcuts.',
+    'Waveguide Assembly':'Custom fabrication by Precision Metals Oy. 50% deposit paid per policy. Weekly progress calls.',
+    'X-Band Antenna':'UK sister company shipment - budget 7-10 days for customs per document guidelines.',
+    'Signal Processor Board':'R&D completed design validation. Firmware V2.4 required.',
+    'Power Amplifier 500W':'High-value item (€8,200). Dual approval obtained (Tuomas + Finance) per €5k rule.',
+    'Rotary Joint':'Long lead item - 6 week lead time. Specialized RF component per document.',
+    'Magnetron':'SAFETY CRITICAL - Requires calibration certificate. Reject if missing per document rules.',
+    'Slip Ring Assembly':'Custom spec from R&D. 18-channel configuration.',
+    'Radome':'Fiberglass construction. Weather seal inspection required.',
+    'Motor Drive Unit':'Yaskawa specialist needed for commissioning. Training scheduled Feb 25.'
   };
   
-  // Realistic multi-person conversations
+  // Realistic multi-person conversations with Finnish team
   const partComments={
-    'Robot Arm 6-Axis':[
-      {text:'Fanuc confirmed build slot for Jan 15',ts:simToday-25*day,author:'John'},
-      {text:'Shipment delayed - new ETA Jan 28',ts:simToday-18*day,author:'John'},
-      {text:'Cleared customs today. Delivery scheduled Feb 2.',ts:simToday-12*day,author:'John'},
-      {text:'Received and inspected. Minor shipping damage on cable cover - ordering replacement part.',ts:simToday-8*day,author:'Marisa'},
-      {text:'Installation training booked for Feb 22-23 with Fanuc tech',ts:simToday-3*day,author:'Sarah'}
+    'RF Transmitter Module':[
+      {text:'Initial testing started. Running thermal validation.',ts:simToday-8*day,author:'Mikko'},
+      {text:'Thermal test passed at 45°C ambient. Starting RF calibration tomorrow.',ts:simToday-6*day,author:'Mikko'},
+      {text:'Calibration certificate received from manufacturer. All parameters within spec.',ts:simToday-4*day,author:'Sari'},
+      {text:'Ready for integration. Moving to configured status.',ts:simToday-2*day,author:'Antti'}
+    ],
+    'Waveguide Assembly':[
+      {text:'Precision Metals confirmed start of fabrication. 50% deposit sent.',ts:simToday-20*day,author:'Tuomas'},
+      {text:'Progress photos received - machining 60% complete.',ts:simToday-12*day,author:'Antti'},
+      {text:'Surface finish issue found. Rework in progress, +3 days to schedule.',ts:simToday-8*day,author:'Tuomas'},
+      {text:'Rework complete. Final inspection tomorrow, ship Friday.',ts:simToday-3*day,author:'Antti'}
+    ],
+    'X-Band Antenna':[
+      {text:'Shipped from UK today. DHL tracking: 1234567890',ts:simToday-14*day,author:'Tuomas'},
+      {text:'Stuck in customs. Missing commercial invoice. Contacted UK team.',ts:simToday-10*day,author:'Antti'},
+      {text:'Customs cleared! Delivery tomorrow morning.',ts:simToday-5*day,author:'Antti'},
+      {text:'Received. Minor cosmetic damage to protective cover - acceptable.',ts:simToday-4*day,author:'Jukka'}
+    ],
+    'Signal Processor Board':[
+      {text:'Matti confirmed firmware V2.4 ready for flash.',ts:simToday-15*day,author:'Tuomas'},
+      {text:'Board arrived. Visual inspection OK, starting power-on test.',ts:simToday-10*day,author:'Mikko'},
+      {text:'All self-tests passed. Firmware loaded successfully.',ts:simToday-8*day,author:'Mikko'}
+    ],
+    'Power Amplifier 500W':[
+      {text:'Quote received: €8,200. Need dual approval per >€5k policy.',ts:simToday-25*day,author:'Antti'},
+      {text:'Approved by Tuomas and Finance. Order placed.',ts:simToday-23*day,author:'Tuomas'},
+      {text:'Shipped via express. ETA Thursday.',ts:simToday-6*day,author:'Antti'}
+    ],
+    'Magnetron':[
+      {text:'IMPORTANT: Cal cert MUST accompany this part. Do not accept without it.',ts:simToday-30*day,author:'Matti'},
+      {text:'Delivery attempted but driver had no cal cert. Refused shipment per policy.',ts:simToday-12*day,author:'Antti'},
+      {text:'Supplier reshipping with proper documentation. New ETA +5 days.',ts:simToday-10*day,author:'Tuomas'}
+    ],
+    'Rotary Joint':[
+      {text:'6-week lead time confirmed. This is critical path.',ts:simToday-35*day,author:'Tuomas'},
+      {text:'Week 3 update: Joint housing complete, electrical work starting.',ts:simToday-14*day,author:'Antti'},
+      {text:'On track for delivery next week. Sari will run continuity tests.',ts:simToday-3*day,author:'Tuomas'}
+    ],
+    'Motor Drive Unit':[
+      {text:'Standard unit wont work - need custom parameters for radar rotation.',ts:simToday-20*day,author:'Matti'},
+      {text:'Yaskawa confirmed factory programming available. +€400.',ts:simToday-18*day,author:'Antti'},
+      {text:'Approved. They need our parameter file by Friday.',ts:simToday-16*day,author:'Tuomas'}
+    ],
+    'Radar Cabinet':[
+      {text:'Konepaja Virtanen starting fabrication Monday.',ts:simToday-25*day,author:'Antti'},
+      {text:'Cabinet 80% complete. Paint booth available Thursday.',ts:simToday-10*day,author:'Jukka'},
+      {text:'Delivered! Mounting frame fits perfectly.',ts:simToday-6*day,author:'Pekka'}
     ],
     'Safety PLC':[
-      {text:'Customer confirmed Cat 3 PLd is required, not Cat 4.',ts:simToday-20*day,author:'Mike'},
-      {text:'Pilz quoted 5-day delivery. Ordered today.',ts:simToday-18*day,author:'Mike'},
-      {text:'Arrived. Starting safety circuit design.',ts:simToday-12*day,author:'Mike'}
-    ],
-    'Light Curtain 600mm':[
-      {text:'Sick says 10 business days, not 7 calendar as quoted!',ts:simToday-22*day,author:'Sarah'},
-      {text:'Expedite fee is $180. Should we pay it?',ts:simToday-21*day,author:'Sarah'},
-      {text:'Approved by PM. Rush order placed.',ts:simToday-20*day,author:'Marisa'},
-      {text:'Arrived 2 days early. Sick came through.',ts:simToday-10*day,author:'Sarah'}
-    ],
-    'Hydraulic Power Unit':[
-      {text:'Bosch Rexroth quoted 14 days, Parker quoted 21 days. Going with Bosch.',ts:simToday-28*day,author:'Mike'},
-      {text:'Oil cooler sizing verification needed before shipping.',ts:simToday-20*day,author:'John'},
-      {text:'Thermal calc confirmed 24V cooler is adequate. Cleared for ship.',ts:simToday-18*day,author:'Mike'},
-      {text:'Delivered to dock. Waiting for rigging crew (available Thursday).',ts:simToday-5*day,author:'John'}
-    ],
-    'Robot Stand':[
-      {text:'MetalWorks wants 50% deposit before starting fab.',ts:simToday-30*day,author:'John'},
-      {text:'Finance approved. PO sent with deposit.',ts:simToday-28*day,author:'Marisa'},
-      {text:'Fabrication started. 3-week lead time.',ts:simToday-26*day,author:'John'},
-      {text:'Progress photos received - looks good. On track for Feb 20.',ts:simToday-10*day,author:'John'}
-    ],
-    'Servo Motor 3kW':[
-      {text:'Wrong model shipped! We got SM-2KW not SM-3KW.',ts:simToday-15*day,author:'Sarah'},
-      {text:'RMA initiated. Yaskawa apologized, expediting replacement.',ts:simToday-14*day,author:'Sarah'},
-      {text:'Replacement shipped today via overnight. Due tomorrow.',ts:simToday-3*day,author:'Sarah'}
-    ],
-    'HMI Panel 15"':[
-      {text:'Customer wants 3 additional screens added to HMI spec.',ts:simToday-12*day,author:'John'},
-      {text:'Change request logged as CR-0042. Pricing TBD.',ts:simToday-11*day,author:'Marisa'},
-      {text:'CR approved at +$4,200. Updating software scope.',ts:simToday-5*day,author:'John'}
-    ],
-    '2D Camera':[
-      {text:'Keyence demo was impressive. 0.02mm repeatability!',ts:simToday-25*day,author:'Sarah'},
-      {text:'Proceeding with CV-X420. Need calibration target separately.',ts:simToday-22*day,author:'Sarah'},
-      {text:'Camera arrived. Target on backorder - 2 week wait.',ts:simToday-8*day,author:'Sarah'}
-    ],
-    'Gripper Assembly':[
-      {text:'Schunk can do 5-day if we pay express freight (+$340)',ts:simToday-20*day,author:'Marisa'},
-      {text:'Express approved. Critical path item.',ts:simToday-19*day,author:'Marisa'}
-    ],
-    'PLC CPU S7-1500':[
-      {text:'Firmware must be V2.9+ for Pilz safety integration.',ts:simToday-30*day,author:'Mike'},
-      {text:'Confirmed V3.0 ships standard now. All good.',ts:simToday-28*day,author:'Mike'}
+      {text:'Waiting for safety assessment approval from UK customer.',ts:simToday-8*day,author:'Tuomas'},
+      {text:'Customer safety engineer reviewing next week.',ts:simToday-5*day,author:'Matti'}
     ]
   };
   
-  // Part templates with realistic status distribution
+  // Radar system assemblies matching document structure
   const partTemplates=[
-    {asm:'Main Control Panel',priority:1,parts:[
-      {name:'PLC CPU S7-1500',code:'6ES7-1500',mfr:'Siemens',status:'tested',daysInStatus:3},
-      {name:'HMI Panel 15"',code:'HMI-TP1500',mfr:'Siemens',status:'configured',daysInStatus:5},
-      {name:'PSU 24V 40A',code:'PSU-24-40',mfr:'Mean Well',status:'installed',daysInStatus:8},
-      {name:'DI Module 32pt',code:'IO-DI-32',mfr:'Siemens',status:'installed',daysInStatus:10},
-      {name:'DO Module 32pt',code:'IO-DO-32',mfr:'Siemens',status:'installed',daysInStatus:10},
-      {name:'AI Module 8ch',code:'IO-AI-8',mfr:'Siemens',status:'tested',daysInStatus:4},
-      {name:'AO Module 4ch',code:'IO-AO-4',mfr:'Siemens',status:'tested',daysInStatus:4},
-      {name:'Profinet Switch',code:'PN-SW-8',mfr:'Scalance',status:'installed',daysInStatus:12},
-      {name:'UPS System',code:'UPS-3KVA',mfr:'APC',status:'arrived',daysInStatus:2},
-      {name:'Panel Cooler',code:'PC-500W',mfr:'Rittal',status:'installed',daysInStatus:15}
+    {asm:'RF Transmitter Unit',priority:1,parts:[
+      {name:'RF Transmitter Module',code:'RF-TX-450',mfr:'UK Sister Co',status:'configured',daysInStatus:2},
+      {name:'Power Amplifier 500W',code:'PA-500W',mfr:'Ampleon',status:'arrived',daysInStatus:3},
+      {name:'Frequency Synthesizer',code:'FS-X01',mfr:'Analog Devices',status:'tested',daysInStatus:4},
+      {name:'RF Isolator',code:'ISO-9GHZ',mfr:'DiTom',status:'installed',daysInStatus:12},
+      {name:'Directional Coupler',code:'DC-20DB',mfr:'Krytar',status:'installed',daysInStatus:10},
+      {name:'Waveguide Assembly',code:'WG-CUST',mfr:'Precision Metals Oy',status:'ordered',daysInStatus:5},
+      {name:'RF Cables Set',code:'RFC-SET',mfr:'Times Microwave',status:'installed',daysInStatus:15},
+      {name:'EMI Shielding',code:'EMI-TX',mfr:'Laird',status:'installed',daysInStatus:18}
     ]},
-    {asm:'Conveyor Line 1',priority:2,parts:[
-      {name:'Servo Motor 3kW',code:'SM-3KW-01',mfr:'Yaskawa',status:'ordered',daysInStatus:3},
-      {name:'Servo Drive',code:'SD-3KW-01',mfr:'Yaskawa',status:'arrived',daysInStatus:5},
-      {name:'Gearbox 15:1',code:'GB-15-1',mfr:'SEW',status:'installed',daysInStatus:8},
-      {name:'Timing Belt',code:'TB-500',mfr:'Gates',status:'installed',daysInStatus:10},
-      {name:'Conveyor Frame',code:'CF-3M',mfr:'Bosch',status:'installed',daysInStatus:20},
-      {name:'Guide Rails',code:'GR-3M',mfr:'Bosch',status:'installed',daysInStatus:18},
-      {name:'Proximity Sensors x4',code:'PS-IND-4',mfr:'IFM',status:'tested',daysInStatus:3},
-      {name:'Photo Eyes x2',code:'PE-RET-2',mfr:'Banner',status:'tested',daysInStatus:3},
-      {name:'Motor Cable 15m',code:'MC-15M',mfr:'Lapp',status:'installed',daysInStatus:12},
-      {name:'Encoder Cable',code:'EC-10M',mfr:'Lapp',status:'arrived',daysInStatus:2}
+    {asm:'Antenna Assembly',priority:2,parts:[
+      {name:'X-Band Antenna',code:'ANT-X9G',mfr:'UK Sister Co',status:'arrived',daysInStatus:4},
+      {name:'Radome',code:'RDM-450',mfr:'Saint-Gobain',status:'tested',daysInStatus:5},
+      {name:'Antenna Mount',code:'MNT-HVY',mfr:'Konecranes',status:'installed',daysInStatus:20},
+      {name:'Rotary Joint',code:'RJ-18CH',mfr:'Cobham',status:'ordered',daysInStatus:8},
+      {name:'Slip Ring Assembly',code:'SR-18',mfr:'Moog',status:'tested',daysInStatus:6},
+      {name:'Bearing Assembly',code:'BRG-SL',mfr:'SKF',status:'installed',daysInStatus:15},
+      {name:'Weather Seal Kit',code:'WS-KIT',mfr:'Parker',status:'installed',daysInStatus:12},
+      {name:'Encoder',code:'ENC-ABS',mfr:'Heidenhain',status:'tested',daysInStatus:4}
     ]},
-    {asm:'Conveyor Line 2',priority:3,parts:[
-      {name:'Servo Motor 2kW',code:'SM-2KW-02',mfr:'Yaskawa',status:'tested',daysInStatus:2},
-      {name:'Servo Drive 2kW',code:'SD-2KW-02',mfr:'Yaskawa',status:'tested',daysInStatus:2},
-      {name:'Gearbox 10:1',code:'GB-10-2',mfr:'SEW',status:'installed',daysInStatus:6},
-      {name:'V-Belt System',code:'VB-400',mfr:'Gates',status:'installed',daysInStatus:8},
-      {name:'Conveyor Frame 2m',code:'CF-2M',mfr:'Bosch',status:'installed',daysInStatus:18},
-      {name:'Side Guards',code:'SG-2M',mfr:'Bosch',status:'installed',daysInStatus:15},
-      {name:'Inductive Sensors x6',code:'PS-IND-6',mfr:'IFM',status:'configured',daysInStatus:4},
-      {name:'Reflective Sensor',code:'RS-01',mfr:'Sick',status:'tested',daysInStatus:3},
-      {name:'Junction Box',code:'JB-IP65',mfr:'Wago',status:'installed',daysInStatus:12},
-      {name:'Cable Tray 2m',code:'CT-2M',mfr:'Legrand',status:'installed',daysInStatus:20}
+    {asm:'Signal Processing Unit',priority:3,parts:[
+      {name:'Signal Processor Board',code:'SPB-450',mfr:'In-House',status:'configured',daysInStatus:6},
+      {name:'FPGA Module',code:'FPGA-K7',mfr:'Xilinx',status:'tested',daysInStatus:5},
+      {name:'ADC Board',code:'ADC-14B',mfr:'Analog Devices',status:'tested',daysInStatus:5},
+      {name:'DSP Module',code:'DSP-C66',mfr:'Texas Instruments',status:'installed',daysInStatus:10},
+      {name:'Memory Module 32GB',code:'MEM-32G',mfr:'Kingston',status:'installed',daysInStatus:12},
+      {name:'Backplane',code:'BP-6SL',mfr:'Elma',status:'installed',daysInStatus:18},
+      {name:'Cooling Fan Assembly',code:'FAN-SP',mfr:'Sanyo Denki',status:'installed',daysInStatus:15},
+      {name:'Debug Interface',code:'DBG-USB',mfr:'FTDI',status:'tested',daysInStatus:3}
     ]},
-    {asm:'Robot Cell 1',priority:4,parts:[
-      {name:'Robot Arm 6-Axis',code:'RA-6AX-20',mfr:'Fanuc',status:'configured',daysInStatus:6},
-      {name:'Robot Controller R30iB',code:'RC-R30IB',mfr:'Fanuc',status:'configured',daysInStatus:6},
-      {name:'Gripper Assembly',code:'GRP-PNU',mfr:'Schunk',status:'tested',daysInStatus:3},
-      {name:'Tool Changer',code:'TC-AUTO',mfr:'ATI',status:'arrived',daysInStatus:4},
-      {name:'Vision Camera',code:'VC-2MP',mfr:'Cognex',status:'tested',daysInStatus:5},
-      {name:'Vision Light',code:'VL-RING',mfr:'CCS',status:'installed',daysInStatus:10},
-      {name:'Robot Pedestal',code:'RP-750',mfr:'Custom',status:'installed',daysInStatus:22},
-      {name:'Safety Mat',code:'SM-1200',mfr:'Omron',status:'installed',daysInStatus:18},
-      {name:'Teach Pendant Cable',code:'TPC-10M',mfr:'Fanuc',status:'arrived',daysInStatus:8},
-      {name:'Robot Base Plate',code:'RBP-01',mfr:'Custom',status:'installed',daysInStatus:25}
+    {asm:'Power System',priority:4,parts:[
+      {name:'Main Power Supply',code:'PSU-48V',mfr:'TDK-Lambda',status:'tested',daysInStatus:4},
+      {name:'DC-DC Converters Set',code:'DCDC-SET',mfr:'Vicor',status:'installed',daysInStatus:10},
+      {name:'UPS Module',code:'UPS-1KVA',mfr:'APC',status:'tested',daysInStatus:5},
+      {name:'Battery Pack',code:'BAT-48V',mfr:'Panasonic',status:'arrived',daysInStatus:3},
+      {name:'Power Distribution Board',code:'PDB-01',mfr:'In-House',status:'configured',daysInStatus:8},
+      {name:'Surge Protection',code:'SPD-48',mfr:'Phoenix Contact',status:'installed',daysInStatus:12},
+      {name:'Power Cables',code:'PWR-CBL',mfr:'Lapp',status:'installed',daysInStatus:15},
+      {name:'Main Breaker',code:'MCB-63A',mfr:'ABB',status:'installed',daysInStatus:18}
     ]},
-    {asm:'Robot Cell 2',priority:5,parts:[
-      {name:'Robot Arm SCARA',code:'RA-SCARA',mfr:'Epson',status:'arrived',daysInStatus:3},
-      {name:'Robot Controller RC90',code:'RC-90',mfr:'Epson',status:'arrived',daysInStatus:3},
-      {name:'Vacuum Gripper',code:'VG-SUC',mfr:'Schmalz',status:'ordered',daysInStatus:8},
-      {name:'Force Sensor',code:'FS-6AX',mfr:'ATI',status:'ordered',daysInStatus:12},
-      {name:'2D Camera',code:'CAM-2D',mfr:'Keyence',status:'arrived',daysInStatus:6},
-      {name:'Backlight Panel',code:'BL-200',mfr:'CCS',status:'tested',daysInStatus:4},
-      {name:'Robot Stand',code:'RS-400',mfr:'Custom',status:'ordered',daysInStatus:18},
-      {name:'Vacuum Generator',code:'VG-01',mfr:'SMC',status:'installed',daysInStatus:10},
-      {name:'IO Link Master',code:'IOL-8PT',mfr:'IFM',status:'tested',daysInStatus:5},
-      {name:'Cable Carrier',code:'CC-R38',mfr:'Igus',status:'installed',daysInStatus:12}
+    {asm:'Motor Drive System',priority:5,parts:[
+      {name:'Motor Drive Unit',code:'VFD-3KW',mfr:'Yaskawa',status:'arrived',daysInStatus:5},
+      {name:'Servo Motor',code:'SGM-3KW',mfr:'Yaskawa',status:'tested',daysInStatus:4},
+      {name:'Gearbox',code:'GB-50:1',mfr:'Neugart',status:'installed',daysInStatus:12},
+      {name:'Motor Cable',code:'MC-10M',mfr:'Lapp',status:'installed',daysInStatus:14},
+      {name:'Encoder Cable',code:'EC-10M',mfr:'Lapp',status:'installed',daysInStatus:14},
+      {name:'Brake Resistor',code:'BR-1KW',mfr:'Danfoss',status:'installed',daysInStatus:10},
+      {name:'Motor Mount',code:'MM-CUST',mfr:'Konepaja Virtanen',status:'tested',daysInStatus:6},
+      {name:'Limit Switches',code:'LS-SET',mfr:'Omron',status:'installed',daysInStatus:15}
     ]},
-    {asm:'Safety System',priority:6,parts:[
-      {name:'Safety PLC',code:'SP-PNOZ',mfr:'Pilz',status:'configured',daysInStatus:8},
-      {name:'Light Curtain 600mm',code:'LC-600',mfr:'Sick',status:'tested',daysInStatus:4},
-      {name:'Light Curtain 400mm',code:'LC-400',mfr:'Sick',status:'tested',daysInStatus:4},
-      {name:'E-Stop Stations x4',code:'ES-4SET',mfr:'ABB',status:'installed',daysInStatus:15},
-      {name:'Safety Door Switch x3',code:'SDS-3SET',mfr:'Schmersal',status:'installed',daysInStatus:12},
-      {name:'Safety Relay Module',code:'SRM-01',mfr:'Pilz',status:'tested',daysInStatus:3},
-      {name:'Muting Sensors x4',code:'MS-4SET',mfr:'Sick',status:'arrived',daysInStatus:5},
-      {name:'Safety Scanner',code:'SS-3M',mfr:'Sick',status:'ordered',daysInStatus:10},
-      {name:'Reset Button x2',code:'RB-2SET',mfr:'ABB',status:'installed',daysInStatus:14},
-      {name:'Safety Edge',code:'SE-2M',mfr:'Haake',status:'pending',daysInStatus:4,pendingNote:'Waiting for final safety assessment approval from customer'},
-      {name:'Backup E-Stop',code:'ES-BK',mfr:'ABB',status:'pending',daysInStatus:6,pendingNote:'Design review scheduled for next week'}
+    {asm:'Control Unit',priority:6,parts:[
+      {name:'Industrial PC',code:'IPC-I7',mfr:'Advantech',status:'configured',daysInStatus:10},
+      {name:'Display 19"',code:'DSP-19',mfr:'Advantech',status:'tested',daysInStatus:4},
+      {name:'Keyboard Panel',code:'KBD-IP65',mfr:'InduKey',status:'installed',daysInStatus:12},
+      {name:'Trackball Mouse',code:'TBM-IP65',mfr:'NSI',status:'installed',daysInStatus:12},
+      {name:'Ethernet Switch',code:'ETH-8P',mfr:'Cisco',status:'installed',daysInStatus:15},
+      {name:'GPS Receiver',code:'GPS-01',mfr:'u-blox',status:'tested',daysInStatus:3},
+      {name:'Compass Module',code:'CMP-01',mfr:'Honeywell',status:'tested',daysInStatus:3},
+      {name:'Control Panel Enclosure',code:'ENC-CTL',mfr:'Rittal',status:'installed',daysInStatus:20}
     ]},
-    {asm:'Pneumatic System',priority:7,parts:[
-      {name:'Air Compressor 7.5HP',code:'AC-7HP',mfr:'Atlas Copco',status:'to-order',daysInStatus:5},
-      {name:'Air Dryer',code:'AD-REF',mfr:'Atlas Copco',status:'pending',daysInStatus:8,pendingNote:'Capacity calculation pending - may need larger unit'},
-      {name:'FRL Unit Large',code:'FRL-LG',mfr:'SMC',status:'installed',daysInStatus:12},
-      {name:'Main Manifold',code:'MM-16PT',mfr:'SMC',status:'installed',daysInStatus:10},
-      {name:'Solenoid Valves x8',code:'SV-5-8',mfr:'SMC',status:'tested',daysInStatus:3},
-      {name:'Cylinders 50mm x4',code:'CYL-50-4',mfr:'Festo',status:'installed',daysInStatus:8},
-      {name:'Cylinders 32mm x6',code:'CYL-32-6',mfr:'Festo',status:'tested',daysInStatus:4},
-      {name:'Flow Controls x10',code:'FC-10SET',mfr:'SMC',status:'installed',daysInStatus:10},
-      {name:'Air Tank 100L',code:'AT-100L',mfr:'SMC',status:'pending',daysInStatus:3,pendingNote:'Verifying mounting location with facilities team'},
-      {name:'Pressure Transducer',code:'PT-0-10',mfr:'SMC',status:'installed',daysInStatus:12}
+    {asm:'Main Enclosure',priority:7,parts:[
+      {name:'Radar Cabinet',code:'CAB-MAIN',mfr:'Konepaja Virtanen',status:'arrived',daysInStatus:6},
+      {name:'Mounting Frame',code:'MF-INT',mfr:'Konepaja Virtanen',status:'installed',daysInStatus:15},
+      {name:'Cable Entry Plates',code:'CEP-SET',mfr:'Roxtec',status:'installed',daysInStatus:18},
+      {name:'Cooling System',code:'AC-2KW',mfr:'Rittal',status:'tested',daysInStatus:5},
+      {name:'Door Switches',code:'DS-SET',mfr:'Schmersal',status:'installed',daysInStatus:12},
+      {name:'Internal Lighting',code:'LED-INT',mfr:'Phoenix Contact',status:'installed',daysInStatus:20},
+      {name:'DIN Rails Set',code:'DIN-SET',mfr:'Phoenix Contact',status:'installed',daysInStatus:22},
+      {name:'Terminal Blocks',code:'TB-SET',mfr:'Wago',status:'installed',daysInStatus:20}
     ]},
-    {asm:'Hydraulic Unit',priority:8,parts:[
-      {name:'Hydraulic Power Unit',code:'HPU-15HP',mfr:'Bosch Rexroth',status:'arrived',daysInStatus:5},
-      {name:'Hydraulic Manifold',code:'HM-6PT',mfr:'Custom',status:'ordered',daysInStatus:15},
-      {name:'Proportional Valve',code:'PV-01',mfr:'Bosch Rexroth',status:'arrived',daysInStatus:8},
-      {name:'Pressure Relief Valve',code:'PRV-210',mfr:'Sun',status:'installed',daysInStatus:10},
-      {name:'Hydraulic Cylinder',code:'HC-100-500',mfr:'Parker',status:'ordered',daysInStatus:18},
-      {name:'Hydraulic Hoses Set',code:'HH-SET',mfr:'Eaton',status:'arrived',daysInStatus:3},
-      {name:'Oil Cooler',code:'OC-24V',mfr:'AKG',status:'arrived',daysInStatus:8},
-      {name:'Hydraulic Filter',code:'HF-10UM',mfr:'Hydac',status:'installed',daysInStatus:12},
-      {name:'Level Switch',code:'LS-01',mfr:'Hydac',status:'installed',daysInStatus:12},
-      {name:'Pressure Gauge x2',code:'PG-2SET',mfr:'WIKA',status:'installed',daysInStatus:14}
+    {asm:'Safety System',priority:8,parts:[
+      {name:'Magnetron',code:'MAG-X9G',mfr:'CPI',status:'ordered',daysInStatus:10},
+      {name:'RF Safety Interlock',code:'INT-RF',mfr:'Pilz',status:'tested',daysInStatus:4},
+      {name:'E-Stop Assembly',code:'ESTOP-3',mfr:'ABB',status:'installed',daysInStatus:15},
+      {name:'Safety Relay',code:'PNOZ-S4',mfr:'Pilz',status:'configured',daysInStatus:8},
+      {name:'Warning Lights',code:'WL-SET',mfr:'Patlite',status:'installed',daysInStatus:12},
+      {name:'Radiation Warning Signs',code:'SGN-RF',mfr:'Brady',status:'installed',daysInStatus:20},
+      {name:'Interlock Key Switch',code:'KS-INT',mfr:'Schmersal',status:'installed',daysInStatus:14},
+      {name:'Safety PLC',code:'S7-F',mfr:'Siemens',status:'pending',daysInStatus:5,pendingNote:'Waiting for safety assessment approval from UK customer'}
     ]},
-    {asm:'Electrical Distribution',priority:9,parts:[
-      {name:'Main Breaker 400A',code:'MB-400A',mfr:'ABB',status:'installed',daysInStatus:20},
-      {name:'Contactor 150A x2',code:'CT-150-2',mfr:'ABB',status:'installed',daysInStatus:18},
-      {name:'Soft Starter 75kW',code:'SS-75KW',mfr:'ABB',status:'tested',daysInStatus:5},
-      {name:'VFD 15kW',code:'VFD-15KW',mfr:'ABB',status:'configured',daysInStatus:8},
-      {name:'VFD 7.5kW x2',code:'VFD-7K5-2',mfr:'ABB',status:'tested',daysInStatus:4},
-      {name:'MCB Set 20pc',code:'MCB-20SET',mfr:'Schneider',status:'installed',daysInStatus:22},
-      {name:'Overload Relays x6',code:'OLR-6SET',mfr:'ABB',status:'installed',daysInStatus:15},
-      {name:'Power Meter',code:'PM-3PH',mfr:'Schneider',status:'tested',daysInStatus:3},
-      {name:'Surge Protector',code:'SPD-01',mfr:'Phoenix',status:'installed',daysInStatus:20},
-      {name:'Bus Bar System',code:'BBS-400A',mfr:'Rittal',status:'installed',daysInStatus:25}
+    {asm:'Interface Modules',priority:9,parts:[
+      {name:'Serial Interface',code:'RS422-4',mfr:'Moxa',status:'tested',daysInStatus:3},
+      {name:'Fiber Optic Transceiver',code:'FO-SFP',mfr:'Finisar',status:'installed',daysInStatus:10},
+      {name:'NMEA Interface',code:'NMEA-01',mfr:'Actisense',status:'configured',daysInStatus:6},
+      {name:'Radar Output Module',code:'ROM-01',mfr:'In-House',status:'tested',daysInStatus:4},
+      {name:'AIS Interface',code:'AIS-01',mfr:'Weatherdock',status:'to-order',daysInStatus:5},
+      {name:'Video Output Card',code:'VID-HD',mfr:'Matrox',status:'tested',daysInStatus:4},
+      {name:'Network Module',code:'NET-GB',mfr:'Intel',status:'installed',daysInStatus:12},
+      {name:'USB Hub',code:'USB-7P',mfr:'Startech',status:'installed',daysInStatus:15}
     ]},
-    {asm:'Vision Inspection',priority:10,parts:[
-      {name:'Smart Camera',code:'SC-5MP',mfr:'Cognex',status:'tested',daysInStatus:5},
-      {name:'Telecentric Lens',code:'TL-0.5X',mfr:'Edmund',status:'tested',daysInStatus:5},
-      {name:'Dome Light',code:'DL-150',mfr:'CCS',status:'installed',daysInStatus:8},
-      {name:'Bar Light x2',code:'BAR-200-2',mfr:'CCS',status:'installed',daysInStatus:8},
-      {name:'Light Controller',code:'LC-4CH',mfr:'CCS',status:'tested',daysInStatus:4},
-      {name:'Camera Mount',code:'CM-ADJ',mfr:'Cognex',status:'installed',daysInStatus:10},
-      {name:'Trigger Sensor',code:'TS-01',mfr:'Banner',status:'tested',daysInStatus:3},
-      {name:'Ethernet Switch',code:'ETH-5PT',mfr:'Cisco',status:'installed',daysInStatus:15},
-      {name:'Reject Cylinder',code:'RJ-CYL',mfr:'Festo',status:'configured',daysInStatus:6},
-      {name:'Inspection Stand',code:'IS-ADJ',mfr:'Custom',status:'installed',daysInStatus:18}
-    ]},
-    {asm:'Labeling Station',priority:11,parts:[
-      {name:'Label Applicator',code:'LA-AUTO',mfr:'Videojet',status:'arrived',daysInStatus:10},
-      {name:'Label Roll Holder',code:'LRH-01',mfr:'Videojet',status:'arrived',daysInStatus:10},
-      {name:'Print Engine',code:'PE-300',mfr:'Zebra',status:'ordered',daysInStatus:8},
-      {name:'Ribbon Holder',code:'RIB-01',mfr:'Zebra',status:'ordered',daysInStatus:8},
-      {name:'Label Sensor',code:'LS-FORK',mfr:'Sick',status:'tested',daysInStatus:3},
-      {name:'Tamp Cylinder',code:'TC-50',mfr:'Festo',status:'installed',daysInStatus:10},
-      {name:'Vacuum Pad Set',code:'VP-SET',mfr:'Schmalz',status:'tested',daysInStatus:4},
-      {name:'Control Box',code:'LCB-01',mfr:'Custom',status:'ordered',daysInStatus:12},
-      {name:'Warning Lights',code:'WL-3CLR',mfr:'Patlite',status:'installed',daysInStatus:15},
-      {name:'Label Waste Bin',code:'LWB-01',mfr:'Custom',status:'installed',daysInStatus:18}
-    ]},
-    {asm:'Packaging Unit',priority:12,parts:[
-      {name:'Box Former',code:'BF-AUTO',mfr:'Wexxar',status:'configured',daysInStatus:12},
-      {name:'Tape Head x2',code:'TH-2SET',mfr:'3M',status:'tested',daysInStatus:5},
-      {name:'Case Conveyor',code:'CC-1.5M',mfr:'Bosch',status:'installed',daysInStatus:15},
-      {name:'Pusher Cylinder',code:'PC-100',mfr:'Festo',status:'installed',daysInStatus:10},
-      {name:'Box Magazine',code:'BM-50',mfr:'Custom',status:'tested',daysInStatus:6},
-      {name:'Glue System',code:'GS-HOT',mfr:'Nordson',status:'configured',daysInStatus:8},
-      {name:'Glue Nozzles x4',code:'GN-4SET',mfr:'Nordson',status:'installed',daysInStatus:12},
-      {name:'Photoeye Set',code:'PES-3',mfr:'Banner',status:'tested',daysInStatus:4},
-      {name:'Reject Gate',code:'RG-01',mfr:'Custom',status:'installed',daysInStatus:14},
-      {name:'Pack Counter',code:'PC-DIG',mfr:'Red Lion',status:'tested',daysInStatus:3}
-    ]},
-    {asm:'Palletizer',priority:13,parts:[
-      {name:'Palletizer Frame',code:'PF-MAIN',mfr:'Custom',status:'ordered',daysInStatus:20},
-      {name:'Layer Gripper',code:'LG-01',mfr:'Schmalz',status:'pending',daysInStatus:5,pendingNote:'Waiting for final product dimensions from customer'},
-      {name:'Z-Axis Servo',code:'ZS-5KW',mfr:'Yaskawa',status:'ordered',daysInStatus:10},
-      {name:'X-Axis Linear',code:'XL-2M',mfr:'Bosch',status:'ordered',daysInStatus:12},
-      {name:'Y-Axis Linear',code:'YL-1.5M',mfr:'Bosch',status:'ordered',daysInStatus:12},
-      {name:'Pallet Dispenser',code:'PD-01',mfr:'Custom',status:'to-order',daysInStatus:5},
-      {name:'Slip Sheet Inserter',code:'SSI-01',mfr:'Custom',status:'to-order',daysInStatus:5},
-      {name:'Layer Press',code:'LP-01',mfr:'Custom',status:'to-order',daysInStatus:8},
-      {name:'Pallet Sensor',code:'PS-RF',mfr:'Sick',status:'arrived',daysInStatus:4},
-      {name:'Stack Height Sensor',code:'SHS-01',mfr:'Banner',status:'arrived',daysInStatus:4}
-    ]},
-    {asm:'Stretch Wrapper',priority:14,parts:[
-      {name:'Turntable',code:'TT-1500',mfr:'Lantech',status:'pending',daysInStatus:12,pendingNote:'Awaiting floor load capacity confirmation from building engineer'},
-      {name:'Film Carriage',code:'FC-PRE',mfr:'Lantech',status:'to-order',daysInStatus:10},
-      {name:'Film Roll Holder',code:'FRH-01',mfr:'Lantech',status:'to-order',daysInStatus:10},
-      {name:'Mast Assembly',code:'MA-2M',mfr:'Lantech',status:'to-order',daysInStatus:10},
-      {name:'Cut & Clamp',code:'CC-AUTO',mfr:'Lantech',status:'to-order',daysInStatus:10},
-      {name:'Top Press',code:'TP-01',mfr:'Custom',status:'to-order',daysInStatus:8},
-      {name:'Ramp',code:'RAMP-01',mfr:'Custom',status:'ordered',daysInStatus:5},
-      {name:'Film Break Sensor',code:'FBS-01',mfr:'Banner',status:'arrived',daysInStatus:6},
-      {name:'Wrap Counter',code:'WC-DIG',mfr:'Red Lion',status:'arrived',daysInStatus:6},
-      {name:'Safety Fence Gate',code:'SFG-01',mfr:'Troax',status:'ordered',daysInStatus:14}
-    ]},
-    {asm:'Outfeed Conveyor',priority:15,parts:[
-      {name:'Roller Conveyor 3m',code:'RC-3M',mfr:'Hytrol',status:'pending',daysInStatus:14},
-      {name:'Drive Motor 1.5kW',code:'DM-1K5',mfr:'SEW',status:'to-order',daysInStatus:8},
-      {name:'Gearmotor',code:'GM-01',mfr:'SEW',status:'to-order',daysInStatus:8},
-      {name:'Accumulation Zone x3',code:'AZ-3SET',mfr:'Hytrol',status:'to-order',daysInStatus:12},
-      {name:'Zone Sensors',code:'ZS-6SET',mfr:'Banner',status:'ordered',daysInStatus:5},
-      {name:'Transfer Section',code:'TS-90',mfr:'Hytrol',status:'to-order',daysInStatus:12},
-      {name:'End Stop',code:'ESTOP-01',mfr:'Custom',status:'ordered',daysInStatus:8},
-      {name:'Pallet Stop x2',code:'PSTOP-2',mfr:'Custom',status:'ordered',daysInStatus:8},
-      {name:'Guide Rails 3m',code:'GR-3M-2',mfr:'Bosch',status:'arrived',daysInStatus:3},
-      {name:'Floor Mounts Set',code:'FM-SET',mfr:'Custom',status:'arrived',daysInStatus:3}
+    {asm:'Documentation & Spares',priority:10,parts:[
+      {name:'Technical Manual',code:'DOC-TM',mfr:'In-House',status:'pending',daysInStatus:8,pendingNote:'Technical writer completing final review'},
+      {name:'Spare Parts Kit',code:'SPK-01',mfr:'Various',status:'to-order',daysInStatus:6},
+      {name:'Calibration Tools',code:'CAL-KIT',mfr:'Anritsu',status:'ordered',daysInStatus:12},
+      {name:'Test Equipment Cert',code:'TEST-CERT',mfr:'Various',status:'pending',daysInStatus:4,pendingNote:'Awaiting final calibration certs from lab'},
+      {name:'Software License',code:'SW-LIC',mfr:'In-House',status:'configured',daysInStatus:10},
+      {name:'Training Materials',code:'TRN-MAT',mfr:'In-House',status:'to-order',daysInStatus:8},
+      {name:'Shipping Crate',code:'CRATE-01',mfr:'Suomen Pakkaus',status:'to-order',daysInStatus:10},
+      {name:'Packing Materials',code:'PACK-SET',mfr:'Various',status:'to-order',daysInStatus:10}
     ]}
   ];
 
   data=[];let id=1;expanded={};
   
-  // Workload imbalance: Marisa gets ~79% of work (for AI to detect)
+  // Assign parts to team based on role (per document: Antti=supervisor, Mikko/Sari=testers, Jukka/Pekka=assemblers)
   const assignPart=(ai,pi)=>{
-    const r=Math.random();
-    if(r<0.79)return 'Marisa';
-    if(r<0.86)return 'John';
-    if(r<0.93)return 'Sarah';
-    return 'Mike';
+    const roles=['Antti','Mikko','Sari','Jukka','Pekka'];
+    return roles[(ai+pi)%roles.length];
   };
   
   partTemplates.forEach((template,ai)=>{
     const asmId=id++;
-    data.push({id:asmId,name:template.asm,isAsm:true,assignee:'Marisa',priority:template.priority});
+    data.push({id:asmId,name:template.asm,isAsm:true,assignee:'Tuomas',priority:template.priority});
     expanded[String(asmId)]=ai<4;
     
     template.parts.forEach((p,pi)=>{
@@ -2646,7 +2566,12 @@ function createSampleData(){
         orderedAt=simToday-orderDaysAgo*day;
         
         // Set expected arrival based on typical lead times
-        const leadDays=p.mfr==='Custom'?18:p.mfr==='Fanuc'||p.mfr==='Epson'?14:Math.floor(Math.random()*8)+5;
+        // Lead times per document: stock 3-7, standard 10-14, custom 3-4 weeks, UK +7-10 customs
+        let leadDays;
+        if(p.mfr==='UK Sister Co') leadDays=Math.floor(Math.random()*4)+14; // 14-18 days with customs
+        else if(p.mfr.includes('Oy')||p.mfr.includes('Virtanen')||p.mfr==='In-House') leadDays=Math.floor(Math.random()*7)+18; // 18-25 days custom
+        else if(p.mfr==='CPI'||p.mfr==='Cobham') leadDays=Math.floor(Math.random()*14)+28; // 28-42 days specialized RF
+        else leadDays=Math.floor(Math.random()*7)+7; // 7-14 days standard
         expectedArrival=new Date(orderedAt+leadDays*day).toISOString().split('T')[0];
         
         if(['arrived','tested','configured','installed'].includes(p.status)){
@@ -2672,54 +2597,53 @@ function createSampleData(){
         expectedArrival,
         pendingNote:p.pendingNote,
         notes:partNotes[p.name]||'',
-        comments:partComments[p.name]?partComments[p.name].map(c=>({...c,ts:c.ts})):undefined
+        comments:partComments[p.name]?partComments[p.name].map(c=>({...c,timestamp:c.ts})):undefined
       });
     });
   });
 
-  // Progress history - realistic ramp up from Nov 1, 2025 to Jan 1, 2026 (2 months)
-  // Progress history - Oct 2025 to Jan 2026 (3 months of progress, weekly entries)
+  // Progress history - radar project timeline (per document: 3-5 months typical)
   history=[
-    {date:'2025-10-01',pct:0,action:'Project kickoff'},
-    {date:'2025-10-10',pct:4,action:'Requirements finalized'},
-    {date:'2025-10-20',pct:9,action:'Initial orders placed'},
-    {date:'2025-10-31',pct:15,action:'Engineering started'},
-    {date:'2025-11-10',pct:21,action:'First parts ordered'},
-    {date:'2025-11-20',pct:28,action:'Control panel design'},
-    {date:'2025-11-30',pct:35,action:'Robot ordered'},
-    {date:'2025-12-10',pct:43,action:'Major deliveries'},
-    {date:'2025-12-20',pct:52,action:'Assembly begins'},
-    {date:'2026-01-01',pct:65,action:'New year checkpoint'}
+    {date:'2025-10-01',pct:0,action:'Project kickoff with UK customer'},
+    {date:'2025-10-10',pct:5,action:'R&D completed BOM finalization'},
+    {date:'2025-10-20',pct:10,action:'Long-lead items ordered (rotary joint, magnetron)'},
+    {date:'2025-10-31',pct:16,action:'Custom fabrication started at Precision Metals Oy'},
+    {date:'2025-11-10',pct:24,action:'First parts received from distributors'},
+    {date:'2025-11-20',pct:32,action:'Main enclosure delivered from Konepaja Virtanen'},
+    {date:'2025-11-30',pct:40,action:'RF transmitter unit testing begun'},
+    {date:'2025-12-10',pct:50,action:'Antenna assembly integration started'},
+    {date:'2025-12-20',pct:56,action:'Signal processor board configured'},
+    {date:'2026-01-02',pct:62,action:'Production resumed after holidays'}
   ];
 
-  // Realistic action items with various states
+  // Action items reflecting radar manufacturing workflow per document
   actions=[
-    {id:now+1,task:'Order remaining pneumatic components (compressor decision)',linkedPartId:null,due:'2026-01-10',assignee:'Marisa',status:'not-started',createdAt:'2025-12-15'},
-    {id:now+2,task:'Complete safety system risk assessment documentation',linkedPartId:null,due:'2026-01-20',assignee:'Mike',status:'in-progress',createdAt:'2025-11-20'},
-    {id:now+3,task:'Schedule Fanuc robot training (2 days)',linkedPartId:null,due:'2026-01-18',assignee:'Sarah',status:'in-progress',createdAt:'2025-12-01'},
-    {id:now+4,task:'Get customer signoff on HMI screen changes (CR-0042)',linkedPartId:null,due:'2026-01-08',assignee:'John',status:'not-started',createdAt:'2025-12-10'},
-    {id:now+5,task:'Follow up on Robot Stand fabrication progress',linkedPartId:null,due:'2026-01-12',assignee:'John',status:'not-started',createdAt:'2025-11-25'},
-    {id:now+6,task:'Arrange rigging crew for hydraulic unit installation',linkedPartId:null,due:'2026-01-16',assignee:'John',status:'not-started',createdAt:'2025-12-20'},
-    {id:now+7,task:'Order calibration target for Keyence camera (backorder)',linkedPartId:null,due:'2025-12-15',assignee:'Sarah',status:'completed',createdAt:'2025-11-15'},
-    {id:now+8,task:'Verify Servo Motor 3kW replacement shipment',linkedPartId:null,due:'2026-01-15',assignee:'Sarah',status:'in-progress',createdAt:'2025-12-18'},
-    {id:now+9,task:'Review Palletizer frame drawings before fab starts',linkedPartId:null,due:'2025-11-30',assignee:'Marisa',status:'completed',createdAt:'2025-10-20'},
-    {id:now+10,task:'Schedule VFD programming with Yaskawa specialist',linkedPartId:null,due:'2026-02-15',assignee:'Mike',status:'not-started',createdAt:'2025-12-28'},
-    {id:now+11,task:'Get quote for Stretch Wrapper package from Lantech',linkedPartId:null,due:'2026-03-01',assignee:'Marisa',status:'not-started',createdAt:'2025-12-15'},
-    {id:now+12,task:'Confirm Label Applicator tech visit date',linkedPartId:null,due:'2026-02-20',assignee:'Sarah',status:'not-started',createdAt:'2025-12-20'}
+    {id:now+1,task:'Follow up with Precision Metals on waveguide delivery',linkedPartId:null,due:'2026-01-08',assignee:'Antti',status:'not-started',createdAt:'2025-12-28'},
+    {id:now+2,task:'Schedule magnetron installation with RF safety protocol',linkedPartId:null,due:'2026-01-15',assignee:'Tuomas',status:'not-started',createdAt:'2025-12-20'},
+    {id:now+3,task:'Complete safety assessment documentation for UK customer',linkedPartId:null,due:'2026-01-20',assignee:'Matti',status:'in-progress',createdAt:'2025-11-15'},
+    {id:now+4,task:'Arrange Yaskawa commissioning visit for motor drive',linkedPartId:null,due:'2026-02-01',assignee:'Antti',status:'not-started',createdAt:'2025-12-15'},
+    {id:now+5,task:'Test rotary joint when delivered (critical path)',linkedPartId:null,due:'2026-01-12',assignee:'Sari',status:'not-started',createdAt:'2025-12-30'},
+    {id:now+6,task:'Verify all calibration certificates are on file',linkedPartId:null,due:'2026-01-10',assignee:'Mikko',status:'in-progress',createdAt:'2025-12-01'},
+    {id:now+7,task:'Order AIS interface - customer confirmed requirement',linkedPartId:null,due:'2026-01-05',assignee:'Antti',status:'not-started',createdAt:'2025-12-28'},
+    {id:now+8,task:'Complete technical manual draft for customer review',linkedPartId:null,due:'2026-02-15',assignee:'Matti',status:'in-progress',createdAt:'2025-11-01'},
+    {id:now+9,task:'Coordinate UK shipment schedule with sister company',linkedPartId:null,due:'2026-03-01',assignee:'Tuomas',status:'not-started',createdAt:'2025-12-20'},
+    {id:now+10,task:'RF transmitter full power test (safety critical)',linkedPartId:null,due:'2026-01-18',assignee:'Mikko',status:'not-started',createdAt:'2025-12-22'},
+    {id:now+11,task:'Book customer acceptance test date',linkedPartId:null,due:'2026-03-15',assignee:'Tuomas',status:'not-started',createdAt:'2025-12-01'},
+    {id:now+12,task:'Order shipping crate - allow 2 weeks for custom size',linkedPartId:null,due:'2026-02-20',assignee:'Antti',status:'not-started',createdAt:'2025-12-15'}
   ];
 
-  // Lead time database
+  // Lead time database - radar components matching document lead time expectations
   leadTimeDb={
-    '6ES7-1500':{samples:[{days:7,date:'2025-12-15'},{days:6,date:'2025-11-20'},{days:8,date:'2025-10-25'}],avg:7},
-    'HMI-TP1500':{samples:[{days:10,date:'2025-12-10'},{days:12,date:'2025-11-15'}],avg:11},
-    'SM-3KW-01':{samples:[{days:5,date:'2025-12-18'},{days:4,date:'2025-11-22'}],avg:5},
-    'RA-6AX-20':{samples:[{days:28,date:'2025-12-01'},{days:25,date:'2025-10-20'}],avg:27},
-    'LC-600':{samples:[{days:10,date:'2025-12-12'},{days:8,date:'2025-11-18'}],avg:9},
-    'HPU-15HP':{samples:[{days:14,date:'2025-12-10'}],avg:14},
-    'SC-5MP':{samples:[{days:6,date:'2025-12-20'},{days:5,date:'2025-12-08'}],avg:6},
-    'VFD-15KW':{samples:[{days:3,date:'2025-12-22'},{days:4,date:'2025-12-15'},{days:3,date:'2025-12-01'}],avg:3},
-    'SP-PNOZ':{samples:[{days:5,date:'2025-12-18'}],avg:5},
-    'GRP-PNU':{samples:[{days:7,date:'2025-12-15'},{days:5,date:'2025-11-28'}],avg:6}
+    'RF-TX-450':{samples:[{days:16,date:'2025-12-01'},{days:18,date:'2025-10-15'}],avg:17},    // UK with customs
+    'ANT-X9G':{samples:[{days:15,date:'2025-12-10'},{days:17,date:'2025-11-05'}],avg:16},      // UK with customs
+    'SPB-450':{samples:[{days:8,date:'2025-12-15'},{days:7,date:'2025-11-20'}],avg:8},         // In-house
+    'PSU-48V':{samples:[{days:6,date:'2025-12-08'},{days:5,date:'2025-11-25'},{days:7,date:'2025-10-30'}],avg:6}, // Stock
+    'VFD-3KW':{samples:[{days:10,date:'2025-12-12'},{days:12,date:'2025-11-18'}],avg:11},      // Standard
+    'CAB-MAIN':{samples:[{days:22,date:'2025-11-28'}],avg:22},                                  // Custom fab
+    'WG-CUST':{samples:[{days:25,date:'2025-10-01'}],avg:25},                                   // Custom fab
+    'RJ-18CH':{samples:[{days:42,date:'2025-09-15'}],avg:42},                                   // Specialized RF
+    'MAG-X9G':{samples:[{days:35,date:'2025-10-20'}],avg:35},                                   // Specialized RF  
+    'IPC-I7':{samples:[{days:5,date:'2025-12-18'},{days:4,date:'2025-12-01'}],avg:5}           // Stock
   };
   
   updateProjectName();
@@ -2729,28 +2653,33 @@ function createSampleData(){
 function loadFromSnapshot(val){
   if(!val) return;
   
+  // Only update data if Firebase actually has data - don't clear existing data on empty response
   if(val.data){
-    data = Array.isArray(val.data) ? val.data : Object.values(val.data);
-  } else {
-    data = [];
+    const newData = Array.isArray(val.data) ? val.data : Object.values(val.data);
+    if(newData.length > 0 || data.length === 0) {
+      data = newData;
+    }
   }
   if(val.team){
-    team = Array.isArray(val.team) ? val.team : Object.values(val.team);
-  } else {
-    team = [];
+    const newTeam = Array.isArray(val.team) ? val.team : Object.values(val.team);
+    if(newTeam.length > 0 || team.length === 0) {
+      team = newTeam;
+    }
   }
   if(val.history){
-    history = Array.isArray(val.history) ? val.history : Object.values(val.history);
-  } else {
-    history = [];
+    const newHistory = Array.isArray(val.history) ? val.history : Object.values(val.history);
+    if(newHistory.length > 0 || history.length === 0) {
+      history = newHistory;
+    }
   }
   if(val.actions){
-    actions = Array.isArray(val.actions) ? val.actions : Object.values(val.actions);
-  } else {
-    actions = [];
+    const newActions = Array.isArray(val.actions) ? val.actions : Object.values(val.actions);
+    if(newActions.length > 0 || actions.length === 0) {
+      actions = newActions;
+    }
   }
-  projectDates = val.projectDates || {start:'',end:''};
-  currentProjectName = val.projectName || 'EBS Project';
+  if(val.projectDates) projectDates = val.projectDates;
+  if(val.projectName) currentProjectName = val.projectName;
   
   updateProjectName();
   updateVersionInfo();
@@ -4297,6 +4226,9 @@ function detectQuestionType(question){
   if(!question)return 'general';
   const q=question.toLowerCase();
   
+  // LOOKUP: specific part/code/PO searches (highest priority)
+  if(/code|item\s*#|part\s*#|sku|pn\s|p\/n|find|search|look\s*up|where\s*is|status\s*of|po\s*\d|po-\d/.test(q))return 'lookup';
+  
   // Velocity/speed related
   if(/velocit|speed|pace|accelerat|slow|fast|rate|throughput|transition/.test(q))return 'velocity';
   
@@ -4316,7 +4248,7 @@ function detectQuestionType(question){
   if(/action|task|todo|overdue|due|upcoming/.test(q))return 'actions';
   
   // Specific part/assembly query
-  if(/which part|what part|show.*part|list.*part|find.*part/.test(q))return 'parts';
+  if(/which part|what part|show.*part|list.*part/.test(q))return 'parts';
   
   return 'general';
 }
@@ -4324,61 +4256,157 @@ function detectQuestionType(question){
 function buildProjectContext(question){
   const parts=getParts();
   const asms=getAsms();
-  const today=new Date().toISOString().split('T')[0];
   const now=Date.now(),day=86400000;
+  const today=new Date().toISOString().split('T')[0];
   const questionType=detectQuestionType(question);
   
-  // Always include: basic project stats
+  // Helper: convert timestamp to relative days (negative = past, positive = future)
+  const relDays=(ts)=>ts?Math.round((ts-now)/day):null;
+  const relDate=(dateStr)=>dateStr?Math.round((Date.parse(dateStr)-now)/day):null;
+  
+  // Status counts
   const byStatus={};
   STAGES.forEach(s=>byStatus[s]=parts.filter(p=>p.status===s).length);
   
   const totalParts=parts.length;
   const installedParts=byStatus.installed||0;
-  const remainingParts=totalParts-installedParts;
   const velocity=getVelocity();
   const daysLeft=getDaysRemaining();
-  const daysNeeded=velocity&&velocity>0?Math.ceil(remainingParts/velocity):null;
   
-  // Base context (always included)
+  // Base context - CRITICAL DATA FIRST (in case of truncation)
   const context={
+    // Plain English summary FIRST - most important for AI
+    summary:`Project "${currentProjectName}" has ${totalParts} parts across ${asms.length} assemblies. Status: ${byStatus.pending||0} pending, ${byStatus['to-order']||0} to-order, ${byStatus.ordered||0} ordered, ${byStatus.arrived||0} arrived, ${byStatus.tested||0} tested, ${byStatus.configured||0} configured, ${byStatus.installed||0} installed. Progress: ${calcOverallProgress()}%.`,
+    // Project info
     project:{
       name:currentProjectName,
-      progress:calcOverallProgress(),
-      velocity,
-      daysLeft,
-      startDate:projectDates.start,
-      endDate:projectDates.end
+      pct:calcOverallProgress(),
+      vel:velocity,
+      left:daysLeft,
+      start:projectDates.start,
+      end:projectDates.end
     },
-    counts:{
-      total:totalParts,
-      remaining:remainingParts,
-      assemblies:asms.length,
-      ...byStatus
+    // Counts by status
+    cnt:{total:totalParts,...byStatus},
+    qType:questionType,
+    today,
+    // Schema for short keys (after critical data)
+    _schema:{
+      parts:'id,n=name,s=status,asm=assembly,a=assignee,c=code,m=mfr,po,q=qty,days=daysInStatus,ord=orderedDaysAgo,arr=arrivedDaysAgo,eta=expectedDays,nt=notes,pn=pendingNote,cm=comments',
+      asms:'id,n=name,pct=progress%,cnt=partCount,a=assignee,pri=priority',
+      actions:'id,t=task,st=status,a=assignee,due=dueDays,part=linkedPart'
     },
-    questionType // Tell the LLM what we detected
+    // Company context LAST (nice to have, not critical)
+    company:{
+      name:'Radar Systems Manufacturing',
+      location:'Finland',
+      customer:'UK sister company',
+      rules:['Safety components need full testing','Parts >€5k need dual approval','RF parts need cal certs','International +7-10d customs'],
+      leadTimes:{stock:'3-7d',standard:'10-14d',custom:'3-4wk',rfSpecialized:'4-6wk'}
+    }
   };
   
-  // VELOCITY: focus on transitions and timing
-  if(questionType==='velocity'||questionType==='general'){
-    const recentTransitions=parts.filter(p=>p.changedAt&&(now-p.changedAt)<14*day).map(p=>({
-      id:p.id,
-      name:p.name,
-      status:p.status,
-      daysAgo:Math.floor((now-p.changedAt)/day)
-    }));
-    const weekAgoCount=recentTransitions.filter(t=>t.daysAgo<=7).length;
-    const priorWeekCount=recentTransitions.filter(t=>t.daysAgo>7&&t.daysAgo<=14).length;
-    context.velocity={
-      current:velocity,
-      transitionsThisWeek:weekAgoCount,
-      transitionsLastWeek:priorWeekCount,
-      trend:priorWeekCount>0?Math.round((weekAgoCount-priorWeekCount)/priorWeekCount*100):0,
-      recentMoves:recentTransitions.slice(0,10)
-    };
-    context.progressHistory=history.slice(-14).map(h=>({date:h.date,pct:h.pct}));
+  // TEAM - always include (small, useful for "who" questions)
+  if(team.length){
+    context.team=team.map(t=>({n:t.name,e:t.email}));
   }
   
-  // BOTTLENECK: focus on dwell times per stage
+  // LEAD TIME DB - historical data per item code
+  if(Object.keys(leadTimeDb).length){
+    context.leadTimes={};
+    Object.entries(leadTimeDb).forEach(([code,lt])=>{
+      context.leadTimes[code]={avg:lt.avg,samples:lt.samples.length};
+    });
+  }
+  
+  // HISTORY - include action descriptions (all entries, no nulls)
+  if(history.length){
+    context.hist=history.map(h=>{
+      const entry={d:h.date,p:h.pct};
+      if(h.action)entry.a=h.action;
+      return entry;
+    });
+  }
+  
+  // ALL PARTS - optimized, no nulls, short keys
+  // Key: id mod:name s:status asm:assembly a:assignee c:code m:mfr po:poNumber q:qty(if>1)
+  //      days:daysInStatus(if>0) ord:orderedAt(rel) arr:arrivedAt(rel) eta:expectedArrival(rel)
+  //      n:notes pn:pendingNote cmt:commentCount cm:comments
+  context.parts=parts.map(p=>{
+    const asm=asms.find(a=>String(a.id)===String(p.parentId));
+    const part={id:p.id,n:p.name,s:p.status};
+    
+    // Only include non-empty, non-default values
+    if(asm?.name)part.asm=asm.name;
+    if(p.assignee)part.a=p.assignee;
+    if(p.code)part.c=p.code;
+    if(p.mfr)part.m=p.mfr;
+    if(p.poNumber)part.po=p.poNumber;
+    if(p.qty&&p.qty>1)part.q=p.qty;
+    
+    const days=p.changedAt?Math.floor((now-p.changedAt)/day):0;
+    if(days>0)part.days=days;
+    
+    // Relative dates (negative=past, positive=future)
+    if(p.orderedAt)part.ord=relDays(p.orderedAt);
+    if(p.arrivedAt)part.arr=relDays(p.arrivedAt);
+    if(p.expectedArrival)part.eta=relDate(p.expectedArrival);
+    
+    if(p.notes)part.nt=p.notes;
+    if(p.pendingNote)part.pn=p.pendingNote;
+    
+    // Comments - all of them, not just last 3
+    if(p.comments?.length){
+      part.cmt=p.comments.length;
+      part.cm=p.comments.map(c=>({
+        by:c.author||'?',
+        t:c.text,
+        ago:c.timestamp?Math.floor((now-c.timestamp)/day):null
+      }));
+    }
+    return part;
+  });
+  
+  // ASSEMBLIES - with notes and priority
+  context.asms=asms.map(a=>{
+    const asmParts=parts.filter(p=>String(p.parentId)===String(a.id));
+    const obj={id:a.id,n:a.name,pct:calcAsmProgress(a.id),cnt:asmParts.length};
+    if(a.assignee)obj.a=a.assignee;
+    if(a.priority)obj.pri=a.priority;
+    if(a.notes)obj.nt=a.notes;
+    return obj;
+  });
+  
+  // ACTIONS - all of them, with linked parts
+  const allActions=getActions();
+  if(allActions.length){
+    context.actions=allActions.map(act=>{
+      const obj={id:act.id,t:act.task,st:act.status};
+      if(act.assignee)obj.a=act.assignee;
+      if(act.due)obj.due=relDate(act.due);
+      if(act.linkedPartId){
+        const lp=parts.find(p=>String(p.id)===String(act.linkedPartId));
+        if(lp)obj.part=lp.name;
+      }
+      if(act.createdAt)obj.created=relDate(act.createdAt);
+      return obj;
+    });
+  }
+  
+  // VELOCITY STATS (for velocity/general questions)
+  if(questionType==='velocity'||questionType==='general'){
+    const recentTransitions=parts.filter(p=>p.changedAt&&(now-p.changedAt)<14*day);
+    const weekAgoCount=recentTransitions.filter(p=>(now-p.changedAt)<=7*day).length;
+    const priorWeekCount=recentTransitions.filter(p=>{const d=(now-p.changedAt)/day;return d>7&&d<=14}).length;
+    context.vel={
+      now:velocity,
+      thisWk:weekAgoCount,
+      lastWk:priorWeekCount,
+      trend:priorWeekCount>0?Math.round((weekAgoCount-priorWeekCount)/priorWeekCount*100):0
+    };
+  }
+  
+  // BOTTLENECK STATS (for bottleneck/general questions)
   if(questionType==='bottleneck'||questionType==='general'){
     const stageDwell={};
     STAGES.forEach(s=>{
@@ -4386,132 +4414,55 @@ function buildProjectContext(question){
       if(inStage.length>0){
         const avgDays=Math.round(inStage.reduce((sum,p)=>sum+(now-p.changedAt),0)/inStage.length/day);
         const maxDays=Math.round(Math.max(...inStage.map(p=>(now-p.changedAt)/day)));
-        stageDwell[s]={count:inStage.length,avgDays,maxDays};
+        stageDwell[s]={cnt:inStage.length,avg:avgDays,max:maxDays};
       }
     });
-    context.bottleneck={stageDwell};
-    
-    // Top stuck items (limit to 5)
-    context.stuck=parts.filter(p=>p.changedAt&&(now-p.changedAt)>5*day&&p.status!=='installed')
-      .map(p=>({id:p.id,name:p.name,status:p.status,days:Math.floor((now-p.changedAt)/day)}))
-      .sort((a,b)=>b.days-a.days)
-      .slice(0,8);
+    context.dwell=stageDwell;
   }
   
-  // LEAD TIME: focus on supplier performance
+  // LEAD TIME STATS (for leadtime/general questions)
   if(questionType==='leadtime'||questionType==='general'){
     const arrivedWithDates=parts.filter(p=>p.orderedAt&&p.arrivedAt);
-    let avgLead=0,onTimeRate=null;
     if(arrivedWithDates.length>=2){
       const leadTimes=arrivedWithDates.map(p=>Math.round((p.arrivedAt-p.orderedAt)/day));
-      avgLead=Math.round(leadTimes.reduce((a,b)=>a+b,0)/leadTimes.length);
+      const avgLead=Math.round(leadTimes.reduce((a,b)=>a+b,0)/leadTimes.length);
       
-      const withEta=arrivedWithDates.filter(p=>p.expectedArrival);
-      if(withEta.length>=2){
-        const onTime=withEta.filter(p=>p.arrivedAt<=new Date(p.expectedArrival).getTime()+day);
-        onTimeRate=Math.round(onTime.length/withEta.length*100);
-      }
+      const mfrPerf={};
+      parts.filter(p=>p.mfr).forEach(p=>{
+        if(!mfrPerf[p.mfr])mfrPerf[p.mfr]={tot:0,transit:0,leads:[]};
+        mfrPerf[p.mfr].tot++;
+        if(p.status==='ordered')mfrPerf[p.mfr].transit++;
+        if(p.orderedAt&&p.arrivedAt)mfrPerf[p.mfr].leads.push(Math.round((p.arrivedAt-p.orderedAt)/day));
+      });
+      
+      context.lead={
+        avg:avgLead,
+        byMfr:Object.entries(mfrPerf).map(([m,d])=>({
+          m,tot:d.tot,transit:d.transit,
+          avg:d.leads.length?Math.round(d.leads.reduce((a,b)=>a+b,0)/d.leads.length):null
+        }))
+      };
     }
-    
-    // Supplier breakdown
-    const mfrPerf={};
-    parts.filter(p=>p.mfr).forEach(p=>{
-      if(!mfrPerf[p.mfr])mfrPerf[p.mfr]={total:0,inTransit:0,leadTimes:[]};
-      mfrPerf[p.mfr].total++;
-      if(p.status==='ordered')mfrPerf[p.mfr].inTransit++;
-      if(p.orderedAt&&p.arrivedAt)mfrPerf[p.mfr].leadTimes.push(Math.round((p.arrivedAt-p.orderedAt)/day));
-    });
-    
-    context.leadTime={
-      avgDays:avgLead,
-      onTimeRate,
-      suppliers:Object.entries(mfrPerf).map(([mfr,d])=>({
-        name:mfr,
-        total:d.total,
-        inTransit:d.inTransit,
-        avgLead:d.leadTimes.length?Math.round(d.leadTimes.reduce((a,b)=>a+b,0)/d.leadTimes.length):null
-      })).filter(s=>s.total>=2).slice(0,5)
-    };
   }
   
-  // WORKLOAD: focus on assignee distribution
+  // WORKLOAD STATS (for workload/general questions)  
   if(questionType==='workload'||questionType==='general'){
     const assigneeWork={};
     parts.filter(p=>p.status!=='installed').forEach(p=>{
       const assignee=p.assignee||'Unassigned';
-      if(!assigneeWork[assignee])assigneeWork[assignee]={total:0,byStatus:{}};
-      assigneeWork[assignee].total++;
-      assigneeWork[assignee].byStatus[p.status]=(assigneeWork[assignee].byStatus[p.status]||0)+1;
+      if(!assigneeWork[assignee])assigneeWork[assignee]={tot:0,by:{}};
+      assigneeWork[assignee].tot++;
+      assigneeWork[assignee].by[p.status]=(assigneeWork[assignee].by[p.status]||0)+1;
     });
-    context.workload=Object.entries(assigneeWork)
-      .map(([name,d])=>({name,total:d.total,byStatus:d.byStatus}))
-      .sort((a,b)=>b.total-a.total);
+    context.work=Object.entries(assigneeWork)
+      .map(([n,d])=>({n,tot:d.tot,by:d.by}))
+      .sort((a,b)=>b.tot-a.tot);
   }
   
-  // FORECAST: focus on schedule risk
+  // FORECAST STATS (for forecast/general questions)
   if(questionType==='forecast'||questionType==='general'){
     context.forecast=getVelocityForecast();
-    context.project.daysNeeded=daysNeeded;
-    context.project.buffer=daysLeft&&daysNeeded?(daysLeft-daysNeeded):null;
-    
-    // Assembly progress (limit to struggling ones)
-    context.asmProgress=asms.map(a=>({
-      name:a.name,
-      progress:calcAsmProgress(a.id),
-      partCount:parts.filter(p=>String(p.parentId)===String(a.id)).length
-    })).filter(a=>a.progress<80).sort((a,b)=>a.progress-b.progress).slice(0,5);
   }
-  
-  // ACTIONS: focus on tasks
-  if(questionType==='actions'||questionType==='general'){
-    const nextWeek=new Date(now+7*day).toISOString().split('T')[0];
-    const activeActions = getActions();
-    context.actions={
-      overdue:activeActions.filter(a=>a.status!=='completed'&&a.due&&a.due<today)
-        .map(a=>({task:a.task,assignee:a.assignee||'Unassigned',daysOverdue:Math.floor((new Date(today)-new Date(a.due))/day)}))
-        .slice(0,5),
-      upcoming:activeActions.filter(a=>a.status!=='completed'&&a.due&&a.due>=today&&a.due<=nextWeek)
-        .map(a=>({task:a.task,assignee:a.assignee||'Unassigned',due:a.due}))
-        .slice(0,5),
-      completed:activeActions.filter(a=>a.status==='completed').length,
-      total:activeActions.length
-    };
-  }
-  
-  // PARTS: Always include part list (limited) so AI can link to specific parts
-  // Include stuck/problematic parts first, then sample others
-  const stuckParts=parts.filter(p=>p.changedAt&&(now-p.changedAt)>5*day&&p.status!=='installed')
-    .sort((a,b)=>(b.changedAt||0)-(a.changedAt||0));
-  const recentParts=parts.filter(p=>p.changedAt&&(now-p.changedAt)<=5*day)
-    .sort((a,b)=>(b.changedAt||0)-(a.changedAt||0));
-  const otherParts=parts.filter(p=>!stuckParts.includes(p)&&!recentParts.includes(p));
-  
-  // Combine: stuck first, then recent activity, then others - include ALL parts
-  const prioritizedParts=[...stuckParts,...recentParts,...otherParts];
-  context.partsList=prioritizedParts.map(p=>{
-    const asm=asms.find(a=>String(a.id)===String(p.parentId));
-    const daysInStatus=p.changedAt?Math.floor((now-p.changedAt)/day):0;
-    const part={
-      id:p.id,
-      name:p.name,
-      status:p.status,
-      daysInStatus
-    };
-    // Only include non-empty fields
-    if(asm?.name)part.assembly=asm.name;
-    if(p.assignee)part.assignee=p.assignee;
-    if(p.poNumber)part.poNumber=p.poNumber;
-    if(p.mfr)part.mfr=p.mfr;
-    if(p.code)part.code=p.code;
-    if(p.qty&&p.qty>1)part.qty=p.qty;
-    if(p.expectedArrival)part.expectedArrival=p.expectedArrival;
-    if(p.orderedAt)part.orderedAt=new Date(p.orderedAt).toISOString().split('T')[0];
-    if(p.arrivedAt)part.arrivedAt=new Date(p.arrivedAt).toISOString().split('T')[0];
-    if(p.pendingNote)part.pendingNote=p.pendingNote;
-    if(p.notes)part.notes=p.notes;
-    if(p.comments?.length)part.commentCount=p.comments.length;
-    return part;
-  });
   
   return context;
 }
@@ -4534,7 +4485,9 @@ function getVelocity(){
 }
 
 async function generateAIReport(mode,question){
-  const context=buildProjectContext();
+  // Use the SAME context builder as the working Opus report
+  const context=buildFullProjectContext();
+  if(question) context.question=question;
   
   // Quick mode uses local generation (instant, no API call)
   if(mode==='quick'){
@@ -4629,21 +4582,22 @@ function formatClaudeResponse(text,mode,usedModel){
     try{
       const items=dataStr.split(',').map(s=>{
         const [label,val]=s.split(':');
-        return {label,val:parseInt(val)};
+        return {label:label.trim(),val:parseInt(val)||0};
       });
+      if(!items.length||items.every(i=>!i.val))return '';
       const max=Math.max(...items.map(i=>i.val),1);
       const h=items.length*40+20;
-      let svg='<svg class="ai-mini-chart" viewBox="0 0 340 '+h+'" width="340">';
+      let svg='<svg class="ai-mini-chart" viewBox="0 0 340 '+h+'" style="width:340px;height:'+h+'px;display:block;margin:8px 0">';
       items.forEach((item,i)=>{
-        const w=Math.round(item.val/max*180);
+        const w=Math.max(Math.round(item.val/max*180),4);
         const y=i*40+10;
-        svg+='<text x="8" y="'+(y+24)+'" font-size="13" fill="var(--text2)">'+item.label+'</text>';
-        svg+='<rect x="130" y="'+(y+8)+'" width="'+w+'" height="24" rx="6" fill="var(--accent)" opacity="0.75"/>';
-        svg+='<text x="'+(140+w)+'" y="'+(y+26)+'" font-size="14" fill="var(--text)" font-weight="500">'+item.val+'</text>';
+        svg+='<text x="8" y="'+(y+24)+'" style="font-size:13px;fill:#9b9991">'+esc(item.label)+'</text>';
+        svg+='<rect x="130" y="'+(y+8)+'" width="'+w+'" height="24" rx="6" style="fill:#5a9ac8;opacity:0.75"/>';
+        svg+='<text x="'+(140+w)+'" y="'+(y+26)+'" style="font-size:14px;fill:#faf9f5;font-weight:500">'+item.val+'</text>';
       });
       svg+='</svg>';
       return '<div class="ai-visual">'+svg+'</div>';
-    }catch(e){return '';}
+    }catch(e){console.error('Chart error:',e);return '';}
   });
   
   // Funnel chart for pipeline
@@ -4651,22 +4605,24 @@ function formatClaudeResponse(text,mode,usedModel){
     try{
       const items=dataStr.split(',').map(s=>{
         const [label,val]=s.split(':');
-        return {label,val:parseInt(val)};
+        return {label:label.trim(),val:parseInt(val)||0};
       });
+      if(!items.length||items.every(i=>!i.val))return '';
       const max=Math.max(...items.map(i=>i.val),1);
       const h=items.length*44+20;
-      let svg='<svg class="ai-mini-chart" viewBox="0 0 360 '+h+'" width="360">';
+      const colors=['#c07070','#d87756','#b8a050','#9888aa','#6aa0aa','#6aaa6a'];
+      let svg='<svg class="ai-mini-chart" viewBox="0 0 360 '+h+'" style="width:360px;height:'+h+'px;display:block;margin:8px 0">';
       items.forEach((item,i)=>{
-        const w=Math.round(item.val/max*180);
+        const w=Math.max(Math.round(item.val/max*180),4);
         const x=(180-w)/2+100;
         const y=i*44+10;
-        svg+='<text x="8" y="'+(y+26)+'" font-size="12" fill="var(--text3)">'+item.label+'</text>';
-        svg+='<rect x="'+x+'" y="'+(y+8)+'" width="'+w+'" height="28" rx="6" fill="var(--s'+((i%6)+1)+')" opacity="0.85"/>';
-        svg+='<text x="300" y="'+(y+28)+'" font-size="14" fill="var(--text)" font-weight="600">'+item.val+'</text>';
+        svg+='<text x="8" y="'+(y+26)+'" style="font-size:12px;fill:#9b9991">'+esc(item.label)+'</text>';
+        svg+='<rect x="'+x+'" y="'+(y+8)+'" width="'+w+'" height="28" rx="6" style="fill:'+colors[i%6]+';opacity:0.85"/>';
+        svg+='<text x="300" y="'+(y+28)+'" style="font-size:14px;fill:#faf9f5;font-weight:600">'+item.val+'</text>';
       });
       svg+='</svg>';
       return '<div class="ai-visual">'+svg+'</div>';
-    }catch(e){return '';}
+    }catch(e){console.error('Funnel error:',e);return '';}
   });
   
   // Escape HTML first (but preserve our generated HTML)
@@ -4993,7 +4949,17 @@ document.addEventListener('click',e=>{
 });
 
 async function askAI(question){
-  const context=buildProjectContext(question); // Pass question for smart filtering
+  const partsCheck = getParts();
+  if(partsCheck.length === 0) {
+    return '<div class="ai-prose"><p><strong>No project data loaded.</strong> Click ☰ → Load Sample Data to get started.</p></div>';
+  }
+  
+  // Use the SAME context builder as the working report
+  const context=buildFullProjectContext();
+  // Add the question for context
+  context.question=question;
+  
+  console.log('🤖 askAI context: parts=', context.allParts?.length, 'asms=', context.assemblies?.length);
   
   try{
     $('aiModelBadge').innerHTML='<span class="thinking-pulse">thinking...</span>';
@@ -5003,7 +4969,7 @@ async function askAI(question){
       mode:'ask',
       projectContext:context,
       question,
-      maxChars:500,
+      maxChars:2000,  // Match the report setting
       style:'concise',
       model:selectedAIModel
     });
@@ -5274,8 +5240,8 @@ function renderWorkspaceConversation(){
       }
       // Sanitize AI response HTML with DOMPurify
       const sanitized = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(msg.content, {
-        ALLOWED_TAGS: ['p','br','strong','em','ul','ol','li','h1','h2','h3','h4','div','span','a','table','thead','tbody','tr','th','td','code','pre','button','svg','path','line','polyline','rect','circle'],
-        ALLOWED_ATTR: ['class','style','href','onclick','data-q','data-question','viewBox','width','height','fill','stroke','stroke-width','stroke-linecap','stroke-linejoin','d','x','y','x1','y1','x2','y2','cx','cy','r','points'],
+        ALLOWED_TAGS: ['p','br','strong','em','ul','ol','li','h1','h2','h3','h4','div','span','a','table','thead','tbody','tr','th','td','code','pre','button','svg','path','line','polyline','rect','circle','text','tspan','g'],
+        ALLOWED_ATTR: ['class','style','href','onclick','data-q','data-question','viewBox','width','height','fill','stroke','stroke-width','stroke-linecap','stroke-linejoin','d','x','y','x1','y1','x2','y2','cx','cy','r','rx','ry','points','font-size','font-weight','opacity','transform'],
         ALLOW_DATA_ATTR: true
       }) : msg.content;
       return '<div class="ai-msg ai-msg-assistant"><div class="ai-msg-content">'+sanitized+'</div></div>';
@@ -5617,8 +5583,8 @@ function renderConversation(){
     }else{
       // Sanitize AI response HTML with DOMPurify
       const sanitized = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(msg.content, {
-        ALLOWED_TAGS: ['p','br','strong','em','ul','ol','li','h1','h2','h3','h4','div','span','a','table','thead','tbody','tr','th','td','code','pre','button','svg','path','line','polyline','rect','circle'],
-        ALLOWED_ATTR: ['class','style','href','onclick','data-q','data-question','viewBox','width','height','fill','stroke','stroke-width','stroke-linecap','stroke-linejoin','d','x','y','x1','y1','x2','y2','cx','cy','r','points'],
+        ALLOWED_TAGS: ['p','br','strong','em','ul','ol','li','h1','h2','h3','h4','div','span','a','table','thead','tbody','tr','th','td','code','pre','button','svg','path','line','polyline','rect','circle','text','tspan','g'],
+        ALLOWED_ATTR: ['class','style','href','onclick','data-q','data-question','viewBox','width','height','fill','stroke','stroke-width','stroke-linecap','stroke-linejoin','d','x','y','x1','y1','x2','y2','cx','cy','r','rx','ry','points','font-size','font-weight','opacity','transform'],
         ALLOW_DATA_ATTR: true
       }) : msg.content;
       html+='<div class="ai-message assistant">'+sanitized+'</div>';
@@ -6696,6 +6662,14 @@ function buildFullProjectContext(){
   
   // Build comprehensive context
   const ctx={
+    // Company context (condensed)
+    company:{
+      name:'Radar Systems Manufacturing',
+      location:'Finland',
+      customer:'UK sister company',
+      rules:['Safety components need full testing','Parts >€5k need dual approval','RF parts need cal certs','International shipments +7-10d customs'],
+      leadTimes:{stock:'3-7d',standard:'10-14d',custom:'3-4wk',rfSpecialized:'4-6wk'}
+    },
     project:{
       name:currentProjectName,
       progress:pct,
@@ -6770,7 +6744,8 @@ function buildFullProjectContext(){
       action:h.action,
       item:h.item,
       time:new Date(h.ts).toLocaleDateString()
-    }))
+    })),
+    team:team.map(t=>({name:t.name,email:t.email}))
   };
   
   return ctx;
