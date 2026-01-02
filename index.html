@@ -125,7 +125,6 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 .autocomplete-item em{color:var(--accent);font-style:normal;font-weight:600}
 .main{padding-top:50px;height:100vh;display:flex;overflow:hidden}
 .sidebar{width:200px;min-width:200px;background:var(--bg);border-right:1px solid var(--border);padding:20px 16px;display:flex;flex-direction:column;gap:24px;overflow-y:auto;position:relative;z-index:15}
-.mobile-nav{display:none;flex-direction:column;gap:8px;padding:0 0 8px 0}
 .sidebar-section{}
 .sidebar-label{font-size:11px;font-weight:500;color:var(--text-muted);letter-spacing:0.3px;margin-bottom:12px;padding:0 12px;text-transform:uppercase}
 .content{flex:1;padding:12px 16px;display:flex;flex-direction:column;overflow:hidden;position:relative}
@@ -925,130 +924,246 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
   .ai-console-btn{padding:8px 14px;font-size:12px}
 }
 
-/* Mobile styles */
+/* Mobile styles - HIDE DESKTOP, SHOW MOBILE VIEW */
 @media(max-width:768px){
-  html,body{overflow-x:hidden!important}
-  .header{height:50px;padding:0 12px;gap:8px;overflow:hidden}
-  .logo{min-width:60px;max-width:100px;font-size:14px}
-  .header-search{display:none}
-  .header-metrics{display:none}
-  .ai-console-btn{display:none}
-  .header-spacer{display:none}
-  .header-btns .btn span{display:none}
-  .header-btns .btn{padding:0 8px;min-width:36px;justify-content:center}
-  .header-btns{gap:2px}
-  .version-badge{font-size:9px;padding:2px 6px}
-  /* CRITICAL: Hide sidebar on mobile */
-  .sidebar{display:none!important}
-  .main{padding:8px 10px;padding-top:58px;overflow-x:hidden;flex-direction:column}
-  /* Show mobile pipeline and tabs */
-  .mobile-nav{display:flex!important}
-  .pipeline{gap:4px;margin-bottom:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;flex-shrink:0}
-  .pipe{min-width:60px;padding:8px 6px;border-radius:10px;flex-shrink:0}
-  .pipe-count{font-size:16px}
-  .pipe-label{font-size:8px}
-  .tabs{margin-bottom:8px;padding:2px;gap:1px;flex-shrink:0}
-  .tab{height:32px;font-size:12px;padding:0 8px}
-  .data-table{border-radius:10px;overflow:hidden}
-  .table-header{height:32px;padding:0 8px;font-size:9px}
-  .parts-grid{grid-template-columns:24px 1fr 60px 60px minmax(80px,1fr) 32px!important}
-  .asm-row{height:38px;padding:0 8px}
-  .part-row{height:36px;padding:0 8px}
-  .parts-grid>div:nth-child(n+10){display:none}
-  .bulk-bar{padding:10px 14px;gap:10px}
-  .bulk-bar-count{font-size:11px}
-  .bulk-bar-actions{gap:4px}
-  .bulk-bar .btn{height:30px;padding:0 12px;font-size:11px}
-  .col-subpart,.col-code,.col-mfr,.col-qty,.col-assignee,.col-eta,.col-notes{display:none!important}
-  .asm-priority{display:none}
-  .asm-name{font-size:13px}
-  .asm-meta{font-size:10px}
-  .asm-toggle{font-size:10px}
-  .cell{font-size:12px}
-  .status-badge{font-size:9px;padding:3px 6px}
-  .sm-btn{width:28px;height:28px}
-  .adv-btn{width:28px;height:28px}
-  .subpart-add{display:none}
-  .add-row{padding:4px!important;padding-left:12px!important}
-  .add-row-btn{width:20px;height:20px;font-size:12px}
-  .card{padding:12px;border-radius:10px}
-  .card-title{font-size:13px}
-  .progress-row{grid-template-columns:1fr!important;gap:10px}
-  .progress-layout-full{gap:10px}
-  .gantt-container{display:none}
-  [data-tab="gantt"]{display:none}
-  .ins-group-title{font-size:10px}
-  .ins-label{font-size:11px}
-  .ins-val{font-size:13px}
-  .toolbar{gap:8px;flex-wrap:wrap}
-  .toolbar .search{width:100%;max-width:none}
-  .toolbar .filter-select{width:100%}
-  .toolbar .btn{flex:1;min-width:80px}
-  .action-row{grid-template-columns:1fr 70px 70px 28px!important}
-  .action-row>div:nth-child(2),.action-row>div:nth-child(3),.action-row>div:nth-child(5){display:none}
-  .action-task{font-size:12px}
-  .action-status{font-size:9px;padding:3px 6px}
-  .filter-badges{flex-wrap:wrap}
-  .filter-badge{font-size:10px}
-  .modal{max-width:calc(100vw - 32px);max-height:calc(100vh - 32px);border-radius:14px}
-  .modal-head{padding:14px 16px}
-  .modal-title{font-size:15px}
-  .modal-body{padding:4px 16px 16px}
-  .modal-foot{padding:12px 16px}
-  .field-label{font-size:11px}
-  .field-input,.field-select,.field-textarea{font-size:16px;height:44px;border-radius:8px}
-  .field-textarea{height:80px}
-  .field-row{flex-direction:column;gap:8px}
-  .modal-foot .btn{height:44px;font-size:14px}
-  .toast{font-size:12px;padding:10px 14px}
-  .dropdown-menu{right:0;left:auto;min-width:180px}
-  .theme-card{padding:10px}
-  .theme-name{font-size:11px}
-  .burndown-container{height:140px}
-  .report-content{font-size:13px}
-  .notes-cell{display:none}
-  .content{width:100%!important;flex:1}
+  /* Hide entire desktop layout */
+  .main{display:none!important}
+  .header{display:none!important}
+  /* Show mobile app */
+  .mobile-app{display:flex!important}
 }
 
-/* Small mobile styles */
-@media(max-width:480px){
-  .header{height:48px;padding:0 10px}
-  .logo{font-size:13px;min-width:50px;max-width:80px}
-  .header-btns .btn{padding:0 8px;height:32px;min-width:32px}
-  .main{padding:6px 8px;padding-top:54px}
-  .pipeline{gap:3px;margin-bottom:6px;padding-bottom:4px}
-  .pipe{min-width:56px;padding:6px 4px;border-radius:8px}
-  .pipe-count{font-size:14px}
-  .pipe-label{font-size:7px;letter-spacing:0}
-  .tabs{margin-bottom:6px}
-  .tab{height:30px;font-size:11px;padding:0 6px}
-  .parts-grid{grid-template-columns:20px 1fr minmax(60px,1fr) 30px!important}
-  .asm-row{height:36px}
-  .part-row{height:34px}
-  .part-checkbox{width:14px;height:14px}
-  .bulk-bar{padding:8px 12px;gap:8px}
-  .bulk-bar .btn{height:28px;font-size:10px;padding:0 10px}
-  .asm-name{font-size:12px}
-  .cell{font-size:11px}
-  .status-badge{font-size:8px;padding:2px 5px}
-  .sm-btn{width:26px;height:26px;font-size:10px}
-  .adv-btn{width:26px;height:26px;font-size:10px}
-  .action-row{grid-template-columns:1fr 60px 26px!important}
-  .action-task{font-size:11px}
-  .modal{border-radius:12px;margin:8px}
-  .modal-head{padding:12px 14px}
-  .modal-body{padding:4px 14px 14px}
-  .modal-foot{padding:10px 14px;flex-direction:column;gap:8px}
-  .modal-foot .btn{width:100%}
-  .field-input,.field-select,.field-textarea{height:44px;font-size:16px}
-  .modal-foot .btn{height:44px;font-size:14px}
-  .progress-top{gap:8px}
-  .card{padding:10px}
-  .ins-row{padding:6px 0}
-  .burndown-container{height:120px}
-  .forecast-card{padding:10px}
-  .forecast-date{font-size:16px}
+/* ===== MOBILE APP (completely separate from desktop) ===== */
+.mobile-app{
+  display:none;
+  flex-direction:column;
+  height:100vh;
+  height:100dvh;
+  background:var(--bg);
+  overflow:hidden;
 }
+.mob-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 16px;
+  padding-top:max(12px,env(safe-area-inset-top));
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  gap:12px;
+  flex-shrink:0;
+}
+.mob-logo{font-size:15px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.mob-header-btns{display:flex;gap:8px}
+.mob-btn{
+  height:36px;
+  padding:0 12px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text2);
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.mob-btn:active{opacity:0.7;transform:scale(0.96)}
+.mob-btn-primary{background:var(--btn-primary-bg);color:var(--btn-primary-text);border:none}
+.mob-pipeline{
+  display:flex;
+  gap:6px;
+  padding:12px 16px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  flex-shrink:0;
+  background:var(--bg2);
+}
+.mob-pipe{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  padding:8px 10px;
+  background:var(--bg3);
+  border-radius:10px;
+  min-width:52px;
+  flex-shrink:0;
+  cursor:pointer;
+  transition:all .15s;
+}
+.mob-pipe.active{background:var(--accent);color:white}
+.mob-pipe.active .mob-pipe-label{color:rgba(255,255,255,0.8)}
+.mob-pipe-count{font-size:18px;font-weight:600;color:var(--text)}
+.mob-pipe.active .mob-pipe-count{color:white}
+.mob-pipe-label{font-size:9px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.3px}
+.mob-tabs{
+  display:flex;
+  gap:4px;
+  padding:8px 16px;
+  flex-shrink:0;
+}
+.mob-tab{
+  flex:1;
+  height:36px;
+  font-size:13px;
+  font-weight:500;
+  color:var(--text3);
+  background:transparent;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+.mob-tab.active{background:var(--bg3);color:var(--text)}
+.mob-tab:active{opacity:0.7}
+.mob-content{
+  flex:1;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  padding:0 0 env(safe-area-inset-bottom) 0;
+}
+.mob-list{padding:8px}
+.mob-asm{
+  background:var(--bg2);
+  border-radius:12px;
+  margin-bottom:8px;
+  overflow:hidden;
+}
+.mob-asm-header{
+  display:flex;
+  align-items:center;
+  padding:14px 16px;
+  gap:12px;
+  cursor:pointer;
+}
+.mob-asm-header:active{background:var(--bg3)}
+.mob-asm-toggle{font-size:12px;color:var(--text3);transition:transform .2s}
+.mob-asm.expanded .mob-asm-toggle{transform:rotate(90deg)}
+.mob-asm-info{flex:1;min-width:0}
+.mob-asm-name{font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mob-asm-meta{font-size:12px;color:var(--text3);margin-top:2px}
+.mob-asm-progress{
+  width:50px;
+  height:6px;
+  background:var(--bg4);
+  border-radius:3px;
+  overflow:hidden;
+}
+.mob-asm-progress-bar{height:100%;background:var(--green);border-radius:3px;transition:width .3s}
+.mob-asm-pct{font-size:12px;font-weight:600;color:var(--text2);min-width:36px;text-align:right}
+.mob-parts{display:none;border-top:1px solid var(--border)}
+.mob-asm.expanded .mob-parts{display:block}
+.mob-part{
+  display:flex;
+  align-items:center;
+  padding:12px 16px;
+  gap:12px;
+  border-bottom:1px solid var(--border);
+  cursor:pointer;
+}
+.mob-part:last-child{border-bottom:none}
+.mob-part:active{background:var(--bg3)}
+.mob-part-info{flex:1;min-width:0}
+.mob-part-name{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mob-part-meta{font-size:11px;color:var(--text3);margin-top:2px;display:flex;gap:8px;flex-wrap:wrap}
+.mob-status{
+  font-size:10px;
+  font-weight:600;
+  padding:4px 8px;
+  border-radius:6px;
+  text-transform:uppercase;
+  letter-spacing:0.3px;
+  white-space:nowrap;
+}
+.mob-status.pending{background:rgba(138,138,130,0.15);color:var(--s0)}
+.mob-status.to-order{background:rgba(192,112,112,0.15);color:var(--s1)}
+.mob-status.ordered{background:rgba(216,119,86,0.15);color:var(--s2)}
+.mob-status.arrived{background:rgba(184,160,80,0.15);color:var(--s3)}
+.mob-status.tested{background:rgba(152,136,170,0.15);color:var(--s4)}
+.mob-status.configured{background:rgba(106,160,170,0.15);color:var(--s5)}
+.mob-status.installed{background:rgba(106,170,106,0.15);color:var(--s6)}
+.mob-part-arrow{color:var(--text3);font-size:14px}
+.mob-empty{padding:40px 20px;text-align:center;color:var(--text3);font-size:14px}
+.mob-actions-list{padding:8px}
+.mob-action{
+  background:var(--bg2);
+  border-radius:12px;
+  padding:14px 16px;
+  margin-bottom:8px;
+  cursor:pointer;
+}
+.mob-action:active{background:var(--bg3)}
+.mob-action-task{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px}
+.mob-action-meta{display:flex;gap:12px;font-size:12px;color:var(--text3);flex-wrap:wrap}
+.mob-action-status{
+  font-size:10px;
+  font-weight:600;
+  padding:3px 8px;
+  border-radius:5px;
+  text-transform:uppercase;
+}
+.mob-action-status.pending{background:rgba(184,160,80,0.15);color:var(--s3)}
+.mob-action-status.in-progress{background:rgba(90,154,200,0.15);color:var(--accent)}
+.mob-action-status.completed{background:rgba(106,170,106,0.15);color:var(--s6)}
+/* Mobile modal overrides */
+.mob-modal{
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  z-index:1000;
+  display:none;
+  flex-direction:column;
+}
+.mob-modal.open{display:flex}
+.mob-modal-header{
+  display:flex;
+  align-items:center;
+  padding:12px 16px;
+  padding-top:max(12px,env(safe-area-inset-top));
+  border-bottom:1px solid var(--border);
+  gap:12px;
+}
+.mob-modal-back{
+  width:36px;
+  height:36px;
+  background:transparent;
+  border:none;
+  color:var(--accent);
+  font-size:20px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.mob-modal-title{flex:1;font-size:16px;font-weight:600;color:var(--text)}
+.mob-modal-body{flex:1;overflow-y:auto;padding:16px}
+.mob-field{margin-bottom:16px}
+.mob-field-label{font-size:12px;font-weight:500;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.3px}
+.mob-field-input,.mob-field-select{
+  width:100%;
+  height:48px;
+  padding:0 14px;
+  font-size:16px;
+  color:var(--text);
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:10px;
+}
+.mob-field-input:focus,.mob-field-select:focus{border-color:var(--accent);outline:none}
+.mob-modal-footer{
+  padding:12px 16px;
+  padding-bottom:max(12px,env(safe-area-inset-bottom));
+  border-top:1px solid var(--border);
+  display:flex;
+  gap:10px;
+}
+.mob-modal-footer .mob-btn{flex:1;height:48px;font-size:15px}
 
 /* Touch improvements */
 @media(hover:none){
@@ -1145,7 +1260,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 </div>
 <div style="flex:1"></div>
-<div class="version-badge" id="versionBadge">v1.6.1
+<div class="version-badge" id="versionBadge">v1.6.2
 <div class="version-info">
 <div class="version-info-row"><span class="version-info-label">Version</span><span class="version-info-value">1.0.2</span></div>
 <div class="version-info-row"><span class="version-info-label">Server</span><span class="version-info-value" id="serverStatus">Firebase</span></div>
@@ -1158,22 +1273,6 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 </aside>
 <div class="content">
-<!-- Mobile navigation (hidden on desktop, shown on mobile) -->
-<div class="mobile-nav">
-<div class="tabs">
-<button class="tab active" data-tab="list"><span class="tab-icon">☰</span>Parts</button>
-<button class="tab" data-tab="actions"><span class="tab-icon">✓</span>Actions</button>
-</div>
-<div class="pipeline">
-<div class="pipe" data-s="pending"><div class="pipe-count" id="mp0">0</div><div class="pipe-label">Pending</div></div>
-<div class="pipe" data-s="to-order"><div class="pipe-count" id="mp1">0</div><div class="pipe-label">To Order</div></div>
-<div class="pipe" data-s="ordered"><div class="pipe-count" id="mp2">0</div><div class="pipe-label">Ordered</div></div>
-<div class="pipe" data-s="arrived"><div class="pipe-count" id="mp3">0</div><div class="pipe-label">Arrived</div></div>
-<div class="pipe" data-s="tested"><div class="pipe-count" id="mp4">0</div><div class="pipe-label">Tested</div></div>
-<div class="pipe" data-s="configured"><div class="pipe-count" id="mp5">0</div><div class="pipe-label">Config</div></div>
-<div class="pipe" data-s="installed"><div class="pipe-count" id="mp6">0</div><div class="pipe-label">Done</div></div>
-</div>
-</div>
 <div class="panel active" id="listPanel">
 <div class="filter-badges" id="filterBadges"></div>
 <div class="bulk-bar" id="bulkBar"><span class="bulk-bar-count"><span id="bulkCount">0</span> selected</span><div class="bulk-bar-actions"><button class="btn" id="bulkStatusBtn">Set Status</button><button class="btn" id="bulkAssignBtn">Set Assignee</button><button class="btn" id="bulkPOBtn">Set PO</button><button class="btn btn-danger" id="bulkDeleteBtn">Delete</button><button class="btn btn-clear" id="bulkClearBtn">✕ Clear</button></div></div>
@@ -1282,6 +1381,86 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 </div>
 </main>
+
+<!-- ===== MOBILE APP (completely separate from desktop) ===== -->
+<div class="mobile-app" id="mobileApp">
+  <header class="mob-header">
+    <div class="mob-logo" id="mobLogo">EF Final Assembly</div>
+    <div class="mob-header-btns">
+      <button class="mob-btn" id="mobMenuBtn">☰</button>
+    </div>
+  </header>
+  <div class="mob-pipeline" id="mobPipeline">
+    <div class="mob-pipe" data-status="pending"><div class="mob-pipe-count" id="mobP0">0</div><div class="mob-pipe-label">Pending</div></div>
+    <div class="mob-pipe" data-status="to-order"><div class="mob-pipe-count" id="mobP1">0</div><div class="mob-pipe-label">To Order</div></div>
+    <div class="mob-pipe" data-status="ordered"><div class="mob-pipe-count" id="mobP2">0</div><div class="mob-pipe-label">Ordered</div></div>
+    <div class="mob-pipe" data-status="arrived"><div class="mob-pipe-count" id="mobP3">0</div><div class="mob-pipe-label">Arrived</div></div>
+    <div class="mob-pipe" data-status="tested"><div class="mob-pipe-count" id="mobP4">0</div><div class="mob-pipe-label">Tested</div></div>
+    <div class="mob-pipe" data-status="configured"><div class="mob-pipe-count" id="mobP5">0</div><div class="mob-pipe-label">Config</div></div>
+    <div class="mob-pipe" data-status="installed"><div class="mob-pipe-count" id="mobP6">0</div><div class="mob-pipe-label">Done</div></div>
+  </div>
+  <div class="mob-tabs">
+    <button class="mob-tab active" data-mob-tab="parts">☰ Parts</button>
+    <button class="mob-tab" data-mob-tab="actions">✓ Actions</button>
+  </div>
+  <div class="mob-content">
+    <div class="mob-list" id="mobPartsList"></div>
+    <div class="mob-actions-list" id="mobActionsList" style="display:none"></div>
+  </div>
+</div>
+
+<!-- Mobile Part Modal -->
+<div class="mob-modal" id="mobPartModal">
+  <div class="mob-modal-header">
+    <button class="mob-modal-back" id="mobPartBack">←</button>
+    <div class="mob-modal-title" id="mobPartTitle">Part Details</div>
+  </div>
+  <div class="mob-modal-body">
+    <div class="mob-field">
+      <div class="mob-field-label">Name</div>
+      <input type="text" class="mob-field-input" id="mobPartName">
+    </div>
+    <div class="mob-field">
+      <div class="mob-field-label">Status</div>
+      <select class="mob-field-select" id="mobPartStatus">
+        <option value="pending">Pending</option>
+        <option value="to-order">To Order</option>
+        <option value="ordered">Ordered</option>
+        <option value="arrived">Arrived</option>
+        <option value="tested">Tested</option>
+        <option value="configured">Configured</option>
+        <option value="installed">Installed</option>
+      </select>
+    </div>
+    <div class="mob-field">
+      <div class="mob-field-label">Assignee</div>
+      <select class="mob-field-select" id="mobPartAssignee"></select>
+    </div>
+    <div class="mob-field">
+      <div class="mob-field-label">PO Number</div>
+      <input type="text" class="mob-field-input" id="mobPartPO">
+    </div>
+  </div>
+  <div class="mob-modal-footer">
+    <button class="mob-btn" id="mobPartCancel">Cancel</button>
+    <button class="mob-btn mob-btn-primary" id="mobPartSave">Save</button>
+  </div>
+</div>
+
+<!-- Mobile Menu Modal -->
+<div class="mob-modal" id="mobMenuModal">
+  <div class="mob-modal-header">
+    <button class="mob-modal-back" id="mobMenuBack">←</button>
+    <div class="mob-modal-title">Menu</div>
+  </div>
+  <div class="mob-modal-body">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button class="mob-btn" id="mobSampleBtn" style="justify-content:flex-start;padding:0 16px">📦 Load Sample Data</button>
+      <button class="mob-btn" id="mobSignOutBtn" style="justify-content:flex-start;padding:0 16px">🚪 Sign Out</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-popover ai-popover ai-modal" id="aiModal"><div class="modal-head"><span class="modal-title"><span class="ai-title-icon">✦</span> AI Console</span><div class="ai-model-selector"><button class="ai-model-badge" id="aiModelBadge" onclick="window.toggleModelSelector(event)">sonnet-4.5 <span style="opacity:0.5;margin-left:2px">▾</span></button><div class="ai-model-dropdown" id="aiModelDropdown"><button class="ai-model-option" data-model="claude-haiku-4-5-20251001" onclick="window.selectAIModel(this)"><span class="model-name">Haiku 4.5</span><span class="model-desc">Fast & efficient</span></button><button class="ai-model-option active" data-model="claude-sonnet-4-5-20250929" onclick="window.selectAIModel(this)"><span class="model-name">Sonnet 4.5</span><span class="model-desc">Balanced</span></button><button class="ai-model-option" data-model="claude-opus-4-5-20251101" onclick="window.selectAIModel(this)"><span class="model-name">Opus 4.5</span><span class="model-desc">Most capable</span></button></div></div><button class="modal-close" id="aiClose">×</button></div><div class="modal-body"><div class="ai-content" id="aiContent"><div class="ai-welcome"><p>Ask any question about your project, or click <strong>Tell me</strong> for a status briefing.</p></div></div><div class="ai-input-row"><input type="text" id="aiQuestion" placeholder="Ask a question..."><button class="btn" id="aiAskBtn">Ask</button><button class="btn btn-tell" id="aiStraightBtn">Tell me</button></div></div></div>
 <div class="modal-popover report-popover" id="reportModal"><div class="modal-head"><span class="modal-title">Project Status Report</span><span class="report-model-badge" id="reportModelBadge"></span><button class="report-refresh-btn" id="reportRefresh" title="Regenerate report">↻</button><button class="modal-close" id="reportClose">×</button></div><div class="modal-body"><div class="report-content" id="reportContent"></div></div><div class="modal-foot"><button class="btn" id="reportCopy">Copy</button><button class="btn btn-primary" id="reportEmail">Email</button></div></div>
 <div class="popover eta-popover" id="etaPopover">
@@ -3341,16 +3520,6 @@ function render(){
     $('p4').textContent=parts.filter(p=>p.status==='tested').length;
     $('p5').textContent=parts.filter(p=>p.status==='configured').length;
     $('p6').textContent=parts.filter(p=>p.status==='installed').length;
-    // Mobile pipeline counts
-    if($('mp0')){
-      $('mp0').textContent=$('p0').textContent;
-      $('mp1').textContent=$('p1').textContent;
-      $('mp2').textContent=$('p2').textContent;
-      $('mp3').textContent=$('p3').textContent;
-      $('mp4').textContent=$('p4').textContent;
-      $('mp5').textContent=$('p5').textContent;
-      $('mp6').textContent=$('p6').textContent;
-    }
 
     document.querySelectorAll('.pipe').forEach(p=>p.classList.toggle('active',p.dataset.s===filterStage));
     $('pmParent').innerHTML='<option value="">—</option>'+asms.map(a=>'<option value="'+a.id+'">'+esc(a.name)+'</option>').join('');
@@ -7655,14 +7824,11 @@ document.querySelectorAll('.pipe').forEach(p=>p.onclick=()=>{filterStage=filterS
 
 document.querySelectorAll('.tab').forEach(tab=>tab.onclick=()=>{
   closeAIWorkspace();
-  const tabId=tab.dataset.tab;
-  // Sync both desktop and mobile tabs
-  document.querySelectorAll('.tab').forEach(t=>{
-    t.classList.toggle('active',t.dataset.tab===tabId);
-  });
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  $(tabId+'Panel').classList.add('active');
-  if(tabId==='gantt')setTimeout(renderGantt,10);
+  $(tab.dataset.tab+'Panel').classList.add('active');
+  if(tab.dataset.tab==='gantt')setTimeout(renderGantt,10);
 });
 
 document.onkeydown=e=>{if(e.key==='Escape'){closeAIWorkspace();['teamModal','datesModal','leadtimeModal','bomModal','otdModal','itemConfigModal'].forEach(closeModal);$('themeModal').classList.remove('open');$('receivePOModal').classList.remove('open');$('reportModal').classList.remove('open');$('metricsPopover').classList.remove('open');$('poModal').classList.remove('open');$('menuDrop').classList.remove('open');$('ganttColorPopup').classList.remove('open');$('ganttDatePopup').classList.remove('open');$('etaPopover').classList.remove('open');hidePopoverModal($('partModal'));hidePopoverModal($('asmModal'));hidePopoverModal($('actionModal'));hidePopoverModal($('aiModal'));closeDeletePopover();$('commentsPopover').classList.remove('open');$('popoverBackdrop').classList.remove('active');currentCommentPartId=null;editId=editAsmId=editActId=editEtaPartId=pendingAdvPartId=null}};
@@ -8219,6 +8385,218 @@ loadItemCodeConfig();
     $('loginScreen').style.display = 'none';
     initFirebaseListeners();
   }
+})();
+
+// ===== MOBILE APP (completely separate from desktop) =====
+(function(){
+  const SLABELS={pending:'Pending','to-order':'To Order',ordered:'Ordered',arrived:'Arrived',tested:'Tested',configured:'Configured',installed:'Installed'};
+  let mobFilterStatus='';
+  let mobCurrentTab='parts';
+  let mobEditPartId=null;
+  let mobExpanded={};
+  
+  // Render mobile parts list
+  function renderMobParts(){
+    const parts=data.filter(d=>!d.isAsm);
+    const asms=data.filter(d=>d.isAsm);
+    
+    // Update pipeline counts
+    const counts={pending:0,'to-order':0,ordered:0,arrived:0,tested:0,configured:0,installed:0};
+    parts.forEach(p=>counts[p.status]=(counts[p.status]||0)+1);
+    if($('mobP0'))$('mobP0').textContent=counts.pending;
+    if($('mobP1'))$('mobP1').textContent=counts['to-order'];
+    if($('mobP2'))$('mobP2').textContent=counts.ordered;
+    if($('mobP3'))$('mobP3').textContent=counts.arrived;
+    if($('mobP4'))$('mobP4').textContent=counts.tested;
+    if($('mobP5'))$('mobP5').textContent=counts.configured;
+    if($('mobP6'))$('mobP6').textContent=counts.installed;
+    
+    // Update active state on pipes
+    document.querySelectorAll('.mob-pipe').forEach(p=>{
+      p.classList.toggle('active',p.dataset.status===mobFilterStatus);
+    });
+    
+    // Filter parts
+    let filteredParts=parts;
+    if(mobFilterStatus)filteredParts=parts.filter(p=>p.status===mobFilterStatus);
+    
+    // Group by assembly
+    let html='';
+    asms.forEach(asm=>{
+      const asmParts=filteredParts.filter(p=>String(p.parentId)===String(asm.id));
+      if(asmParts.length===0&&mobFilterStatus)return;
+      
+      const allAsmParts=parts.filter(p=>String(p.parentId)===String(asm.id));
+      const installed=allAsmParts.filter(p=>p.status==='installed').length;
+      const pct=allAsmParts.length?Math.round(installed/allAsmParts.length*100):0;
+      const isExpanded=mobExpanded[asm.id];
+      
+      html+='<div class="mob-asm'+(isExpanded?' expanded':'')+'" data-asm-id="'+asm.id+'">';
+      html+='<div class="mob-asm-header">';
+      html+='<span class="mob-asm-toggle">▶</span>';
+      html+='<div class="mob-asm-info"><div class="mob-asm-name">'+esc(asm.name)+'</div><div class="mob-asm-meta">'+asmParts.length+' parts</div></div>';
+      html+='<div class="mob-asm-progress"><div class="mob-asm-progress-bar" style="width:'+pct+'%"></div></div>';
+      html+='<div class="mob-asm-pct">'+pct+'%</div>';
+      html+='</div>';
+      html+='<div class="mob-parts">';
+      asmParts.forEach(p=>{
+        html+='<div class="mob-part" data-part-id="'+p.id+'">';
+        html+='<div class="mob-part-info"><div class="mob-part-name">'+esc(p.name)+'</div>';
+        html+='<div class="mob-part-meta">';
+        if(p.assignee)html+='<span>@'+esc(p.assignee)+'</span>';
+        if(p.poNumber)html+='<span>PO: '+esc(p.poNumber)+'</span>';
+        html+='</div></div>';
+        html+='<span class="mob-status '+p.status+'">'+SLABELS[p.status]+'</span>';
+        html+='<span class="mob-part-arrow">›</span>';
+        html+='</div>';
+      });
+      html+='</div></div>';
+    });
+    
+    if(!html)html='<div class="mob-empty">No parts found</div>';
+    $('mobPartsList').innerHTML=html;
+    
+    // Attach events
+    document.querySelectorAll('.mob-asm-header').forEach(h=>{
+      h.onclick=()=>{
+        const asm=h.closest('.mob-asm');
+        const asmId=asm.dataset.asmId;
+        mobExpanded[asmId]=!mobExpanded[asmId];
+        asm.classList.toggle('expanded');
+      };
+    });
+    
+    document.querySelectorAll('.mob-part').forEach(p=>{
+      p.onclick=(e)=>{
+        e.stopPropagation();
+        openMobPartModal(p.dataset.partId);
+      };
+    });
+  }
+  
+  // Render mobile actions list
+  function renderMobActions(){
+    const actions=getActions();
+    let html='';
+    actions.forEach(a=>{
+      html+='<div class="mob-action" data-action-id="'+a.id+'">';
+      html+='<div class="mob-action-task">'+esc(a.task)+'</div>';
+      html+='<div class="mob-action-meta">';
+      if(a.assignee)html+='<span>@'+esc(a.assignee)+'</span>';
+      if(a.due)html+='<span>Due: '+a.due+'</span>';
+      html+='<span class="mob-action-status '+a.status+'">'+a.status+'</span>';
+      html+='</div></div>';
+    });
+    if(!html)html='<div class="mob-empty">No actions yet</div>';
+    $('mobActionsList').innerHTML=html;
+  }
+  
+  // Open part modal
+  function openMobPartModal(partId){
+    const part=data.find(d=>String(d.id)===String(partId));
+    if(!part)return;
+    mobEditPartId=partId;
+    $('mobPartTitle').textContent=part.name;
+    $('mobPartName').value=part.name||'';
+    $('mobPartStatus').value=part.status||'pending';
+    $('mobPartPO').value=part.poNumber||'';
+    
+    // Populate assignee dropdown
+    let assigneeHtml='<option value="">— Unassigned —</option>';
+    team.forEach(t=>{
+      assigneeHtml+='<option value="'+esc(t.name)+'"'+(part.assignee===t.name?' selected':'')+'>'+esc(t.name)+'</option>';
+    });
+    $('mobPartAssignee').innerHTML=assigneeHtml;
+    
+    $('mobPartModal').classList.add('open');
+  }
+  
+  // Save part from modal
+  function saveMobPart(){
+    if(!mobEditPartId)return;
+    const part=data.find(d=>String(d.id)===String(mobEditPartId));
+    if(!part)return;
+    
+    const newStatus=$('mobPartStatus').value;
+    const oldStatus=part.status;
+    
+    part.name=$('mobPartName').value;
+    part.status=newStatus;
+    part.assignee=$('mobPartAssignee').value;
+    part.poNumber=$('mobPartPO').value;
+    
+    if(newStatus!==oldStatus){
+      part.changedAt=Date.now();
+      history.push({ts:Date.now(),action:'Status → '+SLABELS[newStatus],item:part.name,partId:part.id});
+    }
+    
+    saveItem(part);
+    $('mobPartModal').classList.remove('open');
+    mobEditPartId=null;
+    renderMobParts();
+    render(); // Sync desktop
+  }
+  
+  // Mobile render function
+  function renderMobile(){
+    if(!$('mobileApp'))return;
+    $('mobLogo').textContent=currentProjectName||'EF Final Assembly';
+    renderMobParts();
+    renderMobActions();
+  }
+  
+  // Hook into main render
+  const origRender=window.render||render;
+  if(typeof render==='function'){
+    const _origRender=render;
+    window.render=function(){
+      _origRender.apply(this,arguments);
+      renderMobile();
+    };
+  }
+  
+  // Initialize mobile events
+  document.addEventListener('DOMContentLoaded',()=>{
+    // Pipeline filter
+    document.querySelectorAll('.mob-pipe').forEach(p=>{
+      p.onclick=()=>{
+        const status=p.dataset.status;
+        mobFilterStatus=mobFilterStatus===status?'':status;
+        renderMobParts();
+      };
+    });
+    
+    // Tabs
+    document.querySelectorAll('.mob-tab').forEach(t=>{
+      t.onclick=()=>{
+        document.querySelectorAll('.mob-tab').forEach(x=>x.classList.remove('active'));
+        t.classList.add('active');
+        mobCurrentTab=t.dataset.mobTab;
+        $('mobPartsList').style.display=mobCurrentTab==='parts'?'block':'none';
+        $('mobActionsList').style.display=mobCurrentTab==='actions'?'block':'none';
+      };
+    });
+    
+    // Part modal
+    $('mobPartBack').onclick=()=>$('mobPartModal').classList.remove('open');
+    $('mobPartCancel').onclick=()=>$('mobPartModal').classList.remove('open');
+    $('mobPartSave').onclick=saveMobPart;
+    
+    // Menu
+    $('mobMenuBtn').onclick=()=>$('mobMenuModal').classList.add('open');
+    $('mobMenuBack').onclick=()=>$('mobMenuModal').classList.remove('open');
+    $('mobSampleBtn').onclick=()=>{
+      $('mobMenuModal').classList.remove('open');
+      if(typeof loadSampleData==='function')loadSampleData();
+    };
+    $('mobSignOutBtn').onclick=()=>{
+      $('mobMenuModal').classList.remove('open');
+      if(typeof signOut==='function')signOut();
+    };
+    
+    // Initial render
+    setTimeout(renderMobile,100);
+  });
 })();
 
 })();
