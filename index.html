@@ -11,6 +11,8 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
 <!-- DOMPurify for HTML sanitization -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" integrity="sha512-H+rglffZ6f5gF7UJgvH4Naa+fGCgjrHKMgoFOGmcPTRwR6oILo5R+gtzNrpDp7iMV3udbymBVjkeZGNz1Em4rQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- SheetJS for Excel import -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{--bg:#2f2f2d;--bg2:#252523;--bg3:#1f1e1d;--bg4:#131312;--border:rgba(221,220,208,0.08);--border-strong:rgba(221,220,208,0.12);--text:#faf9f5;--text2:#c1bfb5;--text3:#9b9991;--text-muted:#9b9991;--accent:#5a9ac8;--accent-hover:#6aa8d4;--accent-main:#d87756;--selection:rgba(90,154,200,0.12);--green:#6aaa6a;--yellow:#b8a050;--orange:#d87756;--red:#c07070;--cyan:#6aa0aa;--purple:#9888aa;--s0:#8a8a82;--s1:#c07070;--s2:#d87756;--s3:#b8a050;--s4:#9888aa;--s5:#6aa0aa;--s6:#6aaa6a;--checkbox:#5a9ac8;--btn-primary-bg:#faf9f5;--btn-primary-text:#2f2f2d;--shadow:0 4px 12px rgba(0,0,0,0.15)}
 [data-theme="claude-light"]{--bg:#ffffff;--bg2:#faf9f5;--bg3:#f4f4ec;--bg4:#e7e5db;--border:rgba(31,30,29,0.06);--border-strong:rgba(31,30,29,0.10);--text:#131312;--text2:#3c3c39;--text3:#72716b;--text-muted:#72716b;--accent:#1a66b2;--green:#1a7a1a;--yellow:#8a6a20;--orange:#c6603f;--red:#b04545;--cyan:#1a7a90;--purple:#6a4a9a;--s0:#6a6a62;--s1:#b04545;--s2:#c6603f;--s3:#8a6a20;--s4:#6a4a9a;--s5:#1a7a90;--s6:#1a7a1a;--accent-main:#c6603f;--checkbox:#1a66b2;--btn-primary-bg:#131312;--btn-primary-text:#faf9f5;--shadow:0 4px 12px rgba(0,0,0,0.06)}
@@ -424,6 +426,45 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 .gantt-color-swatch{width:24px;height:24px;border-radius:6px;cursor:pointer;border:2px solid transparent;transition:all 0.15s}
 .gantt-color-swatch:hover{transform:scale(1.15);border-color:var(--text)}
 .gantt-color-swatch.selected{border-color:var(--text);box-shadow:0 0 0 2px var(--bg2),0 0 0 4px var(--text)}
+/* Inventory styles */
+.inv-toolbar{display:flex;gap:10px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+.inv-toolbar .search{flex:1;min-width:180px;max-width:300px;height:36px;padding:0 12px;font-size:13px;color:var(--text);background:var(--bg2);border:1px solid var(--border);border-radius:8px}
+.inv-toolbar .search:focus{outline:none;border-color:var(--accent)}
+.inv-stats{display:flex;gap:16px;font-size:12px;color:var(--text2);margin-left:auto}
+.inv-stat{display:flex;align-items:center;gap:6px}
+.inv-stat-val{font-weight:600;color:var(--text)}
+.inv-table{background:var(--bg2);border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.inv-header{display:grid;grid-template-columns:minmax(100px,1fr) minmax(150px,2fr) minmax(100px,1fr) minmax(100px,1fr) 80px minmax(100px,1fr) 50px;gap:0;background:var(--bg3);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px}
+.inv-header>div{padding:12px 14px}
+.inv-body{max-height:calc(100vh - 240px);overflow-y:auto}
+.inv-row{display:grid;grid-template-columns:minmax(100px,1fr) minmax(150px,2fr) minmax(100px,1fr) minmax(100px,1fr) 80px minmax(100px,1fr) 50px;gap:0;border-bottom:1px solid var(--border);font-size:13px;align-items:center;transition:background .15s}
+.inv-row:last-child{border-bottom:none}
+.inv-row:hover{background:var(--bg3)}
+.inv-row>div{padding:12px 14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inv-row .inv-code{font-family:ui-monospace,monospace;font-size:12px;color:var(--accent);font-weight:500}
+.inv-row .inv-desc{color:var(--text)}
+.inv-row .inv-mfr{color:var(--text2)}
+.inv-row .inv-supplier{color:var(--text2)}
+.inv-row .inv-qty{font-weight:600;text-align:center;color:var(--text)}
+.inv-row .inv-qty.low{color:var(--red)}
+.inv-row .inv-loc{font-family:ui-monospace,monospace;font-size:12px;color:var(--cyan);background:var(--bg4);padding:4px 8px!important;border-radius:4px;display:inline-block}
+.inv-row .inv-actions{display:flex;gap:4px;justify-content:flex-end}
+.inv-empty{padding:60px 20px;text-align:center;color:var(--text3);font-size:14px}
+.inv-empty-icon{font-size:48px;margin-bottom:12px;opacity:0.5}
+.inv-empty-text{margin-bottom:16px}
+.inv-import-area{border:2px dashed var(--border);border-radius:12px;padding:40px 20px;text-align:center;margin-bottom:16px;cursor:pointer;transition:all .2s}
+.inv-import-area:hover{border-color:var(--accent);background:rgba(90,154,200,0.05)}
+.inv-import-area.dragover{border-color:var(--accent);background:rgba(90,154,200,0.1)}
+.inv-import-icon{font-size:36px;margin-bottom:8px;opacity:0.6}
+.inv-import-text{font-size:14px;color:var(--text2);margin-bottom:4px}
+.inv-import-hint{font-size:12px;color:var(--text3)}
+.inv-modal{max-width:480px}
+.inv-modal .field{margin-bottom:14px}
+.inv-preview-table{background:var(--bg3);border-radius:8px;overflow:hidden;margin-top:12px;max-height:200px;overflow-y:auto;font-size:12px}
+.inv-preview-table table{width:100%;border-collapse:collapse}
+.inv-preview-table th{background:var(--bg4);padding:8px 10px;text-align:left;font-weight:600;color:var(--text2);font-size:10px;text-transform:uppercase;position:sticky;top:0}
+.inv-preview-table td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text)}
+.inv-preview-count{font-size:12px;color:var(--text2);margin-top:8px}
 .ai-modal{max-width:720px;width:95vw}
 .ai-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:var(--text2)}
 .ai-loading-spinner{width:32px;height:32px;border:3px solid var(--bg4);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:12px}
@@ -1245,6 +1286,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 <button class="tab active" data-tab="list"><span class="tab-icon">☰</span>Parts List</button>
 <button class="tab" data-tab="actions"><span class="tab-icon">✓</span>Action Plan</button>
 <button class="tab" data-tab="gantt"><span class="tab-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18M7 7h6M9 11h9M7 15h5"/></svg></span>Timeline</button>
+<button class="tab" data-tab="inventory"><span class="tab-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>Inventory</button>
 </div>
 </div>
 <div class="sidebar-section">
@@ -1260,7 +1302,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 </div>
 <div style="flex:1"></div>
-<div class="version-badge" id="versionBadge">v1.6.2
+<div class="version-badge" id="versionBadge">v1.7.1
 <div class="version-info">
 <div class="version-info-row"><span class="version-info-label">Version</span><span class="version-info-value">1.0.2</span></div>
 <div class="version-info-row"><span class="version-info-label">Server</span><span class="version-info-value" id="serverStatus">Firebase</span></div>
@@ -1356,6 +1398,35 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 <button class="btn btn-sm" id="ganttDatePopupClear">Clear</button>
 <button class="btn btn-sm btn-primary" id="ganttDatePopupSave">Save</button>
 </div>
+</div>
+</div>
+<div class="panel" id="inventoryPanel">
+<div class="inv-toolbar">
+<input type="text" class="search" id="invSearch" placeholder="Search inventory...">
+<div class="inv-stats">
+<div class="inv-stat"><span>Items:</span><span class="inv-stat-val" id="invTotalItems">0</span></div>
+<div class="inv-stat"><span>Total Qty:</span><span class="inv-stat-val" id="invTotalQty">0</span></div>
+<div class="inv-stat"><span>Locations:</span><span class="inv-stat-val" id="invLocations">0</span></div>
+</div>
+<button class="btn" id="invImportBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Import</button>
+<button class="btn btn-primary" id="invAddBtn">+ Add Item</button>
+</div>
+<div class="inv-table">
+<div class="inv-header">
+<div>Item Code</div>
+<div>Description</div>
+<div>Manufacturer</div>
+<div>Supplier</div>
+<div>Qty</div>
+<div>Location</div>
+<div></div>
+</div>
+<div class="inv-body" id="invList"></div>
+</div>
+<div class="inv-empty" id="invEmpty" style="display:none">
+<div class="inv-empty-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.4"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+<div class="inv-empty-text">No inventory items yet</div>
+<button class="btn btn-primary" id="invEmptyImport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Import from Excel</button>
 </div>
 </div>
 </div>
@@ -1473,6 +1544,40 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 <div class="modal-bg" id="leadtimeModal"><div class="modal leadtime-modal"><div class="modal-head"><span class="modal-title">📊 Lead Time Database</span><button class="modal-close" id="ltClose">×</button></div><div class="modal-body" id="ltBody"></div><div class="modal-foot"><button class="btn" id="ltClear">Clear Data</button><button class="btn btn-primary" id="ltDone">Done</button></div></div></div>
 <div class="modal-bg" id="itemConfigModal"><div class="modal itemconfig-modal"><div class="modal-head"><span class="modal-title">⚙️ Item Code Configuration</span><button class="modal-close" id="icClose">×</button></div><div class="modal-body"><p style="font-size:12px;color:var(--text2);margin-bottom:12px">Configure testing and configuration requirements per item code. These settings persist across projects.</p><div class="itemconfig-add"><input type="text" id="icNewCode" placeholder="Enter item code..."><button id="icAddBtn">Add Code</button></div><div class="itemconfig-list" id="icList"></div></div><div class="modal-foot"><button class="btn btn-primary" id="icDone">Done</button></div></div></div>
 <div class="modal-bg" id="otdModal"><div class="modal otd-modal"><div class="modal-head"><span class="modal-title">🚚 Supplier On-Time Delivery</span><button class="modal-close" id="otdClose">×</button></div><div class="modal-body" id="otdBody"></div><div class="modal-foot"><button class="btn btn-primary" id="otdDone">Done</button></div></div></div>
+<!-- Inventory Item Modal -->
+<div class="modal-bg" id="invItemModal"><div class="modal inv-modal"><div class="modal-head"><span class="modal-title" id="invItemTitle">Add Inventory Item</span><button class="modal-close" id="invItemClose">×</button></div><div class="modal-body">
+<div class="field"><label class="field-label">Item Code *</label><input type="text" class="field-input" id="invItemCode" placeholder="e.g. RF-TX-450"></div>
+<div class="field"><label class="field-label">Description *</label><input type="text" class="field-input" id="invItemDesc" placeholder="e.g. RF Transmitter Module"></div>
+<div class="field-row"><div class="field"><label class="field-label">Manufacturer</label><input type="text" class="field-input" id="invItemMfr" placeholder="e.g. Cobham"></div>
+<div class="field"><label class="field-label">Supplier</label><input type="text" class="field-input" id="invItemSupplier" placeholder="e.g. UK Sister Co"></div></div>
+<div class="field-row"><div class="field"><label class="field-label">Quantity *</label><input type="number" class="field-input" id="invItemQty" min="0" value="1"></div>
+<div class="field"><label class="field-label">Location *</label><input type="text" class="field-input" id="invItemLoc" placeholder="e.g. A-01-03"></div></div>
+</div><div class="modal-foot"><button class="btn" id="invItemCancel">Cancel</button><button class="btn btn-primary" id="invItemSave">Save</button></div></div></div>
+<!-- Inventory Import Modal -->
+<div class="modal-bg" id="invImportModal"><div class="modal" style="max-width:600px"><div class="modal-head"><span class="modal-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Import Inventory from Excel</span><button class="modal-close" id="invImportClose">×</button></div><div class="modal-body">
+<div class="inv-import-area" id="invImportArea">
+<div class="inv-import-icon"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg></div>
+<div class="inv-import-text">Drop Excel file here or click to browse</div>
+<div class="inv-import-hint">Supports .xlsx, .xls, .csv files</div>
+<input type="file" id="invImportFile" accept=".xlsx,.xls,.csv" style="display:none">
+</div>
+<div id="invImportPreview" style="display:none">
+<div style="font-weight:600;margin-bottom:8px">Preview:</div>
+<div class="inv-preview-table" id="invPreviewTable"></div>
+<div class="inv-preview-count" id="invPreviewCount"></div>
+<div style="margin-top:12px">
+<label class="field-label">Column Mapping</label>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+<div><label style="font-size:11px;color:var(--text3)">Item Code</label><select class="field-select" id="invMapCode" style="height:36px;font-size:12px"></select></div>
+<div><label style="font-size:11px;color:var(--text3)">Description</label><select class="field-select" id="invMapDesc" style="height:36px;font-size:12px"></select></div>
+<div><label style="font-size:11px;color:var(--text3)">Manufacturer</label><select class="field-select" id="invMapMfr" style="height:36px;font-size:12px"></select></div>
+<div><label style="font-size:11px;color:var(--text3)">Supplier</label><select class="field-select" id="invMapSupplier" style="height:36px;font-size:12px"></select></div>
+<div><label style="font-size:11px;color:var(--text3)">Quantity</label><select class="field-select" id="invMapQty" style="height:36px;font-size:12px"></select></div>
+<div><label style="font-size:11px;color:var(--text3)">Location</label><select class="field-select" id="invMapLoc" style="height:36px;font-size:12px"></select></div>
+</div>
+</div>
+</div>
+</div><div class="modal-foot"><button class="btn" id="invImportCancel">Cancel</button><button class="btn btn-primary" id="invImportConfirm" disabled>Import</button></div></div></div>
 <div class="popover-backdrop" id="popoverBackdrop"></div>
 
 <!-- Metrics Popover -->
@@ -1639,6 +1744,8 @@ function setProjectCode(code) {
   projectRef = db.ref('projects/' + code);
   console.log('📁 Project path: projects/' + code);
 }
+window.setProjectCode = setProjectCode;
+window.getCurrentProjectCode = () => currentProjectCode;
 
 // Initialize with default (will be overwritten by login)
 setProjectCode(DEFAULT_PROJECT_CODE);
@@ -1715,8 +1822,11 @@ let selectedParts=new Set(),lastSelectedPartId=null;
 let isAuthenticated=false,isConnected=false,isSyncing=false;
 
 const $=id=>document.getElementById(id);
+window.$=$;
 const esc=s=>s?String(s).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):'';
+window.esc=esc;
 const toast=(msg,e)=>{const t=document.createElement('div');t.className='toast '+(e?'err':'success');t.textContent=msg;$('toastBox').appendChild(t);setTimeout(()=>t.remove(),2500)};
+window.toast=toast;
 
 // ============================================
 // Sync Indicator
@@ -2846,6 +2956,50 @@ function createSampleData(){
     'MAG-X9G':{samples:[{days:35,date:'2025-10-20'}],avg:35},                                   // Specialized RF  
     'IPC-I7':{samples:[{days:5,date:'2025-12-18'},{days:4,date:'2025-12-01'}],avg:5}           // Stock
   };
+  
+  // Sample inventory data - warehouse stock for radar components
+  window.sampleInventory=[
+    {code:'RF-TX-450',description:'RF Transmitter Module 450MHz',manufacturer:'UK Sister Co',supplier:'UK Sister Co',qty:2,location:'A-01-01'},
+    {code:'PA-500W',description:'Power Amplifier 500W X-Band',manufacturer:'Ampleon',supplier:'Mouser',qty:3,location:'A-01-02'},
+    {code:'FS-X01',description:'Frequency Synthesizer 9GHz',manufacturer:'Analog Devices',supplier:'DigiKey',qty:5,location:'A-01-03'},
+    {code:'ISO-9GHZ',description:'RF Isolator 9GHz 20dB',manufacturer:'DiTom',supplier:'RF Parts',qty:8,location:'A-02-01'},
+    {code:'DC-20DB',description:'Directional Coupler 20dB',manufacturer:'Krytar',supplier:'RF Parts',qty:6,location:'A-02-02'},
+    {code:'WG-CUST',description:'Waveguide Assembly Custom',manufacturer:'Precision Metals Oy',supplier:'Precision Metals Oy',qty:0,location:'A-02-03'},
+    {code:'RFC-SET',description:'RF Cable Set (10pc)',manufacturer:'Times Microwave',supplier:'Mouser',qty:4,location:'A-03-01'},
+    {code:'EMI-TX',description:'EMI Shielding Kit TX',manufacturer:'Laird',supplier:'DigiKey',qty:12,location:'A-03-02'},
+    {code:'ANT-X9G',description:'X-Band Antenna 9GHz',manufacturer:'UK Sister Co',supplier:'UK Sister Co',qty:1,location:'B-01-01'},
+    {code:'RDM-450',description:'Radome 450mm Fiberglass',manufacturer:'Saint-Gobain',supplier:'Saint-Gobain',qty:2,location:'B-01-02'},
+    {code:'MNT-HVY',description:'Heavy Duty Antenna Mount',manufacturer:'Konecranes',supplier:'Konecranes',qty:1,location:'B-02-01'},
+    {code:'RJ-18CH',description:'Rotary Joint 18-Channel',manufacturer:'Cobham',supplier:'Cobham',qty:0,location:'B-02-02'},
+    {code:'SR-18',description:'Slip Ring Assembly 18CH',manufacturer:'Moog',supplier:'Moog',qty:2,location:'B-02-03'},
+    {code:'BRG-SL',description:'Slewing Bearing Assembly',manufacturer:'SKF',supplier:'SKF Finland',qty:3,location:'B-03-01'},
+    {code:'WS-KIT',description:'Weather Seal Kit',manufacturer:'Parker',supplier:'Ahlsell',qty:10,location:'B-03-02'},
+    {code:'ENC-ABS',description:'Absolute Encoder',manufacturer:'Heidenhain',supplier:'Heidenhain',qty:4,location:'B-03-03'},
+    {code:'SPB-450',description:'Signal Processor Board',manufacturer:'In-House',supplier:'In-House',qty:2,location:'C-01-01'},
+    {code:'FPGA-K7',description:'FPGA Module Kintex-7',manufacturer:'Xilinx',supplier:'Avnet',qty:3,location:'C-01-02'},
+    {code:'ADC-14B',description:'ADC Board 14-bit',manufacturer:'Analog Devices',supplier:'DigiKey',qty:5,location:'C-01-03'},
+    {code:'DSP-C66',description:'DSP Module C6678',manufacturer:'Texas Instruments',supplier:'Arrow',qty:4,location:'C-02-01'},
+    {code:'MEM-32G',description:'Memory Module 32GB DDR4',manufacturer:'Kingston',supplier:'Dustin',qty:8,location:'C-02-02'},
+    {code:'BP-6SL',description:'6-Slot Backplane',manufacturer:'Elma',supplier:'Elma',qty:2,location:'C-02-03'},
+    {code:'FAN-SP',description:'Cooling Fan Assembly SP',manufacturer:'Sanyo Denki',supplier:'RS Components',qty:6,location:'C-03-01'},
+    {code:'DBG-USB',description:'Debug Interface USB',manufacturer:'FTDI',supplier:'Mouser',qty:10,location:'C-03-02'},
+    {code:'PSU-48V',description:'Power Supply 48V 1000W',manufacturer:'TDK-Lambda',supplier:'RS Components',qty:3,location:'D-01-01'},
+    {code:'DCDC-SET',description:'DC-DC Converter Set',manufacturer:'Vicor',supplier:'Vicor',qty:5,location:'D-01-02'},
+    {code:'UPS-1KVA',description:'UPS Module 1KVA',manufacturer:'APC',supplier:'Dustin',qty:2,location:'D-01-03'},
+    {code:'BAT-48V',description:'Battery Pack 48V 20Ah',manufacturer:'Panasonic',supplier:'Elfadistrelec',qty:4,location:'D-02-01'},
+    {code:'PDB-01',description:'Power Distribution Board',manufacturer:'In-House',supplier:'In-House',qty:3,location:'D-02-02'},
+    {code:'SPD-48',description:'Surge Protection 48V',manufacturer:'Phoenix Contact',supplier:'Ahlsell',qty:8,location:'D-02-03'},
+    {code:'VFD-3KW',description:'Variable Frequency Drive 3KW',manufacturer:'Yaskawa',supplier:'Yaskawa Finland',qty:1,location:'E-01-01'},
+    {code:'SGM-3KW',description:'Servo Motor 3KW',manufacturer:'Yaskawa',supplier:'Yaskawa Finland',qty:2,location:'E-01-02'},
+    {code:'GB-50:1',description:'Gearbox 50:1 Ratio',manufacturer:'Neugart',supplier:'Neugart',qty:1,location:'E-01-03'},
+    {code:'MAG-X9G',description:'Magnetron X-Band 9GHz',manufacturer:'CPI',supplier:'CPI',qty:0,location:'F-01-01'},
+    {code:'PNOZ-S4',description:'Safety Relay PNOZ',manufacturer:'Pilz',supplier:'Pilz',qty:5,location:'F-01-02'},
+    {code:'ESTOP-3',description:'E-Stop Assembly 3-pos',manufacturer:'ABB',supplier:'ABB',qty:6,location:'F-01-03'},
+    {code:'IPC-I7',description:'Industrial PC i7',manufacturer:'Advantech',supplier:'Advantech',qty:2,location:'G-01-01'},
+    {code:'DSP-19',description:'Display 19" Industrial',manufacturer:'Advantech',supplier:'Advantech',qty:3,location:'G-01-02'},
+    {code:'ETH-8P',description:'Ethernet Switch 8-Port',manufacturer:'Cisco',supplier:'Dustin',qty:5,location:'G-02-01'},
+    {code:'CAB-MAIN',description:'Main Radar Cabinet',manufacturer:'Konepaja Virtanen',supplier:'Konepaja Virtanen',qty:1,location:'H-01-01'}
+  ];
   
   updateProjectName();
   render();
@@ -7566,8 +7720,25 @@ $('sampleBtn').onclick=()=>{if(confirm('Load sample data? This will replace all 
     projectRef.set(null).then(() => {
       createAndSaveSampleData();
       saveAllToGranular().then(() => {
-        toast('Sample data loaded');
-        render();
+        // Also save sample inventory
+        if(window.sampleInventory && window.sampleInventory.length) {
+          const invUpdates = {};
+          window.sampleInventory.forEach(item => {
+            const id = db.ref().push().key;
+            invUpdates['projects/' + currentProjectCode + '/inventory/' + id] = {
+              ...item,
+              createdAt: Date.now(),
+              updatedAt: Date.now()
+            };
+          });
+          db.ref().update(invUpdates).then(() => {
+            toast('Sample data loaded with ' + window.sampleInventory.length + ' inventory items');
+            render();
+          });
+        } else {
+          toast('Sample data loaded');
+          render();
+        }
       });
     });
   } else {
@@ -8385,6 +8556,347 @@ loadItemCodeConfig();
     $('loginScreen').style.display = 'none';
     initFirebaseListeners();
   }
+})();
+
+// ===== INVENTORY MANAGEMENT =====
+(function(){
+  let inventory = [];
+  let invSearch = '';
+  let invEditId = null;
+  let invImportData = null;
+  let invImportHeaders = [];
+  
+  function getProjectCode() {
+    return window.getCurrentProjectCode ? window.getCurrentProjectCode() : null;
+  }
+  
+  // Firebase sync for inventory
+  function initInventoryListener() {
+    const projectCode = getProjectCode();
+    if (!projectCode) return;
+    const db = firebase.database();
+    db.ref('projects/' + projectCode + '/inventory').on('value', snap => {
+      const val = snap.val();
+      inventory = val ? Object.entries(val).map(([id, item]) => ({ id, ...item })).filter(i => !i._deletedAt) : [];
+      renderInventory();
+    });
+  }
+  
+  // Call this when project code is set
+  const origSetProjectCode = window.setProjectCode;
+  if (origSetProjectCode) {
+    window.setProjectCode = function(code) {
+      origSetProjectCode(code);
+      setTimeout(initInventoryListener, 100);
+    };
+  }
+  
+  // Render inventory list
+  function renderInventory() {
+    const filtered = inventory.filter(item => {
+      if (!invSearch) return true;
+      const s = invSearch.toLowerCase();
+      return (item.code || '').toLowerCase().includes(s) ||
+             (item.description || '').toLowerCase().includes(s) ||
+             (item.manufacturer || '').toLowerCase().includes(s) ||
+             (item.supplier || '').toLowerCase().includes(s) ||
+             (item.location || '').toLowerCase().includes(s);
+    });
+    
+    // Stats
+    $('invTotalItems').textContent = inventory.length;
+    $('invTotalQty').textContent = inventory.reduce((sum, i) => sum + (parseInt(i.qty) || 0), 0);
+    const locations = new Set(inventory.map(i => i.location).filter(Boolean));
+    $('invLocations').textContent = locations.size;
+    
+    // Show/hide empty state
+    const hasItems = filtered.length > 0;
+    $('invList').parentElement.style.display = hasItems ? 'block' : 'none';
+    $('invEmpty').style.display = hasItems ? 'none' : 'block';
+    
+    if (!hasItems) return;
+    
+    // Render rows
+    let html = '';
+    filtered.sort((a, b) => (a.code || '').localeCompare(b.code || '')).forEach(item => {
+      const qty = parseInt(item.qty) || 0;
+      const qtyClass = qty <= 0 ? ' low' : '';
+      html += '<div class="inv-row" data-inv-id="' + item.id + '">';
+      html += '<div class="inv-code">' + esc(item.code || '') + '</div>';
+      html += '<div class="inv-desc">' + esc(item.description || '') + '</div>';
+      html += '<div class="inv-mfr">' + esc(item.manufacturer || '') + '</div>';
+      html += '<div class="inv-supplier">' + esc(item.supplier || '') + '</div>';
+      html += '<div class="inv-qty' + qtyClass + '">' + qty + '</div>';
+      html += '<div><span class="inv-loc">' + esc(item.location || '—') + '</span></div>';
+      html += '<div class="inv-actions">';
+      html += '<button class="sm-btn" onclick="window.editInvItem(\'' + item.id + '\')" title="Edit">✎</button>';
+      html += '<button class="sm-btn" onclick="window.deleteInvItem(\'' + item.id + '\')" title="Delete">🗑</button>';
+      html += '</div></div>';
+    });
+    $('invList').innerHTML = html;
+  }
+  
+  // Save inventory item to Firebase
+  function saveInvItem(item) {
+    const projectCode = getProjectCode();
+    if (!projectCode) return;
+    const db = firebase.database();
+    const id = item.id || db.ref().push().key;
+    item.id = id;
+    item.updatedAt = Date.now();
+    db.ref('projects/' + projectCode + '/inventory/' + id).update(item);
+    toast('Inventory item saved');
+  }
+  
+  // Delete inventory item
+  window.deleteInvItem = function(id) {
+    if (!confirm('Delete this inventory item?')) return;
+    const projectCode = getProjectCode();
+    if (!projectCode) return;
+    const db = firebase.database();
+    db.ref('projects/' + projectCode + '/inventory/' + id).update({ _deletedAt: Date.now() });
+    toast('Item deleted');
+  };
+  
+  // Open add/edit modal
+  window.openInvItemModal = function(id) {
+    invEditId = id || null;
+    const item = id ? inventory.find(i => i.id === id) : null;
+    
+    $('invItemTitle').textContent = item ? 'Edit Inventory Item' : 'Add Inventory Item';
+    $('invItemCode').value = item?.code || '';
+    $('invItemDesc').value = item?.description || '';
+    $('invItemMfr').value = item?.manufacturer || '';
+    $('invItemSupplier').value = item?.supplier || '';
+    $('invItemQty').value = item?.qty || 1;
+    $('invItemLoc').value = item?.location || '';
+    
+    $('invItemModal').classList.add('open');
+    $('invItemCode').focus();
+  };
+  
+  window.editInvItem = function(id) {
+    window.openInvItemModal(id);
+  };
+  
+  // Save from modal
+  function saveInvItemFromModal() {
+    const code = $('invItemCode').value.trim();
+    const desc = $('invItemDesc').value.trim();
+    const qty = $('invItemQty').value;
+    const loc = $('invItemLoc').value.trim();
+    
+    if (!code || !desc || !loc) {
+      toast('Please fill in required fields');
+      return;
+    }
+    
+    const item = {
+      id: invEditId,
+      code,
+      description: desc,
+      manufacturer: $('invItemMfr').value.trim(),
+      supplier: $('invItemSupplier').value.trim(),
+      qty: parseInt(qty) || 0,
+      location: loc
+    };
+    
+    saveInvItem(item);
+    $('invItemModal').classList.remove('open');
+    invEditId = null;
+  }
+  
+  // Import functionality
+  function openImportModal() {
+    invImportData = null;
+    invImportHeaders = [];
+    $('invImportArea').style.display = 'block';
+    $('invImportPreview').style.display = 'none';
+    $('invImportConfirm').disabled = true;
+    $('invImportModal').classList.add('open');
+  }
+  
+  function handleFileSelect(file) {
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+        
+        if (jsonData.length < 2) {
+          toast('File appears to be empty');
+          return;
+        }
+        
+        invImportHeaders = jsonData[0].map(h => String(h || '').trim());
+        invImportData = jsonData.slice(1).filter(row => row.some(cell => cell !== null && cell !== ''));
+        
+        // Show preview
+        $('invImportArea').style.display = 'none';
+        $('invImportPreview').style.display = 'block';
+        
+        // Build preview table
+        let previewHtml = '<table><thead><tr>';
+        invImportHeaders.slice(0, 6).forEach(h => {
+          previewHtml += '<th>' + esc(h) + '</th>';
+        });
+        previewHtml += '</tr></thead><tbody>';
+        invImportData.slice(0, 5).forEach(row => {
+          previewHtml += '<tr>';
+          row.slice(0, 6).forEach(cell => {
+            previewHtml += '<td>' + esc(String(cell || '')) + '</td>';
+          });
+          previewHtml += '</tr>';
+        });
+        previewHtml += '</tbody></table>';
+        $('invPreviewTable').innerHTML = previewHtml;
+        $('invPreviewCount').textContent = invImportData.length + ' rows found';
+        
+        // Populate column mapping dropdowns
+        const mappings = ['invMapCode', 'invMapDesc', 'invMapMfr', 'invMapSupplier', 'invMapQty', 'invMapLoc'];
+        const guesses = {
+          invMapCode: ['code', 'item code', 'itemcode', 'sku', 'part number', 'part', 'item'],
+          invMapDesc: ['description', 'desc', 'name', 'item name', 'product', 'title'],
+          invMapMfr: ['manufacturer', 'mfr', 'brand', 'make', 'vendor'],
+          invMapSupplier: ['supplier', 'vendor', 'source', 'distributor'],
+          invMapQty: ['qty', 'quantity', 'stock', 'count', 'amount', 'on hand'],
+          invMapLoc: ['location', 'loc', 'bin', 'shelf', 'warehouse', 'position', 'storage']
+        };
+        
+        mappings.forEach(mapId => {
+          let html = '<option value="">— Select —</option>';
+          invImportHeaders.forEach((h, i) => {
+            const selected = guesses[mapId].some(g => h.toLowerCase().includes(g)) ? ' selected' : '';
+            html += '<option value="' + i + '"' + selected + '>' + esc(h) + '</option>';
+          });
+          $(mapId).innerHTML = html;
+        });
+        
+        $('invImportConfirm').disabled = false;
+        
+      } catch (err) {
+        console.error('Import error:', err);
+        toast('Error reading file: ' + err.message);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+  
+  function confirmImport() {
+    if (!invImportData || !invImportData.length) return;
+    
+    const codeIdx = parseInt($('invMapCode').value);
+    const descIdx = parseInt($('invMapDesc').value);
+    const mfrIdx = parseInt($('invMapMfr').value);
+    const supplierIdx = parseInt($('invMapSupplier').value);
+    const qtyIdx = parseInt($('invMapQty').value);
+    const locIdx = parseInt($('invMapLoc').value);
+    
+    if (isNaN(codeIdx) || isNaN(descIdx)) {
+      toast('Please map Item Code and Description columns');
+      return;
+    }
+    
+    const projectCode = getProjectCode();
+    if (!projectCode) {
+      toast('No project selected');
+      return;
+    }
+    
+    let imported = 0;
+    const db = firebase.database();
+    const updates = {};
+    
+    invImportData.forEach(row => {
+      const code = String(row[codeIdx] || '').trim();
+      const desc = String(row[descIdx] || '').trim();
+      if (!code && !desc) return;
+      
+      const id = db.ref().push().key;
+      updates['projects/' + projectCode + '/inventory/' + id] = {
+        code,
+        description: desc,
+        manufacturer: !isNaN(mfrIdx) ? String(row[mfrIdx] || '').trim() : '',
+        supplier: !isNaN(supplierIdx) ? String(row[supplierIdx] || '').trim() : '',
+        qty: !isNaN(qtyIdx) ? parseInt(row[qtyIdx]) || 0 : 0,
+        location: !isNaN(locIdx) ? String(row[locIdx] || '').trim() : '',
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      };
+      imported++;
+    });
+    
+    if (imported > 0) {
+      db.ref().update(updates).then(() => {
+        toast(imported + ' items imported successfully');
+        $('invImportModal').classList.remove('open');
+        invImportData = null;
+      }).catch(err => {
+        toast('Import failed: ' + err.message);
+      });
+    } else {
+      toast('No valid items to import');
+    }
+  }
+  
+  // Event listeners
+  document.addEventListener('DOMContentLoaded', function() {
+    // Search
+    $('invSearch').oninput = function() {
+      invSearch = this.value;
+      renderInventory();
+    };
+    
+    // Add button
+    $('invAddBtn').onclick = () => window.openInvItemModal();
+    $('invEmptyImport').onclick = openImportModal;
+    $('invImportBtn').onclick = openImportModal;
+    
+    // Item modal
+    $('invItemClose').onclick = () => $('invItemModal').classList.remove('open');
+    $('invItemCancel').onclick = () => $('invItemModal').classList.remove('open');
+    $('invItemSave').onclick = saveInvItemFromModal;
+    
+    // Import modal
+    $('invImportClose').onclick = () => $('invImportModal').classList.remove('open');
+    $('invImportCancel').onclick = () => $('invImportModal').classList.remove('open');
+    $('invImportConfirm').onclick = confirmImport;
+    
+    // File input
+    $('invImportArea').onclick = () => $('invImportFile').click();
+    $('invImportFile').onchange = function() {
+      if (this.files.length) handleFileSelect(this.files[0]);
+    };
+    
+    // Drag and drop
+    const dropArea = $('invImportArea');
+    ['dragenter', 'dragover'].forEach(evt => {
+      dropArea.addEventListener(evt, e => {
+        e.preventDefault();
+        dropArea.classList.add('dragover');
+      });
+    });
+    ['dragleave', 'drop'].forEach(evt => {
+      dropArea.addEventListener(evt, e => {
+        e.preventDefault();
+        dropArea.classList.remove('dragover');
+      });
+    });
+    dropArea.addEventListener('drop', e => {
+      const files = e.dataTransfer.files;
+      if (files.length) handleFileSelect(files[0]);
+    });
+    
+    // Initialize if already logged in
+    const pc = getProjectCode();
+    if (pc) {
+      setTimeout(initInventoryListener, 200);
+    }
+  });
 })();
 
 // ===== MOBILE APP (completely separate from desktop) =====
