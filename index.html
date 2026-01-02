@@ -465,6 +465,57 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 .inv-preview-table th{background:var(--bg4);padding:8px 10px;text-align:left;font-weight:600;color:var(--text2);font-size:10px;text-transform:uppercase;position:sticky;top:0}
 .inv-preview-table td{padding:6px 10px;border-bottom:1px solid var(--border);color:var(--text)}
 .inv-preview-count{font-size:12px;color:var(--text2);margin-top:8px}
+/* Inventory Excel-style filters */
+.inv-header{display:grid;grid-template-columns:minmax(100px,1fr) minmax(150px,2fr) minmax(100px,1fr) minmax(100px,1fr) 80px minmax(100px,1fr) 50px;gap:0;background:var(--bg3);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.3px}
+.inv-header>div{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:6px}
+.inv-filter-btn{width:18px;height:18px;border:none;background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:3px;flex-shrink:0;padding:0}
+.inv-filter-btn:hover{background:var(--bg4);color:var(--text)}
+.inv-filter-btn.active{color:var(--accent);background:rgba(90,154,200,0.15)}
+.inv-filter-btn svg{width:12px;height:12px}
+.inv-filter-popup{position:fixed;z-index:200;background:var(--bg2);border:1px solid var(--border);border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,0.25);min-width:220px;max-width:280px;display:none}
+.inv-filter-popup.open{display:block}
+.inv-filter-sort{padding:8px;border-bottom:1px solid var(--border)}
+.inv-filter-sort-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;font-size:12px;color:var(--text);background:transparent;border:none;border-radius:4px;cursor:pointer;text-align:left}
+.inv-filter-sort-btn:hover{background:var(--bg3)}
+.inv-filter-sort-btn svg{width:14px;height:14px;color:var(--text3)}
+.inv-filter-search{padding:8px;border-bottom:1px solid var(--border)}
+.inv-filter-search input{width:100%;height:32px;padding:0 10px;font-size:12px;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:4px}
+.inv-filter-search input:focus{outline:none;border-color:var(--accent)}
+.inv-filter-list{max-height:200px;overflow-y:auto;padding:8px}
+.inv-filter-item{display:flex;align-items:center;gap:8px;padding:6px 8px;font-size:12px;color:var(--text);border-radius:4px;cursor:pointer}
+.inv-filter-item:hover{background:var(--bg3)}
+.inv-filter-item input[type="checkbox"]{width:14px;height:14px;margin:0;cursor:pointer;accent-color:var(--accent)}
+.inv-filter-item.select-all{font-weight:600;border-bottom:1px solid var(--border);margin-bottom:4px;padding-bottom:8px}
+.inv-filter-item-label{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inv-filter-item-count{font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 6px;border-radius:10px}
+.inv-filter-footer{display:flex;gap:8px;padding:8px;border-top:1px solid var(--border);justify-content:flex-end}
+.inv-filter-footer button{height:28px;padding:0 14px;font-size:11px}
+.inv-filter-clear{margin-right:auto;color:var(--text3);background:transparent;border:none;font-size:11px;cursor:pointer;padding:0 8px}
+.inv-filter-clear:hover{color:var(--red)}
+/* Warehouse map popover */
+.wh-popover{position:fixed;z-index:1000;background:var(--bg2);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.3);padding:16px;width:320px;display:none}
+.wh-popover.open{display:block}
+.wh-popover-title{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;display:flex;justify-content:space-between;align-items:center}
+.wh-popover-loc{font-family:ui-monospace,monospace;color:var(--cyan);font-size:13px;text-transform:none;letter-spacing:0}
+.wh-map{position:relative;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;aspect-ratio:4/3}
+.wh-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,1fr);gap:6px;height:100%}
+.wh-section{background:var(--bg3);border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text3);position:relative;transition:all .2s}
+.wh-section.active{background:var(--accent);border-color:var(--accent);color:white}
+.wh-section-label{position:absolute;top:2px;left:4px;font-size:9px;opacity:0.7}
+.wh-dot{position:absolute;width:10px;height:10px;background:var(--red);border:2px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.3);transform:translate(-50%,-50%);animation:wh-pulse 1.5s ease-in-out infinite}
+@keyframes wh-pulse{0%,100%{box-shadow:0 2px 6px rgba(0,0,0,0.3),0 0 0 0 rgba(239,68,68,0.4)}50%{box-shadow:0 2px 6px rgba(0,0,0,0.3),0 0 0 8px rgba(239,68,68,0)}}
+.wh-legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;font-size:10px;color:var(--text3)}
+.wh-legend-item{display:flex;align-items:center;gap:4px}
+.wh-legend-color{width:12px;height:12px;border-radius:2px;border:1px solid var(--border)}
+/* Location edit */
+.inv-loc-wrap{position:relative;cursor:pointer}
+.inv-loc-wrap:hover .inv-loc{background:var(--accent);color:white}
+.inv-loc-edit{position:absolute;top:100%;left:0;margin-top:4px;z-index:100;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px;box-shadow:0 4px 16px rgba(0,0,0,0.2);display:none;min-width:160px}
+.inv-loc-edit.open{display:block}
+.inv-loc-edit input{width:100%;height:32px;padding:0 10px;font-size:13px;font-family:ui-monospace,monospace;color:var(--text);background:var(--bg);border:1px solid var(--border);border-radius:4px;margin-bottom:8px}
+.inv-loc-edit input:focus{outline:none;border-color:var(--accent)}
+.inv-loc-edit-btns{display:flex;gap:6px;justify-content:flex-end}
+.inv-loc-edit-btns button{height:28px;padding:0 12px;font-size:11px}
 .ai-modal{max-width:720px;width:95vw}
 .ai-loading{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;color:var(--text2)}
 .ai-loading-spinner{width:32px;height:32px;border:3px solid var(--bg4);border-top-color:var(--purple);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:12px}
@@ -1302,7 +1353,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 </div>
 <div style="flex:1"></div>
-<div class="version-badge" id="versionBadge">v1.7.1
+<div class="version-badge" id="versionBadge">v1.8.5
 <div class="version-info">
 <div class="version-info-row"><span class="version-info-label">Version</span><span class="version-info-value">1.0.2</span></div>
 <div class="version-info-row"><span class="version-info-label">Server</span><span class="version-info-value" id="serverStatus">Firebase</span></div>
@@ -1411,22 +1462,63 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 <button class="btn" id="invImportBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Import</button>
 <button class="btn btn-primary" id="invAddBtn">+ Add Item</button>
 </div>
-<div class="inv-table">
+<div class="inv-table" id="invTable">
 <div class="inv-header">
-<div>Item Code</div>
-<div>Description</div>
-<div>Manufacturer</div>
-<div>Supplier</div>
-<div>Qty</div>
-<div>Location</div>
+<div style="position:relative"><span>Item Code</span><button class="inv-filter-btn" data-col="code" onclick="window.openInvFilter(this,'code')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></div>
+<div style="position:relative"><span>Description</span><button class="inv-filter-btn" data-col="desc" onclick="window.openInvFilter(this,'desc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></div>
+<div style="position:relative"><span>Manufacturer</span><button class="inv-filter-btn" data-col="mfr" onclick="window.openInvFilter(this,'mfr')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></div>
+<div style="position:relative"><span>Supplier</span><button class="inv-filter-btn" data-col="supplier" onclick="window.openInvFilter(this,'supplier')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></div>
+<div style="position:relative"><span>Qty</span><button class="inv-filter-btn" data-col="qty" onclick="window.openInvFilter(this,'qty')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></div>
+<div style="position:relative"><span>Location</span><button class="inv-filter-btn" data-col="loc" onclick="window.openInvFilter(this,'loc')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg></button></div>
 <div></div>
 </div>
 <div class="inv-body" id="invList"></div>
+</div>
+<!-- Inventory Filter Popup -->
+<div class="inv-filter-popup" id="invFilterPopup">
+<div class="inv-filter-sort">
+<button class="inv-filter-sort-btn" id="invSortAZ" onclick="window.invSortAZ()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h7M3 12h10M3 18h5M16 6v12M13 15l3 3 3-3"/></svg>Sort A to Z</button>
+<button class="inv-filter-sort-btn" id="invSortZA" onclick="window.invSortZA()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h5M3 12h10M3 18h7M16 18V6M13 9l3-3 3 3"/></svg>Sort Z to A</button>
+</div>
+<div class="inv-filter-search">
+<input type="text" id="invFilterSearch" placeholder="Search..." oninput="window.filterInvFilterList()">
+</div>
+<div class="inv-filter-list" id="invFilterList"></div>
+<div class="inv-filter-footer">
+<button class="inv-filter-clear" id="invFilterClear" onclick="window.clearInvFilter()">Clear Filter</button>
+<button class="btn btn-sm" onclick="window.closeInvFilter()">Cancel</button>
+<button class="btn btn-sm btn-primary" onclick="window.applyInvFilter()">OK</button>
+</div>
 </div>
 <div class="inv-empty" id="invEmpty" style="display:none">
 <div class="inv-empty-icon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.4"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
 <div class="inv-empty-text">No inventory items yet</div>
 <button class="btn btn-primary" id="invEmptyImport"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Import from Excel</button>
+</div>
+</div>
+<!-- Warehouse Map Popover -->
+<div class="wh-popover" id="whPopover">
+<div class="wh-popover-title">Warehouse Location <span class="wh-popover-loc" id="whPopoverLoc">—</span></div>
+<div class="wh-map">
+<div class="wh-grid">
+<div class="wh-section" data-section="A"><span class="wh-section-label">A</span>RF</div>
+<div class="wh-section" data-section="B"><span class="wh-section-label">B</span>Antenna</div>
+<div class="wh-section" data-section="C"><span class="wh-section-label">C</span>Signal</div>
+<div class="wh-section" data-section="D"><span class="wh-section-label">D</span>Power</div>
+<div class="wh-section" data-section="E"><span class="wh-section-label">E</span>Motor</div>
+<div class="wh-section" data-section="F"><span class="wh-section-label">F</span>Safety</div>
+<div class="wh-section" data-section="G"><span class="wh-section-label">G</span>Control</div>
+<div class="wh-section" data-section="H"><span class="wh-section-label">H</span>Enclosure</div>
+<div class="wh-section" data-section="I"><span class="wh-section-label">I</span>Reserved</div>
+<div class="wh-section" data-section="J"><span class="wh-section-label">J</span>Reserved</div>
+<div class="wh-section" data-section="K"><span class="wh-section-label">K</span>Shipping</div>
+<div class="wh-section" data-section="L"><span class="wh-section-label">L</span>Receiving</div>
+</div>
+<div class="wh-dot" id="whDot" style="display:none"></div>
+</div>
+<div class="wh-legend">
+<div class="wh-legend-item"><div class="wh-legend-color" style="background:var(--accent)"></div>Active Section</div>
+<div class="wh-legend-item"><div class="wh-legend-color" style="background:var(--red);border-radius:50%"></div>Item Location</div>
 </div>
 </div>
 </div>
@@ -8566,6 +8658,20 @@ loadItemCodeConfig();
   let invImportData = null;
   let invImportHeaders = [];
   
+  // Excel-style filter state
+  let invFilters = {
+    code: null,      // null = no filter, Set = selected values
+    desc: null,
+    mfr: null,
+    supplier: null,
+    qty: null,
+    loc: null
+  };
+  let invSortCol = 'code';
+  let invSortDir = 'asc';
+  let currentFilterCol = null;
+  let tempFilterSelection = new Set();
+  
   function getProjectCode() {
     return window.getCurrentProjectCode ? window.getCurrentProjectCode() : null;
   }
@@ -8591,16 +8697,68 @@ loadItemCodeConfig();
     };
   }
   
+  // Get column value helper
+  function getColValue(item, col) {
+    switch(col) {
+      case 'code': return item.code || '';
+      case 'desc': return item.description || '';
+      case 'mfr': return item.manufacturer || '';
+      case 'supplier': return item.supplier || '';
+      case 'qty': return String(item.qty || 0);
+      case 'loc': return item.location || '';
+      default: return '';
+    }
+  }
+  
   // Render inventory list
   function renderInventory() {
-    const filtered = inventory.filter(item => {
-      if (!invSearch) return true;
-      const s = invSearch.toLowerCase();
-      return (item.code || '').toLowerCase().includes(s) ||
-             (item.description || '').toLowerCase().includes(s) ||
-             (item.manufacturer || '').toLowerCase().includes(s) ||
-             (item.supplier || '').toLowerCase().includes(s) ||
-             (item.location || '').toLowerCase().includes(s);
+    // Apply filters
+    let filtered = inventory.filter(item => {
+      // Global search
+      if (invSearch) {
+        const s = invSearch.toLowerCase();
+        const matchGlobal = (item.code || '').toLowerCase().includes(s) ||
+               (item.description || '').toLowerCase().includes(s) ||
+               (item.manufacturer || '').toLowerCase().includes(s) ||
+               (item.supplier || '').toLowerCase().includes(s) ||
+               (item.location || '').toLowerCase().includes(s);
+        if (!matchGlobal) return false;
+      }
+      
+      // Excel-style column filters
+      for (const col of Object.keys(invFilters)) {
+        const filterSet = invFilters[col];
+        if (filterSet && filterSet.size > 0) {
+          const val = getColValue(item, col);
+          if (!filterSet.has(val)) return false;
+        }
+      }
+      
+      return true;
+    });
+    
+    // Apply sorting
+    filtered.sort((a, b) => {
+      let aVal = getColValue(a, invSortCol);
+      let bVal = getColValue(b, invSortCol);
+      
+      // Numeric sort for qty
+      if (invSortCol === 'qty') {
+        aVal = parseInt(aVal) || 0;
+        bVal = parseInt(bVal) || 0;
+        return invSortDir === 'asc' ? aVal - bVal : bVal - aVal;
+      }
+      
+      // String sort
+      const cmp = aVal.localeCompare(bVal);
+      return invSortDir === 'asc' ? cmp : -cmp;
+    });
+    
+    // Update filter button states
+    document.querySelectorAll('.inv-filter-btn').forEach(btn => {
+      const col = btn.dataset.col;
+      const hasFilter = invFilters[col] && invFilters[col].size > 0;
+      btn.classList.toggle('active', hasFilter);
     });
     
     // Stats
@@ -8611,30 +8769,392 @@ loadItemCodeConfig();
     
     // Show/hide empty state
     const hasItems = filtered.length > 0;
-    $('invList').parentElement.style.display = hasItems ? 'block' : 'none';
-    $('invEmpty').style.display = hasItems ? 'none' : 'block';
+    const table = $('invTable');
+    if (table) table.style.display = hasItems || inventory.length === 0 ? 'block' : 'block';
+    if ($('invEmpty')) $('invEmpty').style.display = inventory.length === 0 ? 'block' : 'none';
     
-    if (!hasItems) return;
+    if (!hasItems && inventory.length > 0) {
+      $('invList').innerHTML = '<div style="padding:20px;text-align:center;color:var(--text3)">No items match the current filters</div>';
+      return;
+    }
+    
+    if (inventory.length === 0) {
+      $('invList').innerHTML = '';
+      return;
+    }
     
     // Render rows
     let html = '';
-    filtered.sort((a, b) => (a.code || '').localeCompare(b.code || '')).forEach(item => {
+    filtered.forEach(item => {
       const qty = parseInt(item.qty) || 0;
       const qtyClass = qty <= 0 ? ' low' : '';
+      const locEsc = esc(item.location || '—');
       html += '<div class="inv-row" data-inv-id="' + item.id + '">';
       html += '<div class="inv-code">' + esc(item.code || '') + '</div>';
       html += '<div class="inv-desc">' + esc(item.description || '') + '</div>';
       html += '<div class="inv-mfr">' + esc(item.manufacturer || '') + '</div>';
       html += '<div class="inv-supplier">' + esc(item.supplier || '') + '</div>';
       html += '<div class="inv-qty' + qtyClass + '">' + qty + '</div>';
-      html += '<div><span class="inv-loc">' + esc(item.location || '—') + '</span></div>';
+      html += '<div class="inv-loc-wrap" data-item-id="' + item.id + '" data-location="' + locEsc + '">';
+      html += '<span class="inv-loc">' + locEsc + '</span>';
+      html += '</div>';
       html += '<div class="inv-actions">';
       html += '<button class="sm-btn" onclick="window.editInvItem(\'' + item.id + '\')" title="Edit">✎</button>';
       html += '<button class="sm-btn" onclick="window.deleteInvItem(\'' + item.id + '\')" title="Delete">🗑</button>';
       html += '</div></div>';
     });
     $('invList').innerHTML = html;
+    
+    // Attach location hover and click events
+    attachLocationEvents();
   }
+  
+  // Excel-style filter functions
+  window.openInvFilter = function(btn, col) {
+    const popup = $('invFilterPopup');
+    currentFilterCol = col;
+    
+    // Get unique values for this column with counts
+    const valueCounts = {};
+    inventory.forEach(item => {
+      const val = getColValue(item, col);
+      valueCounts[val] = (valueCounts[val] || 0) + 1;
+    });
+    
+    const uniqueValues = Object.keys(valueCounts).sort((a, b) => {
+      if (col === 'qty') return (parseInt(a) || 0) - (parseInt(b) || 0);
+      return a.localeCompare(b);
+    });
+    
+    // Initialize temp selection from current filter or all values
+    if (invFilters[col] && invFilters[col].size > 0) {
+      tempFilterSelection = new Set(invFilters[col]);
+    } else {
+      tempFilterSelection = new Set(uniqueValues);
+    }
+    
+    // Build filter list
+    buildFilterList(uniqueValues, valueCounts);
+    
+    // Clear search
+    $('invFilterSearch').value = '';
+    
+    // Position popup directly below the button, right-aligned with button
+    const btnRect = btn.getBoundingClientRect();
+    
+    // Use 'right' positioning for reliable alignment with button's right edge
+    const rightOffset = window.innerWidth - btnRect.right;
+    
+    popup.style.top = btnRect.bottom + 'px';
+    popup.style.left = 'auto';
+    popup.style.right = rightOffset + 'px';
+    popup.classList.add('open');
+  };
+  
+  function buildFilterList(values, counts, searchTerm = '') {
+    const list = $('invFilterList');
+    const search = searchTerm.toLowerCase();
+    
+    const filteredValues = search 
+      ? values.filter(v => v.toLowerCase().includes(search))
+      : values;
+    
+    let html = '';
+    
+    // Select All
+    const allSelected = filteredValues.every(v => tempFilterSelection.has(v));
+    const someSelected = filteredValues.some(v => tempFilterSelection.has(v));
+    html += '<label class="inv-filter-item select-all">';
+    html += '<input type="checkbox" ' + (allSelected ? 'checked' : '') + ' ' + 
+            (someSelected && !allSelected ? 'style="opacity:0.5"' : '') + 
+            ' onchange="window.toggleInvFilterAll(this.checked)">';
+    html += '<span class="inv-filter-item-label">(Select All)</span>';
+    html += '</label>';
+    
+    // Individual values
+    filteredValues.forEach(val => {
+      const checked = tempFilterSelection.has(val);
+      const displayVal = val || '(Blank)';
+      html += '<label class="inv-filter-item">';
+      html += '<input type="checkbox" ' + (checked ? 'checked' : '') + 
+              ' data-value="' + esc(val) + '" onchange="window.toggleInvFilterItem(this)">';
+      html += '<span class="inv-filter-item-label">' + esc(displayVal) + '</span>';
+      html += '<span class="inv-filter-item-count">' + (counts[val] || 0) + '</span>';
+      html += '</label>';
+    });
+    
+    list.innerHTML = html;
+  }
+  
+  window.filterInvFilterList = function() {
+    const search = $('invFilterSearch').value;
+    const valueCounts = {};
+    inventory.forEach(item => {
+      const val = getColValue(item, currentFilterCol);
+      valueCounts[val] = (valueCounts[val] || 0) + 1;
+    });
+    const uniqueValues = Object.keys(valueCounts).sort();
+    buildFilterList(uniqueValues, valueCounts, search);
+  };
+  
+  window.toggleInvFilterAll = function(checked) {
+    const checkboxes = document.querySelectorAll('#invFilterList input[data-value]');
+    checkboxes.forEach(cb => {
+      const val = cb.dataset.value;
+      if (checked) {
+        tempFilterSelection.add(val);
+      } else {
+        tempFilterSelection.delete(val);
+      }
+      cb.checked = checked;
+    });
+    // Update select all checkbox
+    document.querySelector('.inv-filter-item.select-all input').checked = checked;
+  };
+  
+  window.toggleInvFilterItem = function(cb) {
+    const val = cb.dataset.value;
+    if (cb.checked) {
+      tempFilterSelection.add(val);
+    } else {
+      tempFilterSelection.delete(val);
+    }
+    // Update select all state
+    const checkboxes = document.querySelectorAll('#invFilterList input[data-value]');
+    const allChecked = Array.from(checkboxes).every(c => c.checked);
+    document.querySelector('.inv-filter-item.select-all input').checked = allChecked;
+  };
+  
+  window.applyInvFilter = function() {
+    // Get all unique values for this column
+    const allValues = new Set();
+    inventory.forEach(item => allValues.add(getColValue(item, currentFilterCol)));
+    
+    // If all values are selected, clear the filter
+    if (tempFilterSelection.size === allValues.size) {
+      invFilters[currentFilterCol] = null;
+    } else {
+      invFilters[currentFilterCol] = new Set(tempFilterSelection);
+    }
+    
+    closeInvFilter();
+    renderInventory();
+  };
+  
+  window.clearInvFilter = function() {
+    invFilters[currentFilterCol] = null;
+    closeInvFilter();
+    renderInventory();
+  };
+  
+  window.closeInvFilter = function() {
+    $('invFilterPopup').classList.remove('open');
+    currentFilterCol = null;
+  };
+  
+  function closeInvFilter() {
+    $('invFilterPopup').classList.remove('open');
+    currentFilterCol = null;
+  }
+  
+  // Sort functions
+  window.invSortAZ = function() {
+    invSortCol = currentFilterCol;
+    invSortDir = 'asc';
+    closeInvFilter();
+    renderInventory();
+  };
+  
+  window.invSortZA = function() {
+    invSortCol = currentFilterCol;
+    invSortDir = 'desc';
+    closeInvFilter();
+    renderInventory();
+  };
+  
+  // Location hover and click handlers
+  let locEditOpen = null;
+  let hoverTimeout = null;
+  
+  function attachLocationEvents() {
+    document.querySelectorAll('.inv-loc-wrap').forEach(wrap => {
+      // Hover - show warehouse map
+      wrap.addEventListener('mouseenter', (e) => {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = setTimeout(() => showWarehouseMap(wrap, e), 200);
+      });
+      wrap.addEventListener('mouseleave', () => {
+        clearTimeout(hoverTimeout);
+        hoverTimeout = setTimeout(hideWarehouseMap, 300);
+      });
+      
+      // Click - edit location
+      wrap.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openLocationEdit(wrap);
+      });
+    });
+  }
+  
+  // Warehouse map positioning
+  const SECTION_POSITIONS = {
+    'A': {col: 0, row: 0}, 'B': {col: 1, row: 0}, 'C': {col: 2, row: 0}, 'D': {col: 3, row: 0},
+    'E': {col: 0, row: 1}, 'F': {col: 1, row: 1}, 'G': {col: 2, row: 1}, 'H': {col: 3, row: 1},
+    'I': {col: 0, row: 2}, 'J': {col: 1, row: 2}, 'K': {col: 2, row: 2}, 'L': {col: 3, row: 2}
+  };
+  
+  function parseLocation(loc) {
+    if (!loc || loc === '—') return null;
+    // Format: A-01-03 (Section-Row-Shelf)
+    const match = loc.match(/^([A-L])-(\d+)-(\d+)$/i);
+    if (!match) return null;
+    return {
+      section: match[1].toUpperCase(),
+      row: parseInt(match[2]),
+      shelf: parseInt(match[3])
+    };
+  }
+  
+  function showWarehouseMap(wrap, e) {
+    const loc = wrap.dataset.location;
+    const popover = $('whPopover');
+    const parsed = parseLocation(loc);
+    
+    // Update location display
+    $('whPopoverLoc').textContent = loc || '—';
+    
+    // Reset sections
+    document.querySelectorAll('.wh-section').forEach(s => s.classList.remove('active'));
+    
+    // Position dot
+    const dot = $('whDot');
+    if (parsed && SECTION_POSITIONS[parsed.section]) {
+      const pos = SECTION_POSITIONS[parsed.section];
+      const section = document.querySelector('.wh-section[data-section="' + parsed.section + '"]');
+      if (section) {
+        section.classList.add('active');
+        
+        // Calculate dot position within section (based on row/shelf)
+        // Row determines X (1-3 maps to 20%-80%), Shelf determines Y (1-3 maps to 20%-80%)
+        const xPct = 20 + (parsed.row - 1) * 30; // 20%, 50%, 80%
+        const yPct = 20 + (parsed.shelf - 1) * 30;
+        
+        // Get section bounds within the grid
+        const grid = document.querySelector('.wh-grid');
+        const gridRect = grid.getBoundingClientRect();
+        const sectionRect = section.getBoundingClientRect();
+        
+        const dotX = (sectionRect.left - gridRect.left) + (sectionRect.width * xPct / 100);
+        const dotY = (sectionRect.top - gridRect.top) + (sectionRect.height * yPct / 100);
+        
+        dot.style.left = dotX + 'px';
+        dot.style.top = dotY + 'px';
+        dot.style.display = 'block';
+      }
+    } else {
+      dot.style.display = 'none';
+    }
+    
+    // Position popover
+    const rect = wrap.getBoundingClientRect();
+    let left = rect.right + 10;
+    let top = rect.top - 50;
+    
+    // Keep on screen
+    if (left + 320 > window.innerWidth) {
+      left = rect.left - 330;
+    }
+    if (top < 10) top = 10;
+    if (top + 280 > window.innerHeight) {
+      top = window.innerHeight - 290;
+    }
+    
+    popover.style.left = left + 'px';
+    popover.style.top = top + 'px';
+    popover.classList.add('open');
+  }
+  
+  function hideWarehouseMap() {
+    $('whPopover').classList.remove('open');
+  }
+  
+  // Initialize warehouse popover events (called from DOMContentLoaded)
+  function initWarehousePopover() {
+    const popover = $('whPopover');
+    if (!popover) return;
+    
+    // Keep popover open when hovering over it
+    popover.addEventListener('mouseenter', () => {
+      clearTimeout(hoverTimeout);
+    });
+    popover.addEventListener('mouseleave', () => {
+      hoverTimeout = setTimeout(hideWarehouseMap, 200);
+    });
+  }
+  
+  // Location edit popover
+  function openLocationEdit(wrap) {
+    // Close any existing edit
+    closeLocationEdit();
+    
+    const itemId = wrap.dataset.itemId;
+    const currentLoc = wrap.dataset.location;
+    const item = inventory.find(i => i.id === itemId);
+    if (!item) return;
+    
+    // Create edit popover
+    const edit = document.createElement('div');
+    edit.className = 'inv-loc-edit open';
+    edit.innerHTML = `
+      <input type="text" id="locEditInput" value="${esc(item.location || '')}" placeholder="e.g. A-01-03">
+      <div class="inv-loc-edit-btns">
+        <button class="btn btn-sm" onclick="window.closeLocEdit()">Cancel</button>
+        <button class="btn btn-sm btn-primary" onclick="window.saveLocEdit('${itemId}')">Save</button>
+      </div>
+    `;
+    wrap.appendChild(edit);
+    locEditOpen = { wrap, itemId };
+    
+    const input = edit.querySelector('input');
+    input.focus();
+    input.select();
+    
+    // Enter to save, Escape to cancel
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        window.saveLocEdit(itemId);
+      } else if (e.key === 'Escape') {
+        closeLocationEdit();
+      }
+    });
+  }
+  
+  function closeLocationEdit() {
+    document.querySelectorAll('.inv-loc-edit').forEach(e => e.remove());
+    locEditOpen = null;
+  }
+  window.closeLocEdit = closeLocationEdit;
+  
+  window.saveLocEdit = function(itemId) {
+    const input = document.getElementById('locEditInput');
+    if (!input) return;
+    
+    const newLoc = input.value.trim().toUpperCase();
+    const item = inventory.find(i => i.id === itemId);
+    if (!item) return;
+    
+    // Validate format (optional - allow any format but suggest standard)
+    if (newLoc && !/^[A-Z]-\d{2}-\d{2}$/.test(newLoc)) {
+      if (!confirm('Location "' + newLoc + '" doesn\'t match standard format (e.g. A-01-03). Save anyway?')) {
+        return;
+      }
+    }
+    
+    item.location = newLoc;
+    saveInvItem(item);
+    closeLocationEdit();
+  };
   
   // Save inventory item to Firebase
   function saveInvItem(item) {
@@ -8872,6 +9392,18 @@ loadItemCodeConfig();
       if (this.files.length) handleFileSelect(this.files[0]);
     };
     
+    // Close filter popup and location edit when clicking outside
+    document.addEventListener('click', function(e) {
+      // Close location edit
+      if (locEditOpen && !e.target.closest('.inv-loc-wrap') && !e.target.closest('.inv-loc-edit')) {
+        closeLocationEdit();
+      }
+      // Close filter popup
+      if (!e.target.closest('.inv-filter-popup') && !e.target.closest('.inv-filter-btn')) {
+        closeInvFilter();
+      }
+    });
+    
     // Drag and drop
     const dropArea = $('invImportArea');
     ['dragenter', 'dragover'].forEach(evt => {
@@ -8896,6 +9428,9 @@ loadItemCodeConfig();
     if (pc) {
       setTimeout(initInventoryListener, 200);
     }
+    
+    // Initialize warehouse popover
+    initWarehousePopover();
   });
 })();
 
