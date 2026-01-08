@@ -34,6 +34,71 @@
 html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:14px;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;line-height:1.5}
 .header{background:var(--bg);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;position:fixed;top:0;left:0;right:0;z-index:100;height:50px;gap:12px}
 .logo{font-weight:500;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:120px;max-width:280px;letter-spacing:-0.2px;flex-shrink:0}
+.project-selector{display:flex;align-items:center;gap:4px;flex-shrink:0;position:relative}
+.project-selector-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text3);cursor:pointer;transition:all .15s}
+.project-selector-btn:hover{background:var(--bg2);border-color:var(--border);color:var(--text)}
+.project-selector-btn svg{width:14px;height:14px}
+.project-dropdown{position:absolute;top:100%;left:0;margin-top:6px;min-width:280px;max-width:360px;background:var(--bg);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.2);z-index:1000;display:none;overflow:hidden}
+.project-dropdown.open{display:block}
+.project-dropdown-header{padding:10px 12px;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.project-dropdown-list{max-height:320px;overflow-y:auto}
+.project-dropdown-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--border)}
+.project-dropdown-item:last-child{border-bottom:none}
+.project-dropdown-item:hover{background:var(--bg2)}
+.project-dropdown-item.active{background:var(--bg3)}
+.project-dropdown-item-name{flex:1;font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.project-dropdown-item-check{width:16px;color:var(--accent);font-size:14px}
+.project-dropdown-item-archived{font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 6px;border-radius:4px}
+.project-dropdown-footer{padding:8px;border-top:1px solid var(--border);background:var(--bg2);display:flex;flex-direction:column;gap:4px}
+.project-dropdown-action{display:flex;align-items:center;gap:8px;padding:8px 10px;font-size:12px;color:var(--text2);cursor:pointer;border-radius:6px;transition:all .1s}
+.project-dropdown-action:hover{background:var(--bg3);color:var(--text)}
+.project-dropdown-action svg{width:14px;height:14px;opacity:0.7}
+.manage-project-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.manage-project-item:last-child{border-bottom:none}
+.manage-project-item-name{flex:1;font-size:13px;color:var(--text);font-weight:500}
+.manage-project-item-date{font-size:11px;color:var(--text3)}
+.manage-project-item-archived{font-size:10px;color:var(--text3);background:var(--bg3);padding:2px 6px;border-radius:4px;margin-left:8px}
+.manage-project-item-actions{display:flex;gap:4px}
+.manage-project-item-actions button{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text3);cursor:pointer;transition:all .15s;font-size:12px}
+.manage-project-item-actions button:hover{background:var(--bg2);border-color:var(--border);color:var(--text)}
+.manage-project-item-actions button.danger:hover{color:var(--red);border-color:var(--red)}
+.template-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border)}
+.template-item:last-child{border-bottom:none}
+.template-item-info{flex:1;min-width:0}
+.template-item-name{font-size:13px;color:var(--text);font-weight:500}
+.template-item-desc{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.template-item-meta{font-size:10px;color:var(--text3);margin-top:4px}
+.template-item-actions{display:flex;gap:4px}
+.template-item-actions button{width:28px;height:28px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text3);cursor:pointer;transition:all .15s;font-size:12px}
+.template-item-actions button:hover{background:var(--bg2);border-color:var(--border);color:var(--text)}
+.template-item-actions button.danger:hover{color:var(--red);border-color:var(--red)}
+.master-schedule-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:500;display:none;flex-direction:column}
+.master-schedule-overlay.open{display:flex}
+.master-schedule-header{padding:16px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;background:var(--bg)}
+.master-schedule-title{font-size:18px;font-weight:600;color:var(--text);flex:1}
+.master-schedule-close{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text2);cursor:pointer;font-size:18px;transition:all .15s}
+.master-schedule-close:hover{background:var(--bg2);color:var(--text)}
+.master-schedule-body{flex:1;overflow:auto;padding:24px}
+.master-schedule-empty{text-align:center;padding:60px 20px;color:var(--text3)}
+.master-project-row{display:flex;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.master-project-row:last-child{border-bottom:none}
+.master-project-info{width:200px;min-width:200px;padding-right:16px}
+.master-project-name{font-size:13px;font-weight:500;color:var(--text);cursor:pointer;transition:color .15s}
+.master-project-name:hover{color:var(--accent)}
+.master-project-dates{font-size:10px;color:var(--text3);margin-top:2px}
+.master-project-progress{font-size:10px;color:var(--text2);margin-top:2px}
+.master-timeline-wrap{flex:1;position:relative;height:32px;background:var(--bg2);border-radius:6px;overflow:hidden}
+.master-timeline-bar{position:absolute;top:4px;bottom:4px;background:var(--accent);border-radius:4px;cursor:pointer;display:flex;align-items:center;padding:0 10px;font-size:10px;color:#fff;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:filter .15s;min-width:60px}
+.master-timeline-bar:hover{filter:brightness(1.1)}
+.master-timeline-bar.archived{background:var(--text3);opacity:0.6}
+.master-timeline-bar.no-dates{background:var(--bg3);color:var(--text3)}
+.master-timeline-today{position:absolute;top:0;bottom:0;width:2px;background:var(--red);z-index:5}
+.master-timeline-header{display:flex;margin-bottom:12px;padding-left:216px}
+.master-timeline-month{flex:1;font-size:10px;color:var(--text3);text-align:center;padding:6px 0;border-left:1px solid var(--border)}
+.master-timeline-month:first-child{border-left:none}
+.master-legend{display:flex;gap:16px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.master-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)}
+.master-legend-color{width:12px;height:12px;border-radius:3px}
 .header-search{position:relative;width:180px;flex-shrink:0}
 .header-search input{width:100%;height:32px;padding:0 32px 0 12px;font-size:13px;color:var(--text);background:var(--bg2);border:1px solid var(--border);border-radius:16px;transition:all .2s}
 .header-search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px rgba(138,186,220,0.08)}
@@ -419,7 +484,15 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 .gantt-bar-conflict{position:absolute;left:4px;top:50%;transform:translateY(-50%);font-size:10px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,0.3));z-index:2}
 .gantt-bar.has-conflict{padding-left:20px}
 .gantt-bar.has-conflict::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#ff6b35;border-radius:4px 0 0 4px}
-.gantt-conflict-badge{background:#ff6b35;color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;margin-left:8px}
+.gantt-conflict-badge{background:#ff6b35;color:#fff;font-size:10px;font-weight:600;padding:2px 6px;border-radius:10px;margin-left:8px;cursor:help;position:relative}
+.gantt-conflict-popover{position:absolute;top:100%;left:0;margin-top:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.25);padding:12px;min-width:280px;max-width:400px;z-index:1000;display:none;text-align:left}
+.gantt-conflict-popover.open{display:block}
+.gantt-conflict-popover-title{font-size:11px;font-weight:600;color:#ff6b35;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.gantt-conflict-item{padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;color:var(--text)}
+.gantt-conflict-item:last-child{border-bottom:none;padding-bottom:0}
+.gantt-conflict-item:first-child{padding-top:0}
+.gantt-conflict-resource{font-weight:600;color:var(--text);margin-bottom:4px}
+.gantt-conflict-tasks{color:var(--text2);font-size:11px;line-height:1.4}
 .gantt-bar-resize{position:absolute;top:-2px;bottom:-2px;width:8px;cursor:ew-resize;z-index:5}
 .gantt-bar-resize-left{left:-4px;border-radius:4px 0 0 4px}
 .gantt-bar-resize-right{right:-4px;border-radius:0 4px 4px 0}
@@ -1366,7 +1439,19 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 </div>
 
 <header class="header">
+<div class="project-selector">
 <div class="logo" id="projectName">EBS v2</div>
+<button class="project-selector-btn" id="projectSelectorBtn" title="Switch Project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+<button class="project-selector-btn" id="masterScheduleBtn" title="Master Schedule — All Projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="13" height="4" rx="1"/><rect x="3" y="16" width="16" height="4" rx="1"/></svg></button>
+<div class="project-dropdown" id="projectDropdown">
+<div class="project-dropdown-header">Projects</div>
+<div class="project-dropdown-list" id="projectDropdownList"></div>
+<div class="project-dropdown-footer">
+<div class="project-dropdown-action" id="newProjectBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Project</div>
+<div class="project-dropdown-action" id="manageProjectsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Manage Projects</div>
+</div>
+</div>
+</div>
 <button class="ai-console-btn" id="aiAlert" title="AI Console"><div class="ai-console-icon"><span class="ai-console-plus"></span></div>AI Console</button>
 <div class="header-spacer"></div>
 <select class="filter-select" id="assigneeFilter"><option value="">All Assignees</option></select>
@@ -1384,7 +1469,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 <div class="header-btns">
 <button class="btn" id="themeBtn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11M8 2.5a5.5 5.5 0 0 1 0 11" fill="currentColor" stroke="none"/></svg></button>
 <button class="btn btn-receive" id="receivePOBtn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 2v9M4.5 7.5 8 11l3.5-3.5M3 13h10"/></svg><span>Receive PO</span></button>
-<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="reportBtn">📊 Generate Report</div><div class="dropdown-div"></div><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="milestonesBtn">🔷 Milestones</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-item" id="itemConfigBtn">Item Code Config</div><div class="dropdown-div"></div><div class="dropdown-item" id="navImportBtn">📥 Import NAV Data</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Load Sample Data</div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
+<div class="dropdown"><button class="btn" id="menuBtn">☰</button><div class="dropdown-menu" id="menuDrop"><div class="dropdown-item" id="reportBtn">📊 Generate Report</div><div class="dropdown-div"></div><div class="dropdown-item" id="teamBtn">Team</div><div class="dropdown-item" id="datesBtn">Project Dates</div><div class="dropdown-item" id="milestonesBtn">🔷 Milestones</div><div class="dropdown-item" id="leadtimeBtn">Lead Time Data</div><div class="dropdown-item" id="itemConfigBtn">Item Code Config</div><div class="dropdown-div"></div><div class="dropdown-item" id="saveTemplateBtn">💾 Save as Template</div><div class="dropdown-item" id="manageTemplatesBtn">📋 Manage Templates</div><div class="dropdown-div"></div><div class="dropdown-item" id="navImportBtn">📥 Import NAV Data</div><div class="dropdown-div"></div><div class="dropdown-item" id="sampleBtn">Load Sample Data</div><div class="dropdown-item" id="generateTestProjectsBtn">🧪 Generate 5 Test Projects</div><div class="dropdown-item danger" id="clearBtn">Clear All</div><div class="dropdown-div"></div><div class="dropdown-item" id="signOutBtn">Sign Out</div></div></div>
 </div>
 </header>
 <main class="main">
@@ -1448,7 +1533,7 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 <div class="gantt-toolbar">
 <span class="gantt-toolbar-title">Project Timeline</span>
 <div class="gantt-toolbar-actions">
-<span id="ganttConflictBadge" style="display:none"></span>
+<span id="ganttConflictBadge" style="display:none;position:relative"></span>
 <select class="gantt-filter-select" id="ganttResourceFilter">
 <option value="">All Resources</option>
 </select>
@@ -1725,7 +1810,67 @@ html,body{height:100%;overflow:hidden;font-family:system-ui,-apple-system,BlinkM
 <div class="po-details-summary" id="poDetailsSummary"></div>
 <div class="po-details-actions"><button class="btn" id="poDetailsClose" style="flex:1">Close</button><button class="btn btn-receive" id="poDetailsReceiveAll">Receive All</button></div>
 </div>
+
+<!-- New Project Modal -->
+<div class="modal-bg" id="newProjectModal"><div class="modal" style="max-width:420px"><div class="modal-head"><span class="modal-title">New Project</span><button class="modal-close" id="newProjectClose">×</button></div><div class="modal-body">
+<div class="field"><label class="field-label">Project Name</label><input type="text" class="field-input" id="newProjectName" placeholder="e.g. MRS-450 Unit #8"></div>
+<div class="field"><label class="field-label">Template</label><select class="field-input" id="newProjectTemplate"><option value="">Empty Project</option></select></div>
+<div style="font-size:11px;color:var(--text3);margin-top:8px">The new project will use the shared team, lead time data, and item configurations.</div>
+</div><div class="modal-foot"><button class="btn" id="newProjectCancel">Cancel</button><button class="btn btn-primary" id="newProjectCreate">Create Project</button></div></div></div>
+
+<!-- Manage Projects Modal -->
+<div class="modal-bg" id="manageProjectsModal"><div class="modal" style="max-width:520px"><div class="modal-head"><span class="modal-title">Manage Projects</span><button class="modal-close" id="manageProjectsClose">×</button></div><div class="modal-body" style="padding:0">
+<div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;background:var(--bg2)">
+<label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="showArchivedProjects"> Show archived</label>
+</div>
+<div id="manageProjectsList" style="max-height:400px;overflow-y:auto"></div>
+</div><div class="modal-foot"><button class="btn" id="manageProjectsDone">Done</button></div></div></div>
+
+<!-- Rename Project Modal -->
+<div class="modal-bg" id="renameProjectModal"><div class="modal" style="max-width:380px"><div class="modal-head"><span class="modal-title">Rename Project</span><button class="modal-close" id="renameProjectClose">×</button></div><div class="modal-body">
+<div class="field"><label class="field-label">Project Name</label><input type="text" class="field-input" id="renameProjectName"></div>
+</div><div class="modal-foot"><button class="btn" id="renameProjectCancel">Cancel</button><button class="btn btn-primary" id="renameProjectSave">Save</button></div></div></div>
+
+<!-- Delete Project Modal -->
+<div class="modal-bg" id="deleteProjectModal"><div class="modal" style="max-width:400px"><div class="modal-head"><span class="modal-title" style="color:var(--red)">Delete Project</span><button class="modal-close" id="deleteProjectClose">×</button></div><div class="modal-body">
+<div style="font-size:13px;color:var(--text);margin-bottom:16px">This will permanently delete the project and all its data. This cannot be undone.</div>
+<div style="font-size:12px;color:var(--text2);margin-bottom:8px">Type the project name to confirm:</div>
+<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px;padding:8px;background:var(--bg2);border-radius:6px" id="deleteProjectDisplayName"></div>
+<div class="field"><input type="text" class="field-input" id="deleteProjectConfirmName" placeholder="Type project name here"></div>
+</div><div class="modal-foot"><button class="btn" id="deleteProjectCancel">Cancel</button><button class="btn" id="deleteProjectConfirm" style="background:var(--red);color:#fff" disabled>Delete Project</button></div></div></div>
+
+<!-- Save as Template Modal -->
+<div class="modal-bg" id="saveTemplateModal"><div class="modal" style="max-width:420px"><div class="modal-head"><span class="modal-title">💾 Save as Template</span><button class="modal-close" id="saveTemplateClose">×</button></div><div class="modal-body">
+<div style="font-size:12px;color:var(--text2);margin-bottom:16px">Save the current project structure (assemblies and parts) as a reusable template. Status, dates, and PO data will not be included.</div>
+<div class="field"><label class="field-label">Template Name</label><input type="text" class="field-input" id="saveTemplateName" placeholder="e.g. MRS-450 Standard Config"></div>
+<div class="field"><label class="field-label">Description (optional)</label><input type="text" class="field-input" id="saveTemplateDesc" placeholder="Brief description..."></div>
+<div style="font-size:11px;color:var(--text3);margin-top:8px" id="saveTemplateStats"></div>
+</div><div class="modal-foot"><button class="btn" id="saveTemplateCancel">Cancel</button><button class="btn btn-primary" id="saveTemplateSave">Save Template</button></div></div></div>
+
+<!-- Manage Templates Modal -->
+<div class="modal-bg" id="manageTemplatesModal"><div class="modal" style="max-width:520px"><div class="modal-head"><span class="modal-title">📋 Manage Templates</span><button class="modal-close" id="manageTemplatesClose">×</button></div><div class="modal-body" style="padding:0">
+<div id="templatesList" style="max-height:400px;overflow-y:auto"></div>
+</div><div class="modal-foot"><button class="btn" id="manageTemplatesDone">Done</button></div></div></div>
+
 <div class="toast-box" id="toastBox"></div>
+
+<!-- Master Schedule Overlay -->
+<div class="master-schedule-overlay" id="masterScheduleOverlay">
+<div class="master-schedule-header">
+<span class="master-schedule-title">Master Schedule</span>
+<label style="font-size:12px;display:flex;align-items:center;gap:6px;color:var(--text2);cursor:pointer"><input type="checkbox" id="masterShowArchived"> Show archived</label>
+<button class="master-schedule-close" id="masterScheduleClose">×</button>
+</div>
+<div class="master-schedule-body">
+<div id="masterTimelineHeader" class="master-timeline-header"></div>
+<div id="masterScheduleContent"></div>
+<div class="master-legend">
+<div class="master-legend-item"><div class="master-legend-color" style="background:var(--accent)"></div> Active project</div>
+<div class="master-legend-item"><div class="master-legend-color" style="background:var(--text3);opacity:0.6"></div> Archived</div>
+<div class="master-legend-item"><div class="master-legend-color" style="background:var(--red);width:2px"></div> Today</div>
+</div>
+</div>
+</div>
 
 <!-- Chat -->
 <div class="comments-popover" id="commentsPopover">
@@ -1803,6 +1948,23 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 const auth = firebase.auth();
 
+// ============================================
+// Multi-Project Support
+// ============================================
+const globalRef = db.ref('global');
+let projectIndex = {};  // {projectId: {name, archived, createdAt, updatedAt}}
+let currentProjectId = null;
+
+// Generate short alphanumeric ID for new projects
+function generateProjectId() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let id = 'p_';
+  for (let i = 0; i < 6; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
+
 // Dynamic project reference - set after project code is entered
 let projectRef = null;
 let currentProjectCode = null;
@@ -1810,6 +1972,7 @@ let currentProjectCode = null;
 // Set up project reference based on code
 function setProjectCode(code) {
   currentProjectCode = code;
+  currentProjectId = code;  // For now, code = id (will be migrated)
   projectRef = db.ref('projects/' + code);
   console.log('📁 Project path: projects/' + code);
 }
@@ -1833,7 +1996,7 @@ let data=[],team=[],expanded={},history=[],projectDates={start:'',end:''},action
 // Structure: { 'ITEM-CODE': { requiresTesting: bool, tester: string, requiresConfig: bool, configuredBy: string } }
 let itemCodeConfig={};
 const ITEM_CONFIG_KEY='ebs-item-code-config';
-const itemConfigRef = db.ref('itemCodeConfig');
+// Note: itemConfigRef is now under /global/itemCodeConfig (migrated from root /itemCodeConfig)
 
 function loadItemCodeConfig(){
   // Load from localStorage first as fallback
@@ -1842,8 +2005,8 @@ function loadItemCodeConfig(){
     if(stored)itemCodeConfig=JSON.parse(stored);
   }catch(e){console.warn('Failed to load item code config from localStorage',e)}
   
-  // Then sync from Firebase
-  itemConfigRef.on('value',snapshot=>{
+  // Then sync from Firebase (now under /global/itemCodeConfig)
+  globalRef.child('itemCodeConfig').on('value',snapshot=>{
     const val=snapshot.val();
     if(val){
       itemCodeConfig=val;
@@ -1855,8 +2018,8 @@ function loadItemCodeConfig(){
 }
 
 function saveItemCodeConfig(){
-  // Save to Firebase
-  itemConfigRef.set(itemCodeConfig).catch(e=>console.warn('Failed to save item config to Firebase',e));
+  // Save to Firebase (now under /global/itemCodeConfig)
+  globalRef.child('itemCodeConfig').set(itemCodeConfig).catch(e=>console.warn('Failed to save item config to Firebase',e));
   // Also save to localStorage as backup
   try{
     localStorage.setItem(ITEM_CONFIG_KEY,JSON.stringify(itemCodeConfig));
@@ -1866,6 +2029,369 @@ function saveItemCodeConfig(){
 function getItemConfig(code){
   if(!code||!itemCodeConfig[code])return{requiresTesting:true,tester:'',requiresConfig:false,configuredBy:''};
   return itemCodeConfig[code];
+}
+
+// ============================================
+// Global Data Migration (Phase 1)
+// ============================================
+// Migrates team, leadTime, globalCodes, globalMfrs from project-specific to global storage
+// This ensures all projects share the same team and reference data
+
+let globalDataLoaded = false;
+let migrationInProgress = false;
+
+async function checkAndRunMigration() {
+  if (migrationInProgress) return;
+  migrationInProgress = true;
+  
+  try {
+    // Check if global data already exists
+    const globalSnap = await globalRef.child('migrated').once('value');
+    
+    if (globalSnap.val()) {
+      console.log('✓ Global data migration already complete');
+      migrationInProgress = false;
+      return;
+    }
+    
+    console.log('🔄 Running global data migration...');
+    
+    // Read current project's shared data
+    const [teamSnap, leadTimeSnap, codesSnap, mfrsSnap, itemConfigSnap] = await Promise.all([
+      projectRef.child('meta/team').once('value'),
+      projectRef.child('leadTime').once('value'),
+      projectRef.child('globalCodes').once('value'),
+      projectRef.child('globalMfrs').once('value'),
+      db.ref('itemCodeConfig').once('value')  // Old root-level path
+    ]);
+    
+    // Prepare migration data
+    const updates = {};
+    
+    if (teamSnap.val()) {
+      updates['team'] = teamSnap.val();
+      console.log('  → Migrating team:', Array.isArray(teamSnap.val()) ? teamSnap.val().length : Object.keys(teamSnap.val()).length, 'members');
+    }
+    
+    if (leadTimeSnap.val()) {
+      updates['leadTime'] = leadTimeSnap.val();
+      console.log('  → Migrating lead time data');
+    }
+    
+    if (codesSnap.val()) {
+      updates['globalCodes'] = codesSnap.val();
+      console.log('  → Migrating global codes');
+    }
+    
+    if (mfrsSnap.val()) {
+      updates['globalMfrs'] = mfrsSnap.val();
+      console.log('  → Migrating global manufacturers');
+    }
+    
+    if (itemConfigSnap.val()) {
+      updates['itemCodeConfig'] = itemConfigSnap.val();
+      console.log('  → Migrating item code config');
+    }
+    
+    // Also register current project in the index
+    updates['projectIndex/' + currentProjectCode] = {
+      name: currentProjectName || 'Untitled Project',
+      archived: false,
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      updatedAt: firebase.database.ServerValue.TIMESTAMP
+    };
+    
+    updates['migrated'] = true;
+    updates['migratedAt'] = firebase.database.ServerValue.TIMESTAMP;
+    
+    // Write all at once
+    await globalRef.update(updates);
+    
+    console.log('✓ Global data migration complete');
+    
+  } catch (err) {
+    console.error('Migration error:', err);
+  }
+  
+  migrationInProgress = false;
+}
+
+// Load global shared data (team, leadTime, globalCodes, globalMfrs)
+let templatesIndex = {};  // {templateId: {name, description, createdAt, asmCount, partCount}}
+
+function setupGlobalListeners() {
+  // Team - shared across all projects
+  globalRef.child('team').on('value', snap => {
+    const val = snap.val();
+    if (val) {
+      team = Array.isArray(val) ? val : Object.values(val);
+      if (globalDataLoaded) {
+        updateSelects();
+        render();
+      }
+    }
+  });
+  
+  // Lead time database - shared across all projects
+  globalRef.child('leadTime').on('value', snap => {
+    leadTimeDb = snap.val() || {};
+  });
+  
+  // Global codes - shared across all projects
+  globalRef.child('globalCodes').on('value', snap => {
+    const val = snap.val();
+    globalCodes = val ? (Array.isArray(val) ? val : Object.values(val)) : [];
+  });
+  
+  // Global manufacturers - shared across all projects
+  globalRef.child('globalMfrs').on('value', snap => {
+    const val = snap.val();
+    globalMfrs = val ? (Array.isArray(val) ? val : Object.values(val)) : [];
+  });
+  
+  // Project index - list of all projects
+  globalRef.child('projectIndex').on('value', snap => {
+    projectIndex = snap.val() || {};
+    updateProjectDropdown();
+  });
+  
+  // Templates index
+  db.ref('templates').on('value', snap => {
+    const val = snap.val() || {};
+    templatesIndex = {};
+    Object.entries(val).forEach(([id, tmpl]) => {
+      if (tmpl.meta) {
+        templatesIndex[id] = tmpl.meta;
+      }
+    });
+    updateTemplateDropdowns();
+  });
+  
+  globalDataLoaded = true;
+}
+
+// Update template dropdowns (New Project modal)
+function updateTemplateDropdowns() {
+  const select = $('newProjectTemplate');
+  if (!select) return;
+  
+  const templates = Object.entries(templatesIndex)
+    .map(([id, meta]) => ({ id, ...meta }))
+    .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  
+  select.innerHTML = '<option value="">Empty Project</option>' +
+    templates.map(t => '<option value="' + esc(t.id) + '">' + esc(t.name) + ' (' + (t.asmCount || 0) + ' assemblies, ' + (t.partCount || 0) + ' parts)</option>').join('');
+}
+
+// Save global team data
+function saveTeam() {
+  globalRef.child('team').set(team).catch(e => console.warn('Failed to save team:', e));
+}
+
+// Save global lead time data  
+function saveLeadTime() {
+  globalRef.child('leadTime').set(leadTimeDb).catch(e => console.warn('Failed to save lead time:', e));
+}
+
+// Save global codes
+function saveGlobalCodes() {
+  globalRef.child('globalCodes').set(globalCodes).catch(e => console.warn('Failed to save global codes:', e));
+}
+
+// Save global manufacturers
+function saveGlobalMfrs() {
+  globalRef.child('globalMfrs').set(globalMfrs).catch(e => console.warn('Failed to save global mfrs:', e));
+}
+
+// Update project index entry
+function updateProjectIndex() {
+  if (!currentProjectCode) return;
+  globalRef.child('projectIndex/' + currentProjectCode).update({
+    name: currentProjectName,
+    startDate: projectDates.start || null,
+    endDate: projectDates.end || null,
+    updatedAt: firebase.database.ServerValue.TIMESTAMP
+  }).catch(e => console.warn('Failed to update project index:', e));
+}
+
+// ============================================
+// Project Dropdown & Switching (Phase 2)
+// ============================================
+
+// Update the project dropdown UI
+function updateProjectDropdown() {
+  const list = $('projectDropdownList');
+  if (!list) return;
+  
+  // Sort projects: active first (by name), then archived
+  const projects = Object.entries(projectIndex)
+    .map(([id, proj]) => ({ id, ...proj }))
+    .sort((a, b) => {
+      if (a.archived !== b.archived) return a.archived ? 1 : -1;
+      return (a.name || '').localeCompare(b.name || '');
+    });
+  
+  if (projects.length === 0) {
+    list.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text3);font-size:12px">No projects yet</div>';
+    return;
+  }
+  
+  list.innerHTML = projects.map(proj => {
+    const isActive = proj.id === currentProjectCode;
+    const archivedBadge = proj.archived ? '<span class="project-dropdown-item-archived">Archived</span>' : '';
+    const checkMark = isActive ? '✓' : '';
+    return '<div class="project-dropdown-item'+(isActive?' active':'')+'" data-project-id="'+esc(proj.id)+'">' +
+      '<span class="project-dropdown-item-check">'+checkMark+'</span>' +
+      '<span class="project-dropdown-item-name">'+esc(proj.name || 'Untitled')+'</span>' +
+      archivedBadge +
+    '</div>';
+  }).join('');
+}
+
+// Switch to a different project
+async function switchProject(projectId) {
+  if (projectId === currentProjectCode) {
+    closeProjectDropdown();
+    return;
+  }
+  
+  const proj = projectIndex[projectId];
+  if (!proj) {
+    toast('Project not found', 1);
+    return;
+  }
+  
+  console.log('📁 Switching to project:', projectId, proj.name);
+  
+  // Show loading state
+  showSync('syncing', 'Switching...');
+  
+  // Detach current project listeners
+  detachProjectListeners();
+  
+  // Clear current project data
+  data = [];
+  history = [];
+  actions = [];
+  milestones = [];
+  projectDates = { start: '', end: '' };
+  savedBoms = [];
+  expanded = {};
+  
+  // Clear localStorage for old project
+  localStorage.removeItem('ebs-v3-project-' + currentProjectCode);
+  
+  // Set new project
+  setProjectCode(projectId);
+  currentProjectName = proj.name || 'Untitled Project';
+  
+  // Update URL
+  const url = new URL(window.location);
+  url.searchParams.set('project', projectId);
+  window.history.pushState({}, '', url);
+  
+  // Load new project data
+  await loadProjectData();
+  
+  // Close dropdown
+  closeProjectDropdown();
+  
+  // Render
+  updateProjectName();
+  render();
+  showSync('synced', 'Loaded');
+  setTimeout(() => $('syncIndicator').classList.remove('active'), 1500);
+}
+
+// Detach all project-specific listeners
+function detachProjectListeners() {
+  if (!projectRef) return;
+  
+  try {
+    projectRef.child('parts').off();
+    projectRef.child('assemblies').off();
+    projectRef.child('actions').off();
+    projectRef.child('meta').off();
+    projectRef.child('history').off();
+    projectRef.child('boms').off();
+  } catch (e) {
+    console.warn('Error detaching listeners:', e);
+  }
+}
+
+// Load project data (used after switch)
+async function loadProjectData() {
+  return new Promise((resolve) => {
+    // Try localStorage first
+    const localKey = 'ebs-v3-project-' + currentProjectCode;
+    try {
+      const saved = localStorage.getItem(localKey);
+      if (saved) {
+        const val = JSON.parse(saved);
+        if (val.data && val.data.length > 0) {
+          data = val.data;
+          milestones = val.milestones || [];
+          history = val.history || [];
+          actions = val.actions || [];
+          projectDates = val.projectDates || { start: '', end: '' };
+          console.log('📦 Loaded from localStorage:', data.length, 'items');
+        }
+      }
+    } catch (e) {
+      console.warn('localStorage read error:', e);
+    }
+    
+    // Set up realtime listeners for the new project
+    setupRealtimeListener();
+    
+    // Wait a bit for Firebase to load
+    setTimeout(resolve, 500);
+  });
+}
+
+// Open/close dropdown
+function openProjectDropdown() {
+  $('projectDropdown').classList.add('open');
+  updateProjectDropdown();
+}
+
+function closeProjectDropdown() {
+  $('projectDropdown').classList.remove('open');
+}
+
+function toggleProjectDropdown() {
+  const dropdown = $('projectDropdown');
+  if (dropdown.classList.contains('open')) {
+    closeProjectDropdown();
+  } else {
+    openProjectDropdown();
+  }
+}
+
+// Handle URL parameters for project selection
+function handleProjectUrlParam() {
+  const params = new URLSearchParams(window.location.search);
+  const projectId = params.get('project');
+  
+  if (projectId && projectId !== currentProjectCode) {
+    // Will switch after global data loads
+    return projectId;
+  }
+  return null;
+}
+
+// Save current project to its localStorage key
+function saveProjectToLocalStorage() {
+  if (!currentProjectCode) return;
+  
+  const localKey = 'ebs-v3-project-' + currentProjectCode;
+  try {
+    localStorage.setItem(localKey, JSON.stringify({
+      data, milestones, history, actions, projectDates, projectName: currentProjectName
+    }));
+  } catch (e) {
+    console.warn('localStorage save error:', e);
+  }
 }
 
 function getPartStages(part){
@@ -2221,9 +2747,11 @@ function save(){
     if(dirtyMeta) {
       updates['meta/projectName'] = currentProjectName;
       updates['meta/projectDates'] = projectDates;
-      updates['meta/team'] = team;
+      // Note: team is now saved globally via saveTeam()
       updates['meta/milestones'] = milestones;
       updates['meta/updatedAt'] = firebase.database.ServerValue.TIMESTAMP;
+      // Also update project index with new name
+      updateProjectIndex();
     }
     
     // Also update lastSaveId for echo detection
@@ -2281,24 +2809,9 @@ function save(){
   },500);
 }
 
-function saveLeadTime(){
-  if(!isAuthenticated||useLocalStorage)return;
-  projectRef.child('leadTime').set(leadTimeDb).catch(console.error);
-}
-
 function saveBoms(){
   if(!isAuthenticated||useLocalStorage)return;
   projectRef.child('boms').set(savedBoms).catch(console.error);
-}
-
-function saveGlobalCodes(){
-  if(!isAuthenticated||useLocalStorage)return;
-  projectRef.child('globalCodes').set(globalCodes).catch(console.error);
-}
-
-function saveGlobalMfrs(){
-  if(!isAuthenticated||useLocalStorage)return;
-  projectRef.child('globalMfrs').set(globalMfrs).catch(console.error);
 }
 
 function saveExpanded(){
@@ -2385,6 +2898,26 @@ let dataInitialized = false;
 function initFirebaseListeners(){
   showSync('syncing','Loading...');
   
+  // Check for project ID in URL parameter first
+  const params = new URLSearchParams(window.location.search);
+  const urlProjectId = params.get('project');
+  
+  if (urlProjectId && urlProjectId !== currentProjectCode) {
+    // Switch to project specified in URL
+    console.log('📁 Project from URL:', urlProjectId);
+    setProjectCode(urlProjectId);
+  } else {
+    // Check for last opened project
+    const lastProject = localStorage.getItem('ebs-v3-last-project');
+    if (lastProject && lastProject !== currentProjectCode) {
+      console.log('📁 Resuming last project:', lastProject);
+      setProjectCode(lastProject);
+    }
+  }
+  
+  // Set up global listeners first (team, leadTime, globalCodes, globalMfrs, projectIndex)
+  setupGlobalListeners();
+  
   // ALWAYS check localStorage first
   const localData = loadFromLocalStorage();
   
@@ -2397,6 +2930,9 @@ function initFirebaseListeners(){
     
     // Try to connect to Firebase for sync
     tryFirebaseSync();
+    
+    // Run migration if needed (async, won't block UI)
+    checkAndRunMigration();
   } else {
     // No local data - try Firebase, then create sample if needed
     tryFirebaseFirst();
@@ -2484,7 +3020,11 @@ function tryFirebaseFirst(){
       if(metaVal) {
         currentProjectName = metaVal.projectName || 'EBS Project';
         projectDates = metaVal.projectDates || {start:'', end:''};
-        team = metaVal.team ? (Array.isArray(metaVal.team) ? metaVal.team : Object.values(metaVal.team)) : [];
+        // Note: team is now loaded globally via setupGlobalListeners()
+        // Only use project team as fallback if global team is empty (migration period)
+        if(team.length === 0 && metaVal.team) {
+          team = Array.isArray(metaVal.team) ? metaVal.team : Object.values(metaVal.team);
+        }
         milestones = metaVal.milestones ? (Array.isArray(metaVal.milestones) ? metaVal.milestones : Object.values(metaVal.milestones)) : [];
       }
       
@@ -2518,6 +3058,9 @@ function tryFirebaseFirst(){
       setupRealtimeListener();
       render();
       
+      // Run global data migration if needed
+      checkAndRunMigration();
+      
     } else if(hasMigrationIncomplete && hasLegacyData) {
       // Migration was interrupted - retry from legacy data
       console.log('⚠️ Incomplete migration detected (schemaVersion=1), retrying...');
@@ -2530,6 +3073,7 @@ function tryFirebaseFirst(){
           showSync('synced','Migration completed ✓');
           setTimeout(()=>$('syncIndicator').classList.remove('active'),1500);
           setupRealtimeListener();
+          checkAndRunMigration();
         });
       });
       
@@ -2546,6 +3090,7 @@ function tryFirebaseFirst(){
           showSync('synced','Migrated ✓');
           setTimeout(()=>$('syncIndicator').classList.remove('active'),1500);
           setupRealtimeListener();
+          checkAndRunMigration();
         });
       });
       
@@ -2557,6 +3102,7 @@ function tryFirebaseFirst(){
       // Save to granular structure
       saveAllToGranular().then(() => {
         setupRealtimeListener();
+        checkAndRunMigration();
       });
     }
   }).catch(err=>{
@@ -2595,7 +3141,7 @@ async function migrateToGranular() {
   // Migrate meta (except schemaVersion - we'll set that last)
   updates['meta/projectName'] = currentProjectName;
   updates['meta/projectDates'] = projectDates;
-  updates['meta/team'] = team;
+  // Note: team is now global, handled by checkAndRunMigration()
   updates['meta/milestones'] = milestones;
   updates['meta/updatedAt'] = firebase.database.ServerValue.TIMESTAMP;
   
@@ -2640,7 +3186,7 @@ async function saveAllToGranular() {
   
   updates['meta/projectName'] = currentProjectName;
   updates['meta/projectDates'] = projectDates;
-  updates['meta/team'] = team;
+  // Note: team is now global, saved via saveTeam()
   updates['meta/milestones'] = milestones;
   updates['meta/schemaVersion'] = 2;  // Mark as granular structure
   updates['meta/updatedAt'] = firebase.database.ServerValue.TIMESTAMP;
@@ -2682,37 +3228,60 @@ function tryFirebaseSync(){
 
 function loadFromLocalStorage(){
   try {
-    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    // Try project-specific key first
+    let saved = null;
+    if (currentProjectCode) {
+      const projectKey = 'ebs-v3-project-' + currentProjectCode;
+      saved = localStorage.getItem(projectKey);
+    }
+    
+    // Fall back to legacy key
+    if (!saved) {
+      saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    }
+    
     if(saved){
       const val = JSON.parse(saved);
       if(val.data && val.data.length > 0){
         data = val.data;
-        team = val.team || [];
+        team = val.team || team; // Keep existing team if not in saved data (team is global now)
         milestones = val.milestones || [];
         history = val.history || [];
         actions = val.actions || [];
         projectDates = val.projectDates || {start:'',end:''};
         currentProjectName = val.projectName || 'EBS Project';
         
-        // Seed history if insufficient for chart
-        if(history.length < 2 && data.length > 0){
+        // Seed history if insufficient for chart - ALWAYS ensure we have 2+ points
+        if(history.length < 2 && data.length > 0 && projectDates.start){
           const today = new Date().toISOString().split('T')[0];
           const parts = data.filter(d => !d.isAsm);
           const WEIGHTS = {'waiting':0,'to-order':20,'ordered':40,'arrived':70,'installed':100};
           const currentPct = parts.length ? Math.round(parts.reduce((acc, p) => acc + (WEIGHTS[p.status] || 0), 0) / parts.length) : 0;
           
-          if(projectDates.start && projectDates.start < today){
-            history = [
-              {date: projectDates.start, pct: 0},
-              {date: today, pct: currentPct}
-            ];
+          // Use project start date, or 7 days ago if project start is in the future
+          const startDate = new Date(projectDates.start);
+          const todayDate = new Date(today);
+          
+          if(startDate <= todayDate){
+            // Project already started - create history from start to today
+            history = [{date: projectDates.start, pct: 0}];
+            // Add intermediate points if project is more than 7 days old
+            const daysSinceStart = Math.floor((todayDate - startDate) / 86400000);
+            if(daysSinceStart > 14){
+              const midDate = new Date(startDate.getTime() + (todayDate - startDate) / 2);
+              history.push({date: midDate.toISOString().split('T')[0], pct: Math.round(currentPct / 2)});
+            }
+            history.push({date: today, pct: currentPct});
           } else {
-            const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+            // Project hasn't started yet - just use today
+            const weekAgo = new Date(Date.now() - 7*86400000).toISOString().split('T')[0];
             history = [
-              {date: yesterday, pct: Math.max(0, currentPct - 5)},
+              {date: weekAgo, pct: Math.max(0, currentPct - 10)},
               {date: today, pct: currentPct}
             ];
           }
+          // Save the seeded history
+          saveToLocalStorage();
         }
         
         updateProjectName();
@@ -2727,10 +3296,22 @@ function loadFromLocalStorage(){
 }
 
 function saveToLocalStorage(){
+  if (!currentProjectCode) return;
+  
   try {
+    // Save to project-specific key
+    const projectKey = 'ebs-v3-project-' + currentProjectCode;
+    localStorage.setItem(projectKey, JSON.stringify({
+      data, milestones, history, actions, projectDates, projectName: currentProjectName
+    }));
+    
+    // Also save to legacy key for backward compatibility
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({
       data, team, milestones, history, actions, projectDates, projectName: currentProjectName
     }));
+    
+    // Remember last opened project
+    localStorage.setItem('ebs-v3-last-project', currentProjectCode);
   } catch(e){
     console.error('localStorage save error:', e);
   }
@@ -3087,9 +3668,10 @@ function loadFromSnapshot(val){
       data = newData;
     }
   }
-  if(val.team){
+  // Team is now global - only load from project as fallback during migration
+  if(val.team && team.length === 0){
     const newTeam = Array.isArray(val.team) ? val.team : Object.values(val.team);
-    if(newTeam.length > 0 || team.length === 0) {
+    if(newTeam.length > 0) {
       team = newTeam;
     }
   }
@@ -3400,7 +3982,7 @@ function setupRealtimeListener(){
     
     if(val.projectName) currentProjectName = val.projectName;
     if(val.projectDates) projectDates = val.projectDates;
-    if(val.team) team = Array.isArray(val.team) ? val.team : Object.values(val.team);
+    // Note: team is now global, loaded via setupGlobalListeners()
     if(val.milestones) milestones = Array.isArray(val.milestones) ? val.milestones : Object.values(val.milestones);
     
     updateProjectName();
@@ -3433,24 +4015,10 @@ function setupRealtimeListener(){
     });
   });
   
-  // ========== AUXILIARY LISTENERS ==========
-  projectRef.child('leadTime').on('value', snapshot=>{
-    leadTimeDb = snapshot.val() || {};
-  });
-  
+  // ========== AUXILIARY LISTENERS (project-specific) ==========
   projectRef.child('boms').on('value', snapshot=>{
     const val = snapshot.val();
     if(val) savedBoms = Array.isArray(val) ? val : Object.values(val);
-  });
-  
-  projectRef.child('globalCodes').on('value', snapshot=>{
-    const val = snapshot.val();
-    globalCodes = val ? (Array.isArray(val) ? val : Object.values(val)) : [];
-  });
-  
-  projectRef.child('globalMfrs').on('value', snapshot=>{
-    const val = snapshot.val();
-    globalMfrs = val ? (Array.isArray(val) ? val : Object.values(val)) : [];
   });
   
   // ========== CONNECTION STATUS ==========
@@ -3795,6 +4363,20 @@ function render(){
       }
     });
     data.filter(d=>!d.isAsm&&!d._deletedAt&&!d.parentId).filter(matchPart).forEach(p=>{html+=renderPart({type:'part',item:p,child:false,depth:0})});
+    
+    // Show empty state with Add Assembly button if no assemblies
+    if(!asms.length && !html){
+      html='<div style="text-align:center;padding:60px 20px;color:var(--text3)">'+
+        '<div style="font-size:32px;margin-bottom:12px">📦</div>'+
+        '<div style="font-size:14px;font-weight:500;color:var(--text2);margin-bottom:8px">No assemblies yet</div>'+
+        '<div style="font-size:12px;margin-bottom:20px">Add your first assembly to start tracking parts</div>'+
+        '<button class="btn btn-primary" onclick="window.addNewAssembly()" style="display:inline-flex">+ Add Assembly</button>'+
+      '</div>';
+    } else if(asms.length && !filterStage && !filterAssignee && !filterPO && !searchQ) {
+      // Add "Add Assembly" button at the bottom when not filtering
+      html+='<div class="add-row" style="padding-left:12px;margin-top:8px"><button class="add-row-btn" onclick="window.addNewAssembly()" title="Add new assembly" style="width:auto;padding:0 12px;font-size:11px">+ Add Assembly</button></div>';
+    }
+    
     $('partsList').innerHTML=html;
     $('partsTable').style.display='flex';$('emptyList').style.display='none';
     if(highlightPartId){setTimeout(()=>{const row=document.querySelector('[data-part-id="'+highlightPartId+'"]');if(row){row.classList.add('highlight');setTimeout(()=>row.classList.remove('highlight'),5000)}highlightPartId=null},50)}
@@ -3866,8 +4448,31 @@ function renderBurndown(){
   // If no history, create a point for today
   let workingHistory = history.length > 0 ? history : [{date: new Date().toISOString().split('T')[0], pct: calcOverallProgress()}];
   
-  const points=workingHistory.filter(pt=>{const d=new Date(pt.date);return d>=start&&d<=end}).map(pt=>{const d=new Date(pt.date),dayNum=(d-start)/86400000;return{x:xScale(dayNum),y:yScale(pt.pct),pct:pt.pct,dayNum,date:pt.date}});
+  let points=workingHistory.filter(pt=>{const d=new Date(pt.date);return d>=start&&d<=end}).map(pt=>{const d=new Date(pt.date),dayNum=(d-start)/86400000;return{x:xScale(dayNum),y:yScale(pt.pct),pct:pt.pct,dayNum,date:pt.date}});
   points.sort((a,b) => a.dayNum - b.dayNum);
+  
+  // Ensure we have at least 2 points to draw a line
+  if(points.length === 0){
+    // No points in range - add project start at 0% and today
+    const todayDate = new Date();
+    const todayDayNum = (todayDate - start) / 86400000;
+    const currentPct = calcOverallProgress();
+    points = [
+      {x: xScale(0), y: yScale(0), pct: 0, dayNum: 0, date: projectDates.start},
+      {x: xScale(todayDayNum), y: yScale(currentPct), pct: currentPct, dayNum: todayDayNum, date: todayDate.toISOString().split('T')[0]}
+    ];
+  } else if(points.length === 1){
+    // Only 1 point - add project start at 0%
+    if(points[0].dayNum > 0){
+      points.unshift({x: xScale(0), y: yScale(0), pct: 0, dayNum: 0, date: projectDates.start});
+    } else {
+      // Point is at start, add today
+      const todayDate = new Date();
+      const todayDayNum = (todayDate - start) / 86400000;
+      const currentPct = calcOverallProgress();
+      points.push({x: xScale(todayDayNum), y: yScale(currentPct), pct: currentPct, dayNum: todayDayNum, date: todayDate.toISOString().split('T')[0]});
+    }
+  }
   
   let svg='<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="xMidYMid meet">';
   
@@ -4035,7 +4640,7 @@ let ganttResourceFilter=''; // Filter by assignee
 
 // Detect resource conflicts (same person assigned to overlapping date ranges)
 function detectResourceConflicts(rows){
-  const conflicts=new Map(); // rowId -> [{id, name, start, end}]
+  const conflicts=new Map(); // rowId -> [{id, name, start, end, assignee}]
   
   for(let i=0;i<rows.length;i++){
     const a=rows[i];
@@ -4050,12 +4655,55 @@ function detectResourceConflicts(rows){
       if(a.startDate<=b.endDate&&a.endDate>=b.startDate){
         if(!conflicts.has(a.id))conflicts.set(a.id,[]);
         if(!conflicts.has(b.id))conflicts.set(b.id,[]);
-        conflicts.get(a.id).push({id:b.id,name:b.name,start:b.startDate,end:b.endDate});
-        conflicts.get(b.id).push({id:a.id,name:a.name,start:a.startDate,end:a.endDate});
+        conflicts.get(a.id).push({id:b.id,name:b.name,start:b.startDate,end:b.endDate,assignee:a.assignee});
+        conflicts.get(b.id).push({id:a.id,name:a.name,start:a.startDate,end:a.endDate,assignee:a.assignee});
       }
     }
   }
   return conflicts;
+}
+
+// Build conflict description HTML for popover
+function buildConflictPopoverHtml(conflicts, rows){
+  if(conflicts.size === 0) return '';
+  
+  // Group conflicts by assignee to make popover more readable
+  const byAssignee = new Map(); // assignee -> [{task1, task2}]
+  const seen = new Set(); // Track pairs we've already recorded
+  
+  conflicts.forEach((conflictList, rowId) => {
+    const row = rows.find(r => r.id === rowId);
+    if(!row) return;
+    
+    conflictList.forEach(c => {
+      const pairKey = [rowId, c.id].sort().join('-');
+      if(seen.has(pairKey)) return;
+      seen.add(pairKey);
+      
+      const assignee = c.assignee || row.assignee;
+      if(!byAssignee.has(assignee)) byAssignee.set(assignee, []);
+      byAssignee.get(assignee).push({
+        task1: row.name,
+        task2: c.name
+      });
+    });
+  });
+  
+  // Build popover HTML
+  let html = '<div class="gantt-conflict-popover-title">⚠️ Resource Conflicts</div>';
+  
+  byAssignee.forEach((pairs, assignee) => {
+    html += '<div class="gantt-conflict-item">';
+    html += '<div class="gantt-conflict-resource">' + esc(assignee) + '</div>';
+    html += '<div class="gantt-conflict-tasks">';
+    pairs.forEach((p, i) => {
+      if(i > 0) html += '<br>';
+      html += '"' + esc(p.task1) + '" overlaps with "' + esc(p.task2) + '"';
+    });
+    html += '</div></div>';
+  });
+  
+  return html;
 }
 
 function renderGantt(){
@@ -4065,7 +4713,7 @@ function renderGantt(){
   const asms=getAsms();
   const parts=getParts();
   if(!asms.length){
-    $('ganttSidebar').innerHTML='<div style="padding:20px;text-align:center;color:var(--text3)">No assemblies</div>';
+    $('ganttSidebar').innerHTML='<div style="padding:40px 20px;text-align:center;color:var(--text3)"><div style="font-size:24px;margin-bottom:8px">📦</div><div style="font-size:12px;margin-bottom:16px">No assemblies yet</div><button class="btn btn-primary" onclick="window.addNewAssembly()" style="display:inline-flex;font-size:12px">+ Add Assembly</button></div>';
     $('ganttTimelineHeader').innerHTML='';
     $('ganttTimelineBody').innerHTML='';
     return;
@@ -4256,6 +4904,7 @@ function renderGantt(){
   // Detect resource conflicts (before filtering changes the array)
   const conflicts=detectResourceConflicts(rows);
   const totalConflicts=conflicts.size;
+  const conflictPopoverHtml=buildConflictPopoverHtml(conflicts, rows);
 
   // Sort rows by start date (earliest first)
   rows.sort((a,b)=>{
@@ -4408,7 +5057,8 @@ function renderGantt(){
   const badge=$('ganttConflictBadge');
   if(badge){
     if(totalConflicts>0){
-      badge.innerHTML='<span class="gantt-conflict-badge">⚠️ '+totalConflicts+' conflict'+(totalConflicts>1?'s':'')+'</span>';
+      badge.innerHTML='<span class="gantt-conflict-badge" onmouseenter="this.querySelector(\'.gantt-conflict-popover\').classList.add(\'open\')" onmouseleave="this.querySelector(\'.gantt-conflict-popover\').classList.remove(\'open\')">⚠️ '+totalConflicts+' conflict'+(totalConflicts>1?'s':'')+
+        '<div class="gantt-conflict-popover">'+conflictPopoverHtml+'</div></span>';
       badge.style.display='inline';
     }else{
       badge.style.display='none';
@@ -6783,6 +7433,7 @@ window.moveAsmDown=function(id){
   save();render();
 };
 window.addNewAsm=function(){const id=generateId(),asms=getAsms();const maxP=asms.length?Math.max(...asms.map(a=>a.priority||0)):0;data.push({id,name:'New Assembly',isAsm:true,assignee:'',priority:maxP+1});expanded[String(id)]=true;dirtyAsms.add(id);save();render();setTimeout(()=>{editAsmId=id;$('amTitle').textContent='Edit Assembly';$('amName').value='New Assembly';$('amAssignee').value='';$('amNotes').value='';$('amNotify').disabled=true;showPopoverModal($('asmModal'),null);$('amName').select()},50)};
+window.addNewAssembly=window.addNewAsm; // Alias for empty state button
 window.addNewPart=function(parentId){const id=generateId();data.push({id,name:'New Part',code:'',mfr:'',qty:1,assignee:'',parentId:String(parentId),status:'waiting',changedAt:Date.now(),_fieldTs:{}});const serverTime=getServerAlignedTime();['name','status','parentId'].forEach(f=>data[data.length-1]._fieldTs[f]=serverTime);dirtyParts.add(id);expanded[String(parentId)]=true;save();highlightPartId=id;render();setTimeout(()=>{const row=document.querySelector('[data-part-id="'+id+'"] .cell');if(row)row.click()},50)};
 window.addSubPart=function(parentPartId,e){if(e)e.stopPropagation();const parentPart=data.find(d=>String(d.id)===String(parentPartId));if(!parentPart)return;const id=generateId();data.push({id,name:'New Sub-Part',code:'',mfr:'',qty:1,assignee:parentPart.assignee||'',parentId:parentPartId,status:'waiting',changedAt:Date.now()});dirtyParts.add(id);save();highlightPartId=id;render();setTimeout(()=>{const nameCell=document.querySelector('[data-part-id="'+id+'"] .part-name-cell .cell');if(nameCell){nameCell.click();setTimeout(()=>{const input=nameCell.querySelector('input');if(input)input.select()},10)}},50)};
 
@@ -7655,7 +8306,8 @@ window.goToAsm=asmId=>{document.querySelectorAll('.tab').forEach(t=>t.classList.
 window.goToGanttAsm=(asmId,e)=>{e&&e.stopPropagation();document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelector('[data-tab="gantt"]').classList.add('active');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));$('ganttPanel').classList.add('active');ganttExpanded[String(asmId)]=true;window._ganttScrolled=false;setTimeout(()=>{renderGantt();const row=document.querySelector('.gantt-sidebar-row[data-row-id="'+asmId+'"]');if(row){row.scrollIntoView({behavior:'smooth',block:'center'});row.classList.add('highlight');setTimeout(()=>row.classList.remove('highlight'),5000)}},50)};
 let highlightAsmId=null;
 
-const closeModal=id=>$(id).classList.remove('open');
+const closeModal=id=>{const el=$(id);if(el)el.classList.remove('open')};
+const openModal=id=>{const el=$(id);if(el)el.classList.add('open');else console.error('Modal not found:',id)};
 
 // ============================================
 // Command Prompt Window
@@ -8883,7 +9535,7 @@ if($('addActionBtn'))$('addActionBtn').onclick=(e)=>{};
 $('teamBtn').onclick=()=>{renderTeamList();$('teamModal').classList.add('open')};
 $('teamClose').onclick=$('teamDone').onclick=()=>closeModal('teamModal');
 $('teamModal').onclick=e=>{if(e.target.id==='teamModal')closeModal('teamModal')};
-$('teamAdd').onclick=()=>{const name=$('teamName').value.trim(),email=$('teamEmail').value.trim();if(!name||!email.includes('@')){toast('Enter name & email',1);return}if(team.find(t=>t.name===name)){toast('Exists',1);return}team.push({name,email});dirtyMeta=true;save();$('teamName').value='';$('teamEmail').value='';renderTeamList();updateSelects();toast('Added')};
+$('teamAdd').onclick=()=>{const name=$('teamName').value.trim(),email=$('teamEmail').value.trim();if(!name||!email.includes('@')){toast('Enter name & email',1);return}if(team.find(t=>t.name===name)){toast('Exists',1);return}team.push({name,email});saveTeam();$('teamName').value='';$('teamEmail').value='';renderTeamList();updateSelects();toast('Added')};
 
 // Milestones modal handlers
 function renderMilestoneList(){
@@ -8922,7 +9574,7 @@ window.delMilestone=(idx,e)=>{
 
 $('datesBtn').onclick=$('burndownEdit').onclick=window.openDates;
 $('datesClose').onclick=$('datesCancel').onclick=()=>closeModal('datesModal');
-$('datesSave').onclick=()=>{projectDates.start=$('startDate').value;projectDates.end=$('endDate').value;dirtyMeta=true;save();render();renderGantt();closeModal('datesModal');toast('Project dates saved')};
+$('datesSave').onclick=()=>{projectDates.start=$('startDate').value;projectDates.end=$('endDate').value;dirtyMeta=true;save();updateProjectIndex();render();renderGantt();closeModal('datesModal');toast('Project dates saved')};
 $('datesModal').onclick=e=>{if(e.target.id==='datesModal')closeModal('datesModal')};
 
 // PO Modal handlers
@@ -9038,8 +9690,7 @@ $('deleteConfirm').onclick=(e)=>{
     save();render();
   }else if(targetType==='team'){
     team.splice(targetId,1);
-    dirtyMeta=true;
-    save();renderTeamList();updateSelects();
+    saveTeam();renderTeamList();updateSelects();
   }else if(targetType==='bom'){
     savedBoms=savedBoms.filter(b=>String(b.id)!==String(targetId));
     saveBoms();renderBomList();
@@ -9081,7 +9732,642 @@ document.addEventListener('click',e=>{
   if($('menuDrop').classList.contains('open')&&!e.target.closest('.dropdown')){
     $('menuDrop').classList.remove('open');
   }
+  // Close project dropdown when clicking outside
+  if($('projectDropdown').classList.contains('open')&&!e.target.closest('.project-selector')){
+    closeProjectDropdown();
+  }
 });
+
+// Project selector handlers
+$('projectSelectorBtn').onclick=e=>{
+  e.stopPropagation();
+  toggleProjectDropdown();
+};
+
+$('projectDropdownList').onclick=e=>{
+  const item=e.target.closest('.project-dropdown-item');
+  if(item){
+    const projectId=item.dataset.projectId;
+    if(projectId)switchProject(projectId);
+  }
+};
+
+$('newProjectBtn').onclick=()=>{
+  closeProjectDropdown();
+  openModal('newProjectModal');
+};
+
+$('manageProjectsBtn').onclick=()=>{
+  closeProjectDropdown();
+  openModal('manageProjectsModal');
+  renderManageProjectsList();
+};
+
+// New Project Modal handlers
+$('newProjectModal').onclick=e=>{if(e.target.id==='newProjectModal')closeModal('newProjectModal')};
+$('newProjectClose').onclick=()=>closeModal('newProjectModal');
+$('newProjectCancel').onclick=()=>closeModal('newProjectModal');
+$('newProjectCreate').onclick=async ()=>{
+  const name=$('newProjectName').value.trim();
+  if(!name){toast('Enter a project name',1);return}
+  
+  // Generate new project ID
+  const projectId=generateProjectId();
+  console.log('Creating project:', projectId, name);
+  
+  // Create project in Firebase
+  const newProjectRef=db.ref('projects/'+projectId);
+  
+  try{
+    // Initialize project with minimal data
+    console.log('Writing to projects/'+projectId+'/meta...');
+    await newProjectRef.child('meta').set({
+      name:name,
+      projectDates:{start:'',end:''},
+      milestones:[],
+      schemaVersion:2,
+      createdAt:firebase.database.ServerValue.TIMESTAMP,
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    });
+    console.log('Meta written successfully');
+    
+    // Add to project index
+    console.log('Writing to global/projectIndex/'+projectId+'...');
+    await globalRef.child('projectIndex/'+projectId).set({
+      name:name,
+      archived:false,
+      createdAt:firebase.database.ServerValue.TIMESTAMP,
+      updatedAt:firebase.database.ServerValue.TIMESTAMP
+    });
+    console.log('Project index written successfully');
+    
+    closeModal('newProjectModal');
+    $('newProjectName').value='';
+    toast('Project created');
+    
+    // Switch to new project
+    switchProject(projectId);
+    
+  }catch(e){
+    console.error('Failed to create project:',e);
+    console.error('Error code:', e.code);
+    console.error('Error message:', e.message);
+    toast('Failed: '+(e.message||'Unknown error'),1);
+  }
+};
+
+// Manage Projects Modal handlers
+$('manageProjectsModal').onclick=e=>{if(e.target.id==='manageProjectsModal')closeModal('manageProjectsModal')};
+$('manageProjectsClose').onclick=()=>closeModal('manageProjectsModal');
+$('manageProjectsDone').onclick=()=>closeModal('manageProjectsModal');
+$('showArchivedProjects').onchange=()=>renderManageProjectsList();
+
+let renameProjectId=null;
+let deleteProjectId=null;
+
+function renderManageProjectsList(){
+  const list=$('manageProjectsList');
+  const showArchived=$('showArchivedProjects').checked;
+  
+  const projects=Object.entries(projectIndex)
+    .map(([id,proj])=>({id,...proj}))
+    .filter(p=>showArchived||!p.archived)
+    .sort((a,b)=>{
+      if(a.archived!==b.archived)return a.archived?1:-1;
+      return(a.name||'').localeCompare(b.name||'');
+    });
+  
+  if(projects.length===0){
+    list.innerHTML='<div style="padding:24px;text-align:center;color:var(--text3);font-size:12px">No projects</div>';
+    return;
+  }
+  
+  list.innerHTML=projects.map(proj=>{
+    const isActive=proj.id===currentProjectCode;
+    const archivedBadge=proj.archived?'<span class="manage-project-item-archived">Archived</span>':'';
+    const archiveBtn=proj.archived
+      ?'<button onclick="window.unarchiveProject(\''+proj.id+'\')" title="Unarchive">📤</button>'
+      :'<button onclick="window.archiveProject(\''+proj.id+'\')" title="Archive">📥</button>';
+    const dateStr=proj.createdAt?new Date(proj.createdAt).toLocaleDateString():'';
+    
+    return '<div class="manage-project-item">'+
+      '<div style="flex:1">'+
+        '<div class="manage-project-item-name">'+esc(proj.name||'Untitled')+archivedBadge+(isActive?' <span style="color:var(--accent);font-size:11px">(current)</span>':'')+'</div>'+
+        '<div class="manage-project-item-date">Created: '+dateStr+'</div>'+
+      '</div>'+
+      '<div class="manage-project-item-actions">'+
+        '<button onclick="window.renameProject(\''+proj.id+'\',\''+esc(proj.name||'').replace(/'/g,"\\'")+'\')" title="Rename">✏️</button>'+
+        archiveBtn+
+        (isActive?'':'<button class="danger" onclick="window.confirmDeleteProject(\''+proj.id+'\',\''+esc(proj.name||'').replace(/'/g,"\\'")+'\')" title="Delete">🗑️</button>')+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+window.renameProject=(id,currentName)=>{
+  renameProjectId=id;
+  $('renameProjectName').value=currentName;
+  openModal('renameProjectModal');
+};
+
+window.archiveProject=async(id)=>{
+  try{
+    await globalRef.child('projectIndex/'+id+'/archived').set(true);
+    toast('Project archived');
+    renderManageProjectsList();
+    updateProjectDropdown();
+  }catch(e){
+    toast('Failed to archive',1);
+  }
+};
+
+window.unarchiveProject=async(id)=>{
+  try{
+    await globalRef.child('projectIndex/'+id+'/archived').set(false);
+    toast('Project restored');
+    renderManageProjectsList();
+    updateProjectDropdown();
+  }catch(e){
+    toast('Failed to restore',1);
+  }
+};
+
+window.confirmDeleteProject=(id,name)=>{
+  deleteProjectId=id;
+  $('deleteProjectDisplayName').textContent=name;
+  $('deleteProjectConfirmName').value='';
+  $('deleteProjectConfirm').disabled=true;
+  openModal('deleteProjectModal');
+};
+
+// Rename Project Modal handlers
+$('renameProjectModal').onclick=e=>{if(e.target.id==='renameProjectModal')closeModal('renameProjectModal')};
+$('renameProjectClose').onclick=()=>closeModal('renameProjectModal');
+$('renameProjectCancel').onclick=()=>closeModal('renameProjectModal');
+$('renameProjectSave').onclick=async()=>{
+  const newName=$('renameProjectName').value.trim();
+  if(!newName){toast('Enter a name',1);return}
+  
+  try{
+    await globalRef.child('projectIndex/'+renameProjectId+'/name').set(newName);
+    await globalRef.child('projectIndex/'+renameProjectId+'/updatedAt').set(firebase.database.ServerValue.TIMESTAMP);
+    
+    // If renaming current project, update local state
+    if(renameProjectId===currentProjectCode){
+      currentProjectName=newName;
+      updateProjectName();
+    }
+    
+    closeModal('renameProjectModal');
+    toast('Renamed');
+    renderManageProjectsList();
+    updateProjectDropdown();
+  }catch(e){
+    toast('Failed to rename',1);
+  }
+};
+
+// Delete Project Modal handlers
+$('deleteProjectModal').onclick=e=>{if(e.target.id==='deleteProjectModal')closeModal('deleteProjectModal')};
+$('deleteProjectClose').onclick=()=>closeModal('deleteProjectModal');
+$('deleteProjectCancel').onclick=()=>closeModal('deleteProjectModal');
+$('deleteProjectConfirmName').oninput=()=>{
+  const expected=$('deleteProjectDisplayName').textContent;
+  const entered=$('deleteProjectConfirmName').value;
+  $('deleteProjectConfirm').disabled=entered!==expected;
+};
+$('deleteProjectConfirm').onclick=async()=>{
+  if(!deleteProjectId)return;
+  
+  try{
+    // Delete project data
+    await db.ref('projects/'+deleteProjectId).set(null);
+    
+    // Remove from index
+    await globalRef.child('projectIndex/'+deleteProjectId).set(null);
+    
+    closeModal('deleteProjectModal');
+    closeModal('manageProjectsModal');
+    toast('Project deleted');
+    
+    // If deleted current project, switch to another
+    if(deleteProjectId===currentProjectCode){
+      const remaining=Object.keys(projectIndex).filter(id=>id!==deleteProjectId);
+      if(remaining.length>0){
+        switchProject(remaining[0]);
+      }else{
+        // No projects left - create a new one
+        location.reload();
+      }
+    }
+    
+    updateProjectDropdown();
+  }catch(e){
+    toast('Failed to delete',1);
+  }
+};
+
+// ============================================
+// Template System (Phase 4)
+// ============================================
+
+// Generate template ID
+function generateTemplateId() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let id = 't_';
+  for (let i = 0; i < 6; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
+
+// Save as Template Modal handlers
+$('saveTemplateBtn').onclick=()=>{
+  $('menuDrop').classList.remove('open');
+  
+  // Calculate stats
+  const asms = data.filter(d => d.isAsm);
+  const parts = data.filter(d => !d.isAsm);
+  $('saveTemplateStats').textContent = 'Will save ' + asms.length + ' assemblies and ' + parts.length + ' parts';
+  $('saveTemplateName').value = currentProjectName + ' Template';
+  $('saveTemplateDesc').value = '';
+  
+  openModal('saveTemplateModal');
+};
+
+$('saveTemplateClose').onclick=()=>closeModal('saveTemplateModal');
+$('saveTemplateCancel').onclick=()=>closeModal('saveTemplateModal');
+
+$('saveTemplateSave').onclick=async()=>{
+  const name = $('saveTemplateName').value.trim();
+  if(!name) { toast('Enter a template name', 1); return; }
+  
+  const desc = $('saveTemplateDesc').value.trim();
+  const templateId = generateTemplateId();
+  
+  // Build template data - assemblies and parts structure only (no status, dates, PO data)
+  const asms = data.filter(d => d.isAsm);
+  const parts = data.filter(d => !d.isAsm);
+  
+  const templateAsms = {};
+  const templateParts = {};
+  
+  asms.forEach(asm => {
+    templateAsms[asm.id] = {
+      id: asm.id,
+      name: asm.name,
+      isAsm: true,
+      priority: asm.priority || 0
+    };
+  });
+  
+  parts.forEach(part => {
+    templateParts[part.id] = {
+      id: part.id,
+      name: part.name,
+      code: part.code || '',
+      mfr: part.mfr || '',
+      qty: part.qty || 1,
+      parentId: part.parentId || null,
+      notes: part.notes || ''
+    };
+  });
+  
+  try {
+    const templateRef = db.ref('templates/' + templateId);
+    
+    await templateRef.set({
+      meta: {
+        name: name,
+        description: desc,
+        asmCount: asms.length,
+        partCount: parts.length,
+        createdAt: firebase.database.ServerValue.TIMESTAMP,
+        createdBy: firebaseUser ? firebaseUser.uid : null,
+        sourceProject: currentProjectCode
+      },
+      assemblies: templateAsms,
+      parts: templateParts
+    });
+    
+    closeModal('saveTemplateModal');
+    toast('Template saved');
+    
+  } catch(e) {
+    console.error('Failed to save template:', e);
+    toast('Failed: ' + (e.message || 'Unknown error'), 1);
+  }
+};
+
+// Manage Templates Modal handlers
+$('manageTemplatesBtn').onclick=()=>{
+  $('menuDrop').classList.remove('open');
+  renderTemplatesList();
+  openModal('manageTemplatesModal');
+};
+
+$('manageTemplatesClose').onclick=()=>closeModal('manageTemplatesModal');
+$('manageTemplatesDone').onclick=()=>closeModal('manageTemplatesModal');
+
+function renderTemplatesList() {
+  const list = $('templatesList');
+  
+  const templates = Object.entries(templatesIndex)
+    .map(([id, meta]) => ({ id, ...meta }))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  
+  if (templates.length === 0) {
+    list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text3);font-size:12px">No templates yet. Use "Save as Template" from the menu to create one.</div>';
+    return;
+  }
+  
+  list.innerHTML = templates.map(tmpl => {
+    const dateStr = tmpl.createdAt ? new Date(tmpl.createdAt).toLocaleDateString() : '';
+    const stats = (tmpl.asmCount || 0) + ' assemblies, ' + (tmpl.partCount || 0) + ' parts';
+    
+    return '<div class="template-item">' +
+      '<div class="template-item-info">' +
+        '<div class="template-item-name">' + esc(tmpl.name || 'Untitled') + '</div>' +
+        (tmpl.description ? '<div class="template-item-desc">' + esc(tmpl.description) + '</div>' : '') +
+        '<div class="template-item-meta">' + stats + ' • Created ' + dateStr + '</div>' +
+      '</div>' +
+      '<div class="template-item-actions">' +
+        '<button onclick="window.useTemplate(\'' + tmpl.id + '\')" title="Create project from this template">📄</button>' +
+        '<button class="danger" onclick="window.deleteTemplate(\'' + tmpl.id + '\',\'' + esc(tmpl.name || '').replace(/'/g, "\\'") + '\')" title="Delete">🗑️</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+window.useTemplate = (templateId) => {
+  closeModal('manageTemplatesModal');
+  $('newProjectTemplate').value = templateId;
+  $('newProjectName').value = '';
+  openModal('newProjectModal');
+};
+
+window.deleteTemplate = async (templateId, templateName) => {
+  if (!confirm('Delete template "' + templateName + '"? This cannot be undone.')) return;
+  
+  try {
+    await db.ref('templates/' + templateId).set(null);
+    toast('Template deleted');
+    renderTemplatesList();
+  } catch(e) {
+    toast('Failed to delete', 1);
+  }
+};
+
+// ============================================
+// Master Schedule (Portfolio View)
+// ============================================
+
+$('masterScheduleBtn').onclick = () => {
+  renderMasterSchedule();
+  $('masterScheduleOverlay').classList.add('open');
+};
+
+$('masterScheduleClose').onclick = () => {
+  $('masterScheduleOverlay').classList.remove('open');
+};
+
+$('masterShowArchived').onchange = () => {
+  renderMasterSchedule();
+};
+
+function renderMasterSchedule() {
+  const showArchived = $('masterShowArchived').checked;
+  const content = $('masterScheduleContent');
+  const headerEl = $('masterTimelineHeader');
+  
+  // Get projects
+  let projects = Object.entries(projectIndex)
+    .map(([id, p]) => ({ id, ...p }))
+    .filter(p => showArchived || !p.archived)
+    .sort((a, b) => {
+      // Sort by start date, then name
+      if (a.startDate && b.startDate) return a.startDate.localeCompare(b.startDate);
+      if (a.startDate) return -1;
+      if (b.startDate) return 1;
+      return (a.name || '').localeCompare(b.name || '');
+    });
+  
+  if (!projects.length) {
+    content.innerHTML = '<div class="master-schedule-empty">No projects yet</div>';
+    headerEl.innerHTML = '';
+    return;
+  }
+  
+  // Calculate timeline range - 12 months centered around today
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  // Find earliest and latest dates from projects
+  let minDate = new Date(today);
+  let maxDate = new Date(today);
+  
+  projects.forEach(p => {
+    if (p.startDate) {
+      const d = new Date(p.startDate);
+      if (d < minDate) minDate = new Date(d);
+    }
+    if (p.endDate) {
+      const d = new Date(p.endDate);
+      if (d > maxDate) maxDate = new Date(d);
+    }
+  });
+  
+  // Extend range to show context
+  minDate.setMonth(minDate.getMonth() - 1);
+  minDate.setDate(1); // Start of month
+  maxDate.setMonth(maxDate.getMonth() + 2);
+  maxDate.setDate(0); // End of month
+  
+  // Ensure at least 6 months shown
+  const sixMonthsLater = new Date(minDate);
+  sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
+  if (maxDate < sixMonthsLater) maxDate = sixMonthsLater;
+  
+  const totalDays = Math.ceil((maxDate - minDate) / 86400000);
+  
+  // Build month headers
+  const months = [];
+  let monthDate = new Date(minDate);
+  while (monthDate <= maxDate) {
+    const monthStart = new Date(monthDate.getFullYear(), monthDate.getMonth(), 1);
+    const monthEnd = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
+    const daysInMonth = monthEnd.getDate();
+    
+    // Calculate width as percentage
+    const startOffset = Math.max(0, (monthStart - minDate) / 86400000);
+    const endOffset = Math.min(totalDays, (monthEnd - minDate) / 86400000 + 1);
+    const widthPct = ((endOffset - startOffset) / totalDays) * 100;
+    
+    months.push({
+      label: monthDate.toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+      widthPct: widthPct
+    });
+    
+    monthDate.setMonth(monthDate.getMonth() + 1);
+  }
+  
+  headerEl.innerHTML = months.map(m => 
+    '<div class="master-timeline-month" style="flex:0 0 ' + m.widthPct + '%">' + m.label + '</div>'
+  ).join('');
+  
+  // Calculate today position
+  const todayOffset = (today - minDate) / 86400000;
+  const todayPct = (todayOffset / totalDays) * 100;
+  
+  // Build project rows
+  let html = '';
+  projects.forEach(p => {
+    const hasStart = !!p.startDate;
+    const hasEnd = !!p.endDate;
+    const startDate = hasStart ? new Date(p.startDate) : null;
+    const endDate = hasEnd ? new Date(p.endDate) : null;
+    
+    // Format dates for display
+    const startStr = startDate ? startDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '—';
+    const endStr = endDate ? endDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : '—';
+    
+    html += '<div class="master-project-row">';
+    html += '<div class="master-project-info">';
+    html += '<div class="master-project-name" onclick="window.openProjectFromMaster(\'' + p.id + '\')">' + esc(p.name || 'Untitled') + '</div>';
+    html += '<div class="master-project-dates">' + startStr + ' → ' + endStr + '</div>';
+    html += '</div>';
+    
+    html += '<div class="master-timeline-wrap">';
+    
+    // Today line
+    if (todayPct >= 0 && todayPct <= 100) {
+      html += '<div class="master-timeline-today" style="left:' + todayPct + '%"></div>';
+    }
+    
+    if (hasStart && hasEnd && startDate <= endDate) {
+      const barStart = Math.max(0, (startDate - minDate) / 86400000);
+      const barEnd = Math.min(totalDays, (endDate - minDate) / 86400000 + 1);
+      const leftPct = (barStart / totalDays) * 100;
+      const widthPct = ((barEnd - barStart) / totalDays) * 100;
+      
+      const archivedClass = p.archived ? ' archived' : '';
+      html += '<div class="master-timeline-bar' + archivedClass + '" style="left:' + leftPct + '%;width:' + widthPct + '%" onclick="window.openProjectFromMaster(\'' + p.id + '\')" title="' + esc(p.name) + '">' + esc(p.name) + '</div>';
+    } else {
+      // No dates set
+      html += '<div class="master-timeline-bar no-dates" style="left:5%;width:90%" onclick="window.openProjectFromMaster(\'' + p.id + '\')">No dates set</div>';
+    }
+    
+    html += '</div>';
+    html += '</div>';
+  });
+  
+  content.innerHTML = html;
+}
+
+window.openProjectFromMaster = (projectId) => {
+  $('masterScheduleOverlay').classList.remove('open');
+  switchProject(projectId);
+};
+
+// Update newProjectCreate to handle templates
+const originalNewProjectCreate = $('newProjectCreate').onclick;
+$('newProjectCreate').onclick = async () => {
+  const name = $('newProjectName').value.trim();
+  if (!name) { toast('Enter a project name', 1); return; }
+  
+  const templateId = $('newProjectTemplate').value;
+  const projectId = generateProjectId();
+  
+  console.log('Creating project:', projectId, name, 'from template:', templateId || '(empty)');
+  
+  const newProjectRef = db.ref('projects/' + projectId);
+  
+  try {
+    // Initialize project meta
+    await newProjectRef.child('meta').set({
+      name: name,
+      projectDates: { start: '', end: '' },
+      milestones: [],
+      schemaVersion: 2,
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      updatedAt: firebase.database.ServerValue.TIMESTAMP,
+      fromTemplate: templateId || null
+    });
+    
+    // Add to project index
+    await globalRef.child('projectIndex/' + projectId).set({
+      name: name,
+      archived: false,
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      updatedAt: firebase.database.ServerValue.TIMESTAMP
+    });
+    
+    // If template selected, copy its structure
+    if (templateId) {
+      console.log('Loading template data...');
+      const templateSnap = await db.ref('templates/' + templateId).once('value');
+      const templateData = templateSnap.val();
+      
+      if (templateData) {
+        // Copy assemblies with new IDs
+        const idMap = {}; // old ID -> new ID
+        
+        if (templateData.assemblies) {
+          const newAsms = {};
+          Object.values(templateData.assemblies).forEach(asm => {
+            const newId = generateId();
+            idMap[asm.id] = newId;
+            newAsms[newId] = {
+              id: newId,
+              name: asm.name,
+              isAsm: true,
+              priority: asm.priority || 0,
+              assignee: '',
+              _updatedAt: firebase.database.ServerValue.TIMESTAMP
+            };
+          });
+          await newProjectRef.child('assemblies').set(newAsms);
+          console.log('Copied', Object.keys(newAsms).length, 'assemblies');
+        }
+        
+        // Copy parts with new IDs and updated parentIds
+        if (templateData.parts) {
+          const newParts = {};
+          Object.values(templateData.parts).forEach(part => {
+            const newId = generateId();
+            newParts[newId] = {
+              id: newId,
+              name: part.name,
+              code: part.code || '',
+              mfr: part.mfr || '',
+              qty: part.qty || 1,
+              parentId: part.parentId ? (idMap[part.parentId] || null) : null,
+              status: 'waiting',
+              assignee: '',
+              notes: part.notes || '',
+              changedAt: Date.now(),
+              _updatedAt: firebase.database.ServerValue.TIMESTAMP
+            };
+          });
+          await newProjectRef.child('parts').set(newParts);
+          console.log('Copied', Object.keys(newParts).length, 'parts');
+        }
+      }
+    }
+    
+    closeModal('newProjectModal');
+    $('newProjectName').value = '';
+    $('newProjectTemplate').value = '';
+    toast('Project created');
+    
+    // Switch to new project
+    switchProject(projectId);
+    
+  } catch(e) {
+    console.error('Failed to create project:', e);
+    toast('Failed: ' + (e.message || 'Unknown error'), 1);
+  }
+};
 
 $('sampleBtn').onclick=()=>{if(confirm('Load sample data? This will replace all current data.')){
   // Clear existing data first
@@ -9099,6 +10385,228 @@ $('sampleBtn').onclick=()=>{if(confirm('Load sample data? This will replace all 
     render();
   }
 }};
+
+// Generate 5 Test Projects
+$('generateTestProjectsBtn').onclick=async()=>{
+  if(!confirm('Generate 5 test projects with ~150 parts each? This will create new projects but not affect existing ones.')) return;
+  
+  $('menuDrop').classList.remove('open');
+  toast('Generating test projects...');
+  
+  try {
+    await generateTestProjects();
+    toast('5 test projects created! Check Master Schedule');
+  } catch(e) {
+    console.error('Failed to generate test projects:', e);
+    toast('Failed: ' + (e.message || 'Unknown error'), 1);
+  }
+};
+
+async function generateTestProjects() {
+  // Team members (shared across projects)
+  const testTeam = [
+    { name: 'Antti Korhonen', email: 'antti.korhonen@company.fi' },
+    { name: 'Sari Virtanen', email: 'sari.virtanen@company.fi' },
+    { name: 'Mikko Lahtinen', email: 'mikko.lahtinen@company.fi' },
+    { name: 'Tuomas Niemi', email: 'tuomas.niemi@company.fi' },
+    { name: 'Jukka Heikkinen', email: 'jukka.heikkinen@company.fi' },
+    { name: 'Kaisa Mäkinen', email: 'kaisa.makinen@company.fi' },
+    { name: 'Pekka Järvinen', email: 'pekka.jarvinen@company.fi' },
+    { name: 'Laura Salo', email: 'laura.salo@company.fi' }
+  ];
+  
+  const assemblyTemplates = {
+    radar: ['Antenna Array', 'RF Transmitter Module', 'RF Receiver Module', 'Signal Processor', 'Power Distribution Unit', 'Cooling System', 'Control Interface', 'Data Processor', 'Waveguide Assembly', 'Rotary Joint', 'Pedestal Mount', 'Radome', 'Cable Harness Main', 'EMI Shielding', 'Test Interface Panel'],
+    communication: ['Transceiver Unit', 'Antenna System', 'Modem Assembly', 'Encryption Module', 'Power Amplifier', 'Low Noise Amplifier', 'Frequency Synthesizer', 'Digital Backend', 'Cooling Assembly', 'Power Supply Unit', 'Control Panel', 'Cable Assembly', 'RF Filter Bank', 'Diplexer Unit', 'Housing Enclosure'],
+    sensor: ['Sensor Head', 'Processing Unit', 'Power Module', 'Interface Board', 'Optics Assembly', 'Detector Array', 'Thermal Management', 'Calibration Unit', 'Data Acquisition', 'Signal Conditioning', 'Environmental Sealing', 'Mount Assembly', 'Wiring Harness', 'Test Connector Panel', 'Protective Housing'],
+    control: ['Main Controller', 'I/O Module', 'Communication Interface', 'Power Management', 'Display Unit', 'User Interface Panel', 'Safety System', 'Diagnostic Module', 'Data Storage', 'Network Switch', 'Backup Controller', 'Sensor Interface', 'Actuator Driver', 'Emergency Stop', 'Enclosure Assembly'],
+    power: ['Rectifier Unit', 'Inverter Module', 'Battery Bank', 'Charge Controller', 'Distribution Panel', 'Protection Circuit', 'Monitoring System', 'Cooling System', 'Transfer Switch', 'Surge Suppressor', 'Grounding Assembly', 'Cable Tray', 'Control Interface', 'Metering Unit', 'Enclosure']
+  };
+  
+  const partTemplates = [
+    { name: 'Capacitor Bank 100uF', code: 'CAP-100UF', mfr: 'Murata' },
+    { name: 'Capacitor Array 10uF', code: 'CAP-10UF', mfr: 'TDK' },
+    { name: 'Resistor Network 10K', code: 'RES-10K', mfr: 'Vishay' },
+    { name: 'Power MOSFET', code: 'FET-PWR', mfr: 'Infineon' },
+    { name: 'FPGA Module', code: 'FPGA-01', mfr: 'Xilinx' },
+    { name: 'DSP Processor', code: 'DSP-TI', mfr: 'Texas Instruments' },
+    { name: 'ADC 16-bit', code: 'ADC-16B', mfr: 'Analog Devices' },
+    { name: 'DAC 14-bit', code: 'DAC-14B', mfr: 'Analog Devices' },
+    { name: 'Op-Amp Quad', code: 'OPAMP-4', mfr: 'Texas Instruments' },
+    { name: 'Voltage Regulator 5V', code: 'VREG-5V', mfr: 'Linear Tech' },
+    { name: 'RF Amplifier 10W', code: 'RFA-10W', mfr: 'Qorvo' },
+    { name: 'LNA Module', code: 'LNA-01', mfr: 'Mini-Circuits' },
+    { name: 'RF Switch SP4T', code: 'RFSW-4', mfr: 'Analog Devices' },
+    { name: 'RF Mixer', code: 'MIX-01', mfr: 'Mini-Circuits' },
+    { name: 'RF Filter 2.4GHz', code: 'RFF-2G4', mfr: 'Johanson' },
+    { name: 'VCO Module', code: 'VCO-01', mfr: 'Analog Devices' },
+    { name: 'Aluminum Bracket', code: 'BRK-AL', mfr: 'Custom' },
+    { name: 'Heat Sink Assembly', code: 'HS-ASM', mfr: 'Aavid' },
+    { name: 'Fan Assembly 80mm', code: 'FAN-80', mfr: 'Delta' },
+    { name: 'Thermal Pad', code: 'THERM-P', mfr: '3M' },
+    { name: 'SMA Connector Male', code: 'SMA-M', mfr: 'Amphenol' },
+    { name: 'N-Type Connector', code: 'N-CON', mfr: 'Amphenol' },
+    { name: 'D-Sub 25 Connector', code: 'DSUB-25', mfr: 'TE Connectivity' },
+    { name: 'Circular Connector 12P', code: 'CIRC-12', mfr: 'Amphenol' },
+    { name: 'Coax Cable RG-58', code: 'CBL-RG58', mfr: 'Times Microwave' },
+    { name: 'Power Cable 12AWG', code: 'CBL-12A', mfr: 'Alpha Wire' },
+    { name: 'Main Controller PCB', code: 'PCB-CTRL', mfr: 'PCBWAY' },
+    { name: 'Power Supply PCB', code: 'PCB-PWR', mfr: 'PCBWAY' },
+    { name: 'RF Frontend PCB', code: 'PCB-RF', mfr: 'Rogers' },
+    { name: 'Gasket Seal', code: 'GSK-01', mfr: 'Parker' }
+  ];
+  
+  const projects = [
+    { id: 'proj_mrs450', name: 'MRS-450 Marine Radar', type: 'radar', startDate: '2025-08-01', endDate: '2026-03-15', progress: 85 },
+    { id: 'proj_satcom', name: 'SATCOM Terminal v2', type: 'communication', startDate: '2025-11-15', endDate: '2026-06-30', progress: 55 },
+    { id: 'proj_eovis', name: 'EO-VIS Sensor Suite', type: 'sensor', startDate: '2026-01-10', endDate: '2026-08-20', progress: 20 },
+    { id: 'proj_scada', name: 'SCADA Controller Unit', type: 'control', startDate: '2026-03-01', endDate: '2026-09-30', progress: 5 },
+    { id: 'proj_ups500', name: 'UPS-500 Power System', type: 'power', startDate: '2026-05-15', endDate: '2026-12-15', progress: 0 }
+  ];
+  
+  function getStatusForProgress(progress) {
+    const rand = Math.random() * 100;
+    if (progress >= 85) {
+      if (rand < 70) return 'installed';
+      if (rand < 80) return 'configured';
+      if (rand < 90) return 'tested';
+      return 'arrived';
+    } else if (progress >= 50) {
+      if (rand < 30) return 'installed';
+      if (rand < 45) return 'configured';
+      if (rand < 60) return 'tested';
+      if (rand < 75) return 'arrived';
+      if (rand < 85) return 'ordered';
+      return rand < 95 ? 'to-order' : 'waiting';
+    } else if (progress >= 20) {
+      if (rand < 10) return 'installed';
+      if (rand < 35) return 'tested';
+      if (rand < 50) return 'arrived';
+      if (rand < 70) return 'ordered';
+      return rand < 85 ? 'to-order' : 'waiting';
+    } else if (progress >= 5) {
+      if (rand < 15) return 'arrived';
+      if (rand < 30) return 'ordered';
+      return rand < 50 ? 'to-order' : 'waiting';
+    }
+    return 'waiting';
+  }
+  
+  function addDays(dateStr, days) {
+    const d = new Date(dateStr);
+    d.setDate(d.getDate() + days);
+    return d.toISOString().split('T')[0];
+  }
+  
+  function randomDays(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
+  function randomChoice(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+  
+  // Save team
+  await globalRef.child('team').set(testTeam);
+  team = testTeam;
+  
+  for (const proj of projects) {
+    console.log('Generating:', proj.name);
+    
+    const projectRef = db.ref('projects/' + proj.id);
+    const assemblies = assemblyTemplates[proj.type];
+    const asmData = {};
+    const partsData = {};
+    
+    let currentAsmStart = proj.startDate;
+    
+    for (let i = 0; i < assemblies.length; i++) {
+      const asmId = generateId();
+      const asmName = assemblies[i];
+      const assignee = randomChoice(testTeam).name;
+      
+      const staggerDays = i === 0 ? 0 : randomDays(3, 14);
+      const asmStartDate = addDays(currentAsmStart, staggerDays);
+      const asmDuration = randomDays(21, 45);
+      const asmEndDate = addDays(asmStartDate, asmDuration);
+      currentAsmStart = asmStartDate;
+      
+      asmData[asmId] = {
+        id: asmId,
+        name: asmName,
+        isAsm: true,
+        assignee: assignee,
+        priority: i + 1,
+        startDate: asmStartDate,
+        endDate: asmEndDate,
+        _updatedAt: firebase.database.ServerValue.TIMESTAMP
+      };
+      
+      const numParts = randomDays(8, 12);
+      const shuffled = [...partTemplates].sort(() => Math.random() - 0.5);
+      
+      for (let j = 0; j < numParts; j++) {
+        const partId = generateId();
+        const partTemplate = shuffled[j % shuffled.length];
+        const status = getStatusForProgress(proj.progress);
+        
+        let poNumber = '', poDate = '', eta = '';
+        if (['ordered', 'arrived', 'tested', 'configured', 'installed'].includes(status)) {
+          poNumber = 'PO-2026-' + String(1000 + Math.floor(Math.random() * 9000));
+          poDate = addDays(proj.startDate, randomDays(0, 30));
+          eta = addDays(poDate, randomDays(7, 28));
+        }
+        
+        partsData[partId] = {
+          id: partId,
+          name: partTemplate.name + (j >= partTemplates.length ? ' #' + Math.ceil(j / partTemplates.length) : ''),
+          code: partTemplate.code + '-' + String(100 + j),
+          mfr: partTemplate.mfr,
+          qty: randomDays(1, 5),
+          parentId: asmId,
+          assignee: randomChoice(testTeam).name,
+          status: status,
+          poNumber: poNumber,
+          poDate: poDate,
+          eta: eta,
+          changedAt: Date.now() - randomDays(0, 60) * 86400000,
+          _updatedAt: firebase.database.ServerValue.TIMESTAMP
+        };
+      }
+    }
+    
+    const projDuration = Math.ceil((new Date(proj.endDate) - new Date(proj.startDate)) / 86400000);
+    
+    await projectRef.set({
+      meta: {
+        name: proj.name,
+        projectDates: { start: proj.startDate, end: proj.endDate },
+        milestones: [
+          { id: generateId(), name: 'Design Review', date: addDays(proj.startDate, 30), color: '#8ABADC' },
+          { id: generateId(), name: 'First Article', date: addDays(proj.startDate, Math.floor(projDuration * 0.5)), color: '#D4A574' },
+          { id: generateId(), name: 'Final Delivery', date: proj.endDate, color: '#27AE60' }
+        ],
+        schemaVersion: 2,
+        createdAt: firebase.database.ServerValue.TIMESTAMP,
+        updatedAt: firebase.database.ServerValue.TIMESTAMP
+      },
+      assemblies: asmData,
+      parts: partsData
+    });
+    
+    await globalRef.child('projectIndex/' + proj.id).set({
+      name: proj.name,
+      archived: false,
+      startDate: proj.startDate,
+      endDate: proj.endDate,
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      updatedAt: firebase.database.ServerValue.TIMESTAMP
+    });
+  }
+  
+  // Switch to first project
+  switchProject('proj_mrs450');
+}
 
 // NAV Import functionality
 let navImportData=[];
@@ -9309,8 +10817,8 @@ $('clearBtn').onclick=()=>{if(confirm('Delete ALL data? This cannot be undone.')
   if(projectRef) {
     projectRef.set(null).then(() => {
       console.log('Firebase data deleted');
-      data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';
-      localStorage.removeItem('ebs-data');
+      data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];milestones=[];currentProjectName='New Project';
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
       toast('All data cleared - reload to start fresh');
       setTimeout(() => location.reload(), 500);
     }).catch(err => {
@@ -9318,8 +10826,8 @@ $('clearBtn').onclick=()=>{if(confirm('Delete ALL data? This cannot be undone.')
       toast('Failed to clear data', 1);
     });
   } else {
-    data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];currentProjectName='New Project';
-    localStorage.removeItem('ebs-data');
+    data=[];team=[];expanded={};history=[];projectDates={start:'',end:''};actions=[];milestones=[];currentProjectName='New Project';
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
     toast('All data cleared');
     render();
   }
@@ -9370,7 +10878,7 @@ document.querySelectorAll('.tab').forEach(tab=>tab.onclick=()=>{
   }
 });
 
-document.onkeydown=e=>{if(e.key==='Escape'){closeAIWorkspace();['teamModal','datesModal','leadtimeModal','bomModal','otdModal','itemConfigModal'].forEach(closeModal);$('themeModal').classList.remove('open');$('receivePOModal').classList.remove('open');$('reportModal').classList.remove('open');$('metricsPopover').classList.remove('open');$('poModal').classList.remove('open');$('menuDrop').classList.remove('open');$('ganttColorPopup').classList.remove('open');$('ganttDatePopup').classList.remove('open');$('etaPopover').classList.remove('open');hidePopoverModal($('partModal'));hidePopoverModal($('asmModal'));closeCmdWindow();closeDeletePopover();$('commentsPopover').classList.remove('open');$('popoverBackdrop').classList.remove('active');currentCommentPartId=null;editId=editAsmId=editActId=editEtaPartId=pendingAdvPartId=null}};
+document.onkeydown=e=>{if(e.key==='Escape'){closeAIWorkspace();['teamModal','datesModal','leadtimeModal','bomModal','otdModal','itemConfigModal','newProjectModal','manageProjectsModal','renameProjectModal','deleteProjectModal'].forEach(closeModal);$('themeModal').classList.remove('open');$('receivePOModal').classList.remove('open');$('reportModal').classList.remove('open');$('metricsPopover').classList.remove('open');$('poModal').classList.remove('open');$('menuDrop').classList.remove('open');$('ganttColorPopup').classList.remove('open');$('ganttDatePopup').classList.remove('open');$('etaPopover').classList.remove('open');hidePopoverModal($('partModal'));hidePopoverModal($('asmModal'));closeCmdWindow();closeDeletePopover();$('commentsPopover').classList.remove('open');$('popoverBackdrop').classList.remove('active');closeProjectDropdown();currentCommentPartId=null;editId=editAsmId=editActId=editEtaPartId=pendingAdvPartId=null}};
 
 // Comments on parts
 let currentCommentPartId=null;
